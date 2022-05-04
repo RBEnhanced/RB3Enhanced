@@ -1,0 +1,39 @@
+{
+    "configurations": [
+        {
+            "name": "Xbox 360",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "${XEDK}/include/xbox"
+            ],
+            "defines": [
+                "_DEBUG",
+                "_XBOX",
+                "RB3E",
+                "RB3E_XBOX"
+            ],
+            "compilerPath": "${XEDK}/bin/win32/cl.exe",
+            "cStandard": "c89",
+            "intelliSenseMode": "msvc-x86"
+        },
+        {
+            "name": "Wii",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "C:/devkitPro/bslug/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "GEKKO",
+                "HW_RVL",
+                "__wii__",
+                "RB3E",
+                "RB3E_WII"
+            ],
+            "compilerPath": "C:/devkitPro/devkitPPC/bin/powerpc-eabi-gcc.exe",
+            "cStandard": "c89",
+            "intelliSenseMode": "gcc-x86"
+        }
+    ],
+    "version": 4
+}

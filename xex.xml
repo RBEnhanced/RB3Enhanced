@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<xex>
+    <format>
+        <compressed/>
+    </format>
+    <mediatypes>
+        <allpackages/>
+    </mediatypes>
+    <gameregion>
+        <all/>
+    </gameregion>
+    <baseaddr addr = "0x84000000"/>
+</xex>

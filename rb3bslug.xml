@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Rock Band 3 symbols, kind of. They aren't really *portable*...
+     TODO: If Brainslug gets support for hardcoding symbol addresses,
+     do that. This is really hacky and probably makes things slower. -->
+<symbols>
+    <symbol name="AppConstructor" size="0x684" offset="0x0" >
+        <data>
+            94 21 f6 70 7c 08 02 a6 90 01 09 94 39 61 09 90
+            48 6e 80 41
+        </data>
+    </symbol>
+</symbols>

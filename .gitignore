@@ -1,0 +1,18 @@
+# output files
+out/
+# xbox VS/build artifacts
+build_xbox/
+*.exe
+*.xex
+*.dll
+*.pdb
+*.xdb
+*.obj
+# wii build artifacts
+build_wii/
+*.mod
+*.elf
+*.map
+*.o
+# automatically generated files
+version.h
