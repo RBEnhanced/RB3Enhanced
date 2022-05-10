@@ -20,7 +20,11 @@
 #define PORT_AUD_PATCH_NET4 0x82b8f81c     // patch somewhere to force Audition Mode to be connected (4) - li r3, 0
 #define PORT_AUD_PATCH_NET5 0x82562638     // patch somewhere to force Audition Mode to be connected (5) - li r3, 1
 #define PORT_AUD_PATCH_REPL 0x82b8e978     // patch to allow Audition to recieve insecure packets from Magma
+#define PORT_AUD_PATCH_HDD 0x82515dd4      // patch to make has_hard_drive always return true, probably broken
 #define PORT_AUD_PATCH_UNK 0x823f6074      // idk
+#define PORT_XNQOS_PROBE1 0x823ee7f8       // instruction that checks xnqos probe results
+#define PORT_XNQOS_PROBE2 0x823ee800       // instruction that checks xnqos probe results
+#define PORT_XNQOS_PROBE3 0x823ee80c       // instruction that checks xnqos probe results
 #define PORT_SESSION_MASK_CHECK 0x82652acc // beq in while loop for instrument mask check
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320            // PlatformMgr::SetDiskError

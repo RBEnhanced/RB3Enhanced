@@ -18,6 +18,12 @@ ifeq ($(strip $(DEBUG)),1)
     DEFINES += RB3EDEBUG
 endif
 
+# if EMULATOR=1 then compile "emulator" builds
+ifeq ($(strip $(EMULATOR)),1) 
+    DEFINES += RB3E_XENIA
+	OUTNAME := RB3Enhanced_Emu
+endif
+
 # Wii variables
 # =================
 # build directory for Wii compilation
@@ -68,6 +74,9 @@ INCLUDES_X := "$(XEDK)/include/xbox"
 LIBDIR_X := "$(XEDK)/lib/xbox"
 # library includes
 LIBS_X := xapilib.lib xboxkrnl.lib xnet.lib xonline.lib
+ifeq ($(strip $(EMULATOR)),1) # for emulator builds we need xbdm
+	LIBS_X += xbdm.lib
+endif
 # compiler flags
 CFLAGS_X := -c -Zi -nologo -W3 -WX- -Ox -Os -D _XBOX -D RB3E_XBOX $(patsubst %,-D %,$(DEFINES)) \
 			-GF -Gm- -MT -GS- -Gy -fp:fast -fp:except- -Zc:wchar_t -Zc:forScope \
@@ -96,7 +105,7 @@ clean:
 # Wii compilation, creates BrainSlug .MOD file
 
 .PHONY: wii
-wii: scripts $(OUTPUT)/$(OUTNAME).mod
+wii: $(OUTPUT)/$(OUTNAME).mod
 
 $(OUTPUT)/$(OUTNAME).mod: $(BUILD_W)/output.elf
 	@echo "Creating MOD..."
@@ -108,7 +117,7 @@ $(BUILD_W)/output.elf: $(OBJECTS_W)
 	@mkdir -p $(@D)
 	@$(LINKER_W) $^ $(LFLAG2_W) -o $@
 
-$(BUILD_W)/%.c.o: $(SRC_DIR)/%.c
+$(BUILD_W)/%.c.o: $(SRC_DIR)/%.c | scripts
 	@echo $<
 	@mkdir -p $(@D)
 	@$(COMPILER_W) -c $(CFLAGS_W) $< -o $@
@@ -116,7 +125,7 @@ $(BUILD_W)/%.c.o: $(SRC_DIR)/%.c
 # Xbox compilation, creates .DLL file
 
 .PHONY: xbox
-xbox: scripts $(OUTPUT)/$(OUTNAME).dll
+xbox: $(OUTPUT)/$(OUTNAME).dll
 
 $(OUTPUT)/$(OUTNAME).dll: $(BUILD_X)/$(OUTNAME).exe
 	@echo "Creating XEXDLL..."
@@ -128,6 +137,6 @@ $(BUILD_X)/$(OUTNAME).exe: $(OBJECTS_X)
 	@mkdir -p $(@D)
 	@LIB=$(LIBDIR_X) $(LINKER_X) $(LFLAGS_X) -OUT:"$@" -PDB:"$(BUILD_X)/$(OUTNAME).pdb" -IMPLIB:"$(BUILD_X)/$(OUTNAME)" $^
 
-$(BUILD_X)/%.obj: $(SRC_DIR)/%.c
+$(BUILD_X)/%.obj: $(SRC_DIR)/%.c | scripts
 	@mkdir -p $(@D)
 	@INCLUDE=$(INCLUDES_X) $(COMPILER_X) $(CFLAGS_X) -Fo"$@" -TC $<

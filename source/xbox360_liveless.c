@@ -18,14 +18,20 @@
 
 // user's external IP.
 IN_ADDR ExternalIP = {0};
+USHORT ExternalIPShort[4];
 
 BOOL CanUseGoCentral()
 {
+#ifndef RB3E_XENIA
     // Detect a connection to Xbox Live. If this is successful, we can't safely use GoCentral or Liveless features.
     XNQOS *xnqos;
     int res = XNetQosServiceLookup(0, NULL, &xnqos);
     RB3E_DEBUG("XNetQosServiceLookup: %i", res);
     return (res != 0);
+#else
+    // If you're using Xenia, you aren't connected to Xbox Live.
+    return TRUE;
+#endif
 }
 
 int ReturnsZero()
@@ -37,7 +43,7 @@ int ReturnsOne()
     return 1;
 }
 
-// Socket creation hook to
+// Socket creation hook to allow insecure networking
 BOOL optEnable = TRUE;
 SOCKET socketHook(int af, int type, int protocol)
 {
@@ -63,6 +69,19 @@ DWORD XSessionSearchExHook(DWORD dwProcedureIndex,
 {
     XSESSION_SEARCHRESULT result = {0};
     int i = 0;
+    int j = 0;
+    for (i = 0; i < wNumContexts; i++)
+    {
+        RB3E_DEBUG("Context %i: %08x=%08x", i, pSearchContexts[i].dwContextId, pSearchContexts[i].dwValue);
+    }
+    for (i = 0; i < wNumProperties; i++)
+    {
+        RB3E_DEBUG("Property %i: %08x type %x", i, pSearchProperties[i].dwPropertyId, pSearchProperties[i].value.type);
+        if (pSearchProperties[i].value.type == XUSER_DATA_TYPE_INT32)
+        {
+            RB3E_DEBUG("    Integer data: %08x", pSearchProperties[i].value.nData);
+        }
+    }
     XSessionSearchEx(dwProcedureIndex, dwUserIndex, dwNumResults, dwNumUsers, wNumProperties, wNumContexts, pSearchProperties, pSearchContexts, pcbResultsBuffer, pSearchResults, pXOverlapped);
     // return a fake session with our redirect IP address
     RB3E_DEBUG("Returning a fake XSession...", NULL);
@@ -141,23 +160,32 @@ int XNetGetTitleXnAddrHook(XNADDR *pxna)
     return ret;
 }
 
+XNQOS xnqos = {0};
 int XNetQosLookupHook(UINT cxna, const XNADDR *apxna[], const XNKID *apxnkid[], const XNKEY *apxnkey[], UINT cina, const IN_ADDR aina[], const DWORD adwServiceId[], UINT cProbes, DWORD dwBitsPerSec, DWORD dwFlags, WSAEVENT hEvent, XNQOS **ppxnqos)
 {
     unsigned int i = 0;
     RB3E_DEBUG("XNetQoSLookup called for XnAddr offline %u.%u.%u.%u online %u.%u.%u.%u", apxna[0]->ina.S_un.S_un_b.s_b1, apxna[0]->ina.S_un.S_un_b.s_b2, apxna[0]->ina.S_un.S_un_b.s_b3, apxna[0]->ina.S_un.S_un_b.s_b4, apxna[0]->inaOnline.S_un.S_un_b.s_b1, apxna[0]->inaOnline.S_un.S_un_b.s_b2, apxna[0]->inaOnline.S_un.S_un_b.s_b3, apxna[0]->inaOnline.S_un.S_un_b.s_b4);
     XNetQosLookup(cxna, apxna, apxnkid, apxnkey, cina, aina, adwServiceId, cProbes, dwBitsPerSec, dwFlags, hEvent, ppxnqos);
-    for (i = 0; i < (*ppxnqos)->cxnqos; i++)
+    if (ppxnqos != NULL)
     {
-        // falsify the QoS results, making the game think it succeeded
-        (*ppxnqos)->axnqosinfo[i].cProbesXmit = 4;
-        (*ppxnqos)->axnqosinfo[i].cProbesRecv = 4;
-        (*ppxnqos)->axnqosinfo[i].cbData = 1;
-        (*ppxnqos)->axnqosinfo[i].pbData = (BYTE *)"A";
-        (*ppxnqos)->axnqosinfo[i].wRttMinInMsecs = 4;
-        (*ppxnqos)->axnqosinfo[i].wRttMedInMsecs = 10;
-        (*ppxnqos)->axnqosinfo[i].dwUpBitsPerSec = 13125;
-        (*ppxnqos)->axnqosinfo[i].dwDnBitsPerSec = 21058;
-        (*ppxnqos)->axnqosinfo[i].bFlags = XNET_XNQOSINFO_COMPLETE | XNET_XNQOSINFO_TARGET_CONTACTED;
+        if (*ppxnqos == NULL)
+        {
+            *ppxnqos = &xnqos;
+            (*ppxnqos)->cxnqos = 1;
+        }
+        for (i = 0; i < (*ppxnqos)->cxnqos; i++)
+        {
+            // falsify the QoS results, making the game think it succeeded
+            (*ppxnqos)->axnqosinfo[i].cProbesXmit = 4;
+            (*ppxnqos)->axnqosinfo[i].cProbesRecv = 4;
+            (*ppxnqos)->axnqosinfo[i].cbData = 1;
+            (*ppxnqos)->axnqosinfo[i].pbData = (BYTE *)"A";
+            (*ppxnqos)->axnqosinfo[i].wRttMinInMsecs = 4;
+            (*ppxnqos)->axnqosinfo[i].wRttMedInMsecs = 10;
+            (*ppxnqos)->axnqosinfo[i].dwUpBitsPerSec = 13125;
+            (*ppxnqos)->axnqosinfo[i].dwDnBitsPerSec = 21058;
+            (*ppxnqos)->axnqosinfo[i].bFlags = XNET_XNQOSINFO_COMPLETE | XNET_XNQOSINFO_TARGET_CONTACTED;
+        }
     }
     return ERROR_SUCCESS;
 }
@@ -188,7 +216,11 @@ void InitLivelessHooks()
     {
         // load external IP
         RB3E_DEBUG("External IP ini: %s", config.ExternalIP);
-        sscanf(config.ExternalIP, "%hhu.%hhu.%hhu.%hhu", &ExternalIP.S_un.S_un_b.s_b1, &ExternalIP.S_un.S_un_b.s_b2, &ExternalIP.S_un.S_un_b.s_b3, &ExternalIP.S_un.S_un_b.s_b4);
+        sscanf(config.ExternalIP, "%hu.%hu.%hu.%hu", &ExternalIPShort[0], &ExternalIPShort[1], &ExternalIPShort[2], &ExternalIPShort[3]);
+        ExternalIP.S_un.S_un_b.s_b1 = (BYTE)ExternalIPShort[0];
+        ExternalIP.S_un.S_un_b.s_b2 = (BYTE)ExternalIPShort[1];
+        ExternalIP.S_un.S_un_b.s_b3 = (BYTE)ExternalIPShort[2];
+        ExternalIP.S_un.S_un_b.s_b4 = (BYTE)ExternalIPShort[3];
         RB3E_DEBUG("External IP loaded: %08x", ExternalIP.S_un.S_addr);
         // XSession patches to return success for everything
         POKE_B(PORT_XL_XSESSIONCREATE, &ReturnsZero);
@@ -208,6 +240,17 @@ void InitLivelessHooks()
         POKE_32(PORT_SESSION_MASK_CHECK, NOP);
         // session search hook
         POKE_B(PORT_XL_XSESSIONSEARCHEX, &XSessionSearchExHook);
+        // don't write or expect VDP packets
+        POKE_32(0x82b39ba0, NOP);
+        POKE_32(0x82b39e60, NOP);
+        POKE_32(0x82b3a5e4, NOP);
+        POKE_32(0x82b3a5f0, NOP);
+#ifdef RB3E_XENIA
+        // if on xenia, we need to patch out the xnqos responses
+        POKE_32(PORT_XNQOS_PROBE1, NOP);
+        POKE_32(PORT_XNQOS_PROBE2, NOP);
+        POKE_32(PORT_XNQOS_PROBE3, NOP);
+#endif
         RB3E_MSG("Applied liveless patches!", NULL);
     }
     if (config.EnableGoCentral)

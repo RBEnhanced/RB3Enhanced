@@ -115,10 +115,7 @@ void ApplyPatches()
     POKE_32(PORT_KEYSONGUITAR, BLR);
     // Replace call to song blacklist check with li r3, 0
     POKE_32(PORT_SONGBLACKLIST, LI(3, 0));
-#ifdef RB3E_XBOX
-    // Replace App::Run with App::RunWithoutDebugging
-    POKE_BL(PORT_APP_RUN, PORT_APP_RUNNODEBUG);
-#elif RB3E_WII
+#ifdef RB3E_WII
     // Patch out calls to CustomSplash in App::_ct
     POKE_32(PORT_STRAPSCREEN_1, NOP);
     POKE_32(PORT_STRAPSCREEN_2, NOP);
