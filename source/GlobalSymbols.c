@@ -26,6 +26,12 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.blueGem, "gem_blue.wid");
     SymbolConstruct(&globalSymbols.orangeGem, "gem_orange.wid");
 
+    SymbolConstruct(&globalSymbols.greenHopoGem, "gem_green_hopo.wid");
+    SymbolConstruct(&globalSymbols.redHopoGem, "gem_red_hopo.wid");
+    SymbolConstruct(&globalSymbols.yellowHopoGem, "gem_yellow_hopo.wid");
+    SymbolConstruct(&globalSymbols.blueHopoGem, "gem_blue_hopo.wid");
+    SymbolConstruct(&globalSymbols.orangeHopoGem, "gem_orange_hopo.wid");
+
     SymbolConstruct(&globalSymbols.green, "green");
     SymbolConstruct(&globalSymbols.red, "red");
     SymbolConstruct(&globalSymbols.yellow, "yellow");

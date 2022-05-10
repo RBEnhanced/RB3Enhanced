@@ -29,6 +29,12 @@ typedef struct _GlobalSymbols
     Symbol yellowGem;
     Symbol blueGem;
     Symbol orangeGem;
+    // hopo widgets
+    Symbol greenHopoGem;
+    Symbol redHopoGem;
+    Symbol yellowHopoGem;
+    Symbol blueHopoGem;
+    Symbol orangeHopoGem;
 
     // slot colors
     Symbol green;

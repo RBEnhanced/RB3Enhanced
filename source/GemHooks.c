@@ -24,31 +24,23 @@ int *GetWidgetByNameHook(int *gemManager, Symbol sym)
 {
     Modifier *colorShuffleModifier;
     Symbol *colors[5] = {&globalSymbols.greenGem, &globalSymbols.redGem, &globalSymbols.yellowGem, &globalSymbols.blueGem, &globalSymbols.orangeGem};
+    Symbol *colorsHopo[5] = {&globalSymbols.greenHopoGem, &globalSymbols.redHopoGem, &globalSymbols.yellowHopoGem, &globalSymbols.blueHopoGem, &globalSymbols.orangeHopoGem};
+    int i = 0;
 
     colorShuffleModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.colorShuffle, 0);
 
     if (colorShuffleModifier->enabled)
     {
         // explicitly check the gem widget name so we dont accidentally try to replace a beat/measure line, kick, piano, or cymbal gem with a standard one as they are all track widgets
-        if (strcmp(sym.sym, "gem_green.wid") == 0)
+        for (i = 0; i < sizeof(colors) / sizeof(Symbol *); i++)
         {
-            return GetWidgetByName(gemManager, *colors[RandomInt(0, 5)]);
+            if (strcmp(sym.sym, colors[i]->sym) == 0)
+                return GetWidgetByName(gemManager, *colors[RandomInt(0, 5)]);
         }
-        if (strcmp(sym.sym, "gem_red.wid") == 0)
+        for (i = 0; i < sizeof(colorsHopo) / sizeof(Symbol *); i++)
         {
-            return GetWidgetByName(gemManager, *colors[RandomInt(0, 5)]);
-        }
-        if (strcmp(sym.sym, "gem_yellow.wid") == 0)
-        {
-            return GetWidgetByName(gemManager, *colors[RandomInt(0, 5)]);
-        }
-        if (strcmp(sym.sym, "gem_blue.wid") == 0)
-        {
-            return GetWidgetByName(gemManager, *colors[RandomInt(0, 5)]);
-        }
-        if (strcmp(sym.sym, "gem_orange.wid") == 0)
-        {
-            return GetWidgetByName(gemManager, *colors[RandomInt(0, 5)]);
+            if (strcmp(sym.sym, colorsHopo[i]->sym) == 0)
+                return GetWidgetByName(gemManager, *colorsHopo[RandomInt(0, 5)]);
         }
         return GetWidgetByName(gemManager, sym);
     }
