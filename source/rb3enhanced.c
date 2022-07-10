@@ -111,10 +111,10 @@ void ApplyPatches()
     POKE_32(PORT_SONGLIMIT, LI(3, 8000));
     // "Fast startup" - make the game not wait until Splash is done
     POKE_32(PORT_FASTSTART_CHECK, NOP);
-    // Patch out the function for checking keys on guitar unlock status.
-    POKE_32(PORT_KEYSONGUITAR, BLR);
     // Replace call to song blacklist check with li r3, 0
     POKE_32(PORT_SONGBLACKLIST, LI(3, 0));
+    // Patch out the function for checking keys on guitar unlock status.
+    POKE_32(PORT_KEYSONGUITAR, BLR);
 #ifdef RB3E_WII
     // Patch out calls to CustomSplash in App::_ct
     POKE_32(PORT_STRAPSCREEN_1, NOP);
@@ -123,6 +123,20 @@ void ApplyPatches()
     POKE_32(PORT_NASWII_HOST, NOP);
 #endif
     RB3E_MSG("Patches applied!", NULL);
+}
+
+// apply patches conditionally based on config settings
+void ApplyConfigurablePatches()
+{
+    if (config.UnlockClothing == 1)
+    {
+        // Unlocks all clothing, tattoos, face paint, and video venues
+        // TODO: Figure out what marks items as locked in the UI and patch that as well, right now it still shows them as locked
+        POKE_32(PORT_CHARACTER_CLOTHES_CHECK, NOP);
+        POKE_32(PORT_TATTOO_CHECK, LI(3, 1));
+        POKE_32(PORT_FACE_PAINT_CHECK, LI(3, 1));
+        POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
+    }
 }
 
 void InitialiseFunctions()
@@ -171,6 +185,7 @@ void StartupHook(void *ThisApp, int argc, char **argv)
     RB3E_MountFileSystems();
     InitConfig();
     LoadConfig();
+    ApplyConfigurablePatches();
 
     RB3E_MSG("Starting Rock Band 3...", NULL);
     AppConstructor(ThisApp, argc, argv);

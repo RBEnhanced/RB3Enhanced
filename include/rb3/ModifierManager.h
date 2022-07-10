@@ -2,11 +2,12 @@
 #define _MODIFIERMANAGER_H
 
 typedef char bool;
+#include "Data.h"
 #include "Symbol.h"
 
 typedef struct _Modifier
 {
-    int *dataArray;
+    DataArray *dataArray;
     bool enabled;
 } Modifier;
 

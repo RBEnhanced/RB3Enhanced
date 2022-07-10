@@ -5,4 +5,4 @@
 
 #include "rb3/Symbol.h"
 
-char *LocalizeHook(int thisLocale, Symbol sym, int unk);
+char *LocalizeHook(int thisLocale, Symbol sym, int fail);

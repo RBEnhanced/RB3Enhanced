@@ -87,7 +87,7 @@ Symbol GetSlotColorHook(int *bandUser)
     return slotColor;
 }
 
-int AddGameGemHook(int *gameGemList, GameGem *gem, GameGemType gemType)
+int AddGameGemHook(int *gameGemList, GameGem *gem, NoStrumState gemType)
 {
     Modifier *mirrorModeModifier;
     char origGreen = gem->green;
@@ -100,7 +100,7 @@ int AddGameGemHook(int *gameGemList, GameGem *gem, GameGemType gemType)
 
     if (mirrorModeModifier->enabled)
     {
-        if (gemType == guitar_bass)
+        if (gemType == kStrumDefault)
         {
             gem->green = origOrange;
             gem->red = origBlue;

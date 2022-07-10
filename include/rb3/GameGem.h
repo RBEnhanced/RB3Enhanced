@@ -5,11 +5,10 @@
 
 typedef struct _GameGem
 {
-    // not sure what takes precendence here, MS or ticks. or it could be a combo of both
-    float startMillis;
-    int startTicks;
-    short lengthMs;
-    short lengthTicks;
+    float milliSeconds;
+    int tick;
+    short durationMs;
+    short durationTicks;
 
     unsigned char unkBitfield1;
     unsigned char unkBitfield2;
@@ -41,15 +40,15 @@ typedef struct _GameGem
     // There is more after this that I am too lazy to map. Probably pro instrument stuff
 } GameGem;
 
-typedef enum _GameGemType
+typedef enum _NoStrumState
 {
-    unknown = 0,
-    keys_drums = 1,
-    guitar_bass = 2
-} GameGemType;
+    kStrumForceOn = 0,
+    kStrumForceOff = 1,
+    kStrumDefault = 2
+} NoStrumState;
 
 extern int WillBeNoStrum(int *gameGemListPtr, int *multiGemInfoPtr);
-extern int AddGameGem(int *gameGemList, GameGem *gem, GameGemType gemType);
+extern int AddGameGem(int *gameGemList, GameGem *gem, NoStrumState gemType);
 extern int *GetWidgetByName(int *gemManager, Symbol sym);
 extern Symbol GetSlotColor(int *bandUser);
 

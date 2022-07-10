@@ -46,6 +46,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.GameOriginIcons = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "LogFileAccess") == 0)
             config.LogFileAccess = 1;
+        if (strcmp(name, "UnlockClothing") == 0)
+            config.UnlockClothing = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "GoCentral") == 0)
     {

@@ -5,27 +5,31 @@
 #ifdef RB3E_XBOX // Rock Band 3 Xbox 360 Title Update 5
 
 // instruction patch addresses
-#define PORT_SONGLIMIT 0x82579880          // call to "max_song_count" DataNode::_value
-#define PORT_APP_CALL 0x82272e88           // call to App::_ct from main()
-#define PORT_SONGBLACKLIST 0x82579098      // call to a function that checks song blacklist
-#define PORT_DATAINITFUNCS_TAIL 0x82765980 // blr of DataInitFuncs
-#define PORT_FASTSTART_CHECK 0x82270f40    // beq after OptionBool("fast",0) in App::_ct
-#define PORT_SYSTEMINIT_BLANK 0x825113a4   // call to a stub function in SystemInit
-#define PORT_XL_BYPASS_SG 0x82a88268       // lbz r11, bypassSecureGateway in Quazal::XboxClient::Login2
-#define PORT_RCG_POLL_LOGGEDIN 0x824f7178  // check for login status in RockCentralGateway::Poll
-#define PORT_AUD_PATCH_CRASH 0x82b8c928    // patch somewhere to prevent Audition Mode crashes - blr
-#define PORT_AUD_PATCH_NET1 0x82b8f7fc     // patch somewhere to force Audition Mode to be connected (1) - nop
-#define PORT_AUD_PATCH_NET2 0x82b8f80c     // patch somewhere to force Audition Mode to be connected (2) - nop
-#define PORT_AUD_PATCH_NET3 0x82b8f814     // patch somewhere to force Audition Mode to be connected (3) - nop
-#define PORT_AUD_PATCH_NET4 0x82b8f81c     // patch somewhere to force Audition Mode to be connected (4) - li r3, 0
-#define PORT_AUD_PATCH_NET5 0x82562638     // patch somewhere to force Audition Mode to be connected (5) - li r3, 1
-#define PORT_AUD_PATCH_REPL 0x82b8e978     // patch to allow Audition to recieve insecure packets from Magma
-#define PORT_AUD_PATCH_HDD 0x82515dd4      // patch to make has_hard_drive always return true, probably broken
-#define PORT_AUD_PATCH_UNK 0x823f6074      // idk
-#define PORT_XNQOS_PROBE1 0x823ee7f8       // instruction that checks xnqos probe results
-#define PORT_XNQOS_PROBE2 0x823ee800       // instruction that checks xnqos probe results
-#define PORT_XNQOS_PROBE3 0x823ee80c       // instruction that checks xnqos probe results
-#define PORT_SESSION_MASK_CHECK 0x82652acc // beq in while loop for instrument mask check
+#define PORT_SONGLIMIT 0x82579880               // call to "max_song_count" DataNode::_value
+#define PORT_APP_CALL 0x82272e88                // call to App::_ct from main()
+#define PORT_SONGBLACKLIST 0x82579098           // call to a function that checks song blacklist
+#define PORT_DATAINITFUNCS_TAIL 0x82765980      // blr of DataInitFuncs
+#define PORT_FASTSTART_CHECK 0x82270f40         // beq after OptionBool("fast",0) in App::_ct
+#define PORT_SYSTEMINIT_BLANK 0x825113a4        // call to a stub function in SystemInit
+#define PORT_XL_BYPASS_SG 0x82a88268            // lbz r11, bypassSecureGateway in Quazal::XboxClient::Login2
+#define PORT_RCG_POLL_LOGGEDIN 0x824f7178       // check for login status in RockCentralGateway::Poll
+#define PORT_AUD_PATCH_CRASH 0x82b8c928         // patch somewhere to prevent Audition Mode crashes - blr
+#define PORT_AUD_PATCH_NET1 0x82b8f7fc          // patch somewhere to force Audition Mode to be connected (1) - nop
+#define PORT_AUD_PATCH_NET2 0x82b8f80c          // patch somewhere to force Audition Mode to be connected (2) - nop
+#define PORT_AUD_PATCH_NET3 0x82b8f814          // patch somewhere to force Audition Mode to be connected (3) - nop
+#define PORT_AUD_PATCH_NET4 0x82b8f81c          // patch somewhere to force Audition Mode to be connected (4) - li r3, 0
+#define PORT_AUD_PATCH_NET5 0x82562638          // patch somewhere to force Audition Mode to be connected (5) - li r3, 1
+#define PORT_AUD_PATCH_REPL 0x82b8e978          // patch to allow Audition to recieve insecure packets from Magma
+#define PORT_AUD_PATCH_HDD 0x82515dd4           // patch to make has_hard_drive always return true, probably broken
+#define PORT_AUD_PATCH_UNK 0x823f6074           // idk
+#define PORT_XNQOS_PROBE1 0x823ee7f8            // instruction that checks xnqos probe results
+#define PORT_XNQOS_PROBE2 0x823ee800            // instruction that checks xnqos probe results
+#define PORT_XNQOS_PROBE3 0x823ee80c            // instruction that checks xnqos probe results
+#define PORT_SESSION_MASK_CHECK 0x82652acc      // beq in while loop for instrument mask check
+#define PORT_CHARACTER_CLOTHES_CHECK 0x82618120 // check to see if the goal required to select a piece of clothing has been achieved or not
+#define PORT_FACE_PAINT_CHECK 0x82614a60        // check to see if face paint is unlocked
+#define PORT_TATTOO_CHECK 0x82614a9c            // check to see if tattoos are unlocked
+#define PORT_VIDEO_VENUE_CHECK 0x82581634       // check to see if video venues are unlocked
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320            // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                 // App::Run
@@ -87,13 +91,17 @@ void DbgPrint(const char *s, ...);
 #include <string.h>
 
 // instruction patch addresses
-#define PORT_SONGLIMIT 0x801cedac          // call to "max_song_count" DataNode::_value
-#define PORT_SONGBLACKLIST 0x801d2148      // call to a function that checks song blacklist
-#define PORT_DATAINITFUNCS_TAIL 0x80321b7c // blr of DataInitFuncs
-#define PORT_FASTSTART_CHECK 0x8000e2f0    // beq after OptionBool("fast",0) in App::_ct
-#define PORT_STRAPSCREEN_1 0x8000e40c      // branch to CustomSplash::Show in App::_ct
-#define PORT_STRAPSCREEN_2 0x8000e41c      // branch to CustomSplash::EndShow in App::_ct
-#define PORT_NASWII_HOST 0x807e94a0        // branch to the add header function in the DWCDL login function
+#define PORT_SONGLIMIT 0x801cedac               // call to "max_song_count" DataNode::_value
+#define PORT_SONGBLACKLIST 0x801d2148           // call to a function that checks song blacklist
+#define PORT_DATAINITFUNCS_TAIL 0x80321b7c      // blr of DataInitFuncs
+#define PORT_FASTSTART_CHECK 0x8000e2f0         // beq after OptionBool("fast",0) in App::_ct
+#define PORT_STRAPSCREEN_1 0x8000e40c           // branch to CustomSplash::Show in App::_ct
+#define PORT_STRAPSCREEN_2 0x8000e41c           // branch to CustomSplash::EndShow in App::_ct
+#define PORT_NASWII_HOST 0x807e94a0             // branch to the add header function in the DWCDL login function
+#define PORT_CHARACTER_CLOTHES_CHECK 0x801fec58 // check to see if the goal required to select a piece of clothing has been unlocked
+#define PORT_FACE_PAINT_CHECK 0x801fd9a8        // check to see if face paint is unlocked
+#define PORT_TATTOO_CHECK 0x801fd9c4            // check to see if tattoos are unlocked
+#define PORT_VIDEO_VENUE_CHECK 0x80227e34       // check to see if video venues are unlocked
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c            // PlatformMgr::SetDiskError
 #define PORT_NEWFILE 0x802f9ed0                 // NewFile

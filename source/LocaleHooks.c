@@ -37,7 +37,7 @@ char *replacementSubStrings[][2] = {
 int numReplacementSubStrings = sizeof(replacementSubStrings) / sizeof(replacementSubStrings[0]);
 */
 
-char *LocalizeHook(int thisLocale, Symbol sym, int unk)
+char *LocalizeHook(int thisLocale, Symbol sym, int fail)
 {
     int i = 0;
     char *original;
@@ -49,7 +49,7 @@ char *LocalizeHook(int thisLocale, Symbol sym, int unk)
     }
     if (config.GameOriginIcons == 1 && sym.sym != NULL && strcmp(sym.sym, "song_artist_fmt") == 0)
         return "%s <it>%s</it>";
-    original = Localize(thisLocale, sym, unk);
+    original = Localize(thisLocale, sym, fail);
     if (original != NULL)
     {
         // todo: replacement strings
