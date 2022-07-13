@@ -71,6 +71,10 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.DirectConnectIP, value, RB3E_MAX_IP_LEN);
         if (strcmp(name, "ExternalIP") == 0)
             strncpy(config.ExternalIP, value, RB3E_MAX_IP_LEN);
+        if (strcmp(name, "STUNServerIP") == 0)
+            strncpy(config.STUNServerIP, value, RB3E_MAX_IP_LEN);
+        if (strcmp(name, "STUNServerPort") == 0)
+            config.STUNServerPort = atoi(value);
     }
 #endif
     return 1;

@@ -150,6 +150,14 @@ int XNetGetTitleXnAddrHook(XNADDR *pxna)
 {
     int ret = XNetGetTitleXnAddr(pxna);
     int i = 0;
+
+    // load external IP
+    sscanf(config.ExternalIP, "%hu.%hu.%hu.%hu", &ExternalIPShort[0], &ExternalIPShort[1], &ExternalIPShort[2], &ExternalIPShort[3]);
+    ExternalIP.S_un.S_un_b.s_b1 = (BYTE)ExternalIPShort[0];
+    ExternalIP.S_un.S_un_b.s_b2 = (BYTE)ExternalIPShort[1];
+    ExternalIP.S_un.S_un_b.s_b3 = (BYTE)ExternalIPShort[2];
+    ExternalIP.S_un.S_un_b.s_b4 = (BYTE)ExternalIPShort[3];
+
     pxna->inaOnline.S_un.S_addr = ExternalIP.S_un.S_addr;
     pxna->wPortOnline = 9103;
     for (i = 0; i < 20; i++)
@@ -214,14 +222,6 @@ void InitLivelessHooks()
     RB3E_MSG("Applied socket patches!", NULL);
     if (config.EnableLiveless)
     {
-        // load external IP
-        RB3E_DEBUG("External IP ini: %s", config.ExternalIP);
-        sscanf(config.ExternalIP, "%hu.%hu.%hu.%hu", &ExternalIPShort[0], &ExternalIPShort[1], &ExternalIPShort[2], &ExternalIPShort[3]);
-        ExternalIP.S_un.S_un_b.s_b1 = (BYTE)ExternalIPShort[0];
-        ExternalIP.S_un.S_un_b.s_b2 = (BYTE)ExternalIPShort[1];
-        ExternalIP.S_un.S_un_b.s_b3 = (BYTE)ExternalIPShort[2];
-        ExternalIP.S_un.S_un_b.s_b4 = (BYTE)ExternalIPShort[3];
-        RB3E_DEBUG("External IP loaded: %08x", ExternalIP.S_un.S_addr);
         // XSession patches to return success for everything
         POKE_B(PORT_XL_XSESSIONCREATE, &ReturnsZero);
         POKE_B(PORT_XL_XSESSIONJOINREMOTE, &ReturnsZero);

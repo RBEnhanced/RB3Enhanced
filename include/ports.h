@@ -31,40 +31,46 @@
 #define PORT_TATTOO_CHECK 0x82614a9c            // check to see if tattoos are unlocked
 #define PORT_VIDEO_VENUE_CHECK 0x82581634       // check to see if video venues are unlocked
 // function patch addresses
-#define PORT_SETDISKERROR 0x82516320            // PlatformMgr::SetDiskError
-#define PORT_APP_RUN 0x82272e90                 // App::Run
-#define PORT_APP_RUNNODEBUG 0x82270080          // App::RunWithoutDebugging
-#define PORT_APP_CT 0x82270e68                  // App::_ct
-#define PORT_NEWFILE 0x825173e0                 // NewFile
-#define PORT_SETTRACKSPEED 0x827dd118           // TrackPanelDirBase::UpdateTrackSpeed
-#define PORT_SETSONGSPEED 0x82678C88            // Game::SetMusicSpeed
-#define PORT_MODIFIERMGR_CT 0x82589c48          // ModifierManager::__ct
-#define PORT_MODIFIERMGR_ACTIVE 0x82588d80      // ModifierManager::ModifierActive
-#define PORT_SYMBOL_CT 0x827c0728               // Symbol::Symbol
-#define PORT_LOCALIZE 0x827c96d8                // Locale::Localize
-#define PORT_ADDGAMEGEM 0x8278e530              // GameGemList::AddGameGem
-#define PORT_WILLBENOSTRUM 0x8278cbb0           // GameGemList::WillBeNoStrum
-#define PORT_SETVENUE 0x8257d1c0                // MetaPerformer::SetVenue(?) (actual func name is not known)
-#define PORT_ISUGCPLUS 0x8259e890               // function that checks song source(?)
-#define PORT_KEYSONGUITAR 0x825b50f8            // function that checks "key_keys_on_guitar"
-#define PORT_EXECUTEDTA 0x824f7e50              // RockCentralGateway::ExecuteConfig
-#define PORT_BANDLABELSETDISPLAYTEXT 0x823406f8 // BandLabel::SetDisplayText
-#define PORT_SETSONGANDARTISTNAME 0x825c66f8    // BandLabel::SetSongAndArtistName
-#define PORT_DATANODEEVALUATE 0x8274ae98        // DataNode::Evaluate
-#define PORT_HMXFACTORYFUNCAT 0x82359f28        // HmxObjectFactoryFunc::_at
-#define PORT_SETADDRESS 0x82aeb888              // Quazal::InetAddress::SetAddress
-#define PORT_XL_USESECURESOCKETS 0x82a8eca8     // Inet::UseSecureSockets
-#define PORT_XL_XSESSIONCREATE 0x82a69c90       // XSessionCreate
-#define PORT_XL_XSESSIONJOINREMOTE 0x82a69fb0   // XSessionJoinRemote
-#define PORT_XL_XSESSIONMODIFY 0x82a69e40       // XSessionModify
-#define PORT_XL_XSESSIONSEARCHEX 0x82a6a490     // XSessionSearchEx
-#define PORT_RANDOMINT 0x824f2f90               // RandomInt(min, max)
-#define PORT_GETWIDGETBYNAME 0x82b9b880         // GemManager::GetWidgetByName
-#define PORT_GETSLOTCOLOR 0x82baa308            // TrackConfig::GetSlotColor
+#define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
+#define PORT_APP_RUN 0x82272e90                      // App::Run
+#define PORT_APP_RUNNODEBUG 0x82270080               // App::RunWithoutDebugging
+#define PORT_APP_CT 0x82270e68                       // App::_ct
+#define PORT_NEWFILE 0x825173e0                      // NewFile
+#define PORT_SETTRACKSPEED 0x827dd118                // TrackPanelDirBase::UpdateTrackSpeed
+#define PORT_SETSONGSPEED 0x82678C88                 // Game::SetMusicSpeed
+#define PORT_MODIFIERMGR_CT 0x82589c48               // ModifierManager::__ct
+#define PORT_MODIFIERMGR_ACTIVE 0x82588d80           // ModifierManager::ModifierActive
+#define PORT_SYMBOL_CT 0x827c0728                    // Symbol::Symbol
+#define PORT_LOCALIZE 0x827c96d8                     // Locale::Localize
+#define PORT_ADDGAMEGEM 0x8278e530                   // GameGemList::AddGameGem
+#define PORT_WILLBENOSTRUM 0x8278cbb0                // GameGemList::WillBeNoStrum
+#define PORT_SETVENUE 0x8257d1c0                     // MetaPerformer::SetVenue(?) (actual func name is not known)
+#define PORT_ISUGCPLUS 0x8259e890                    // function that checks song source(?)
+#define PORT_KEYSONGUITAR 0x825b50f8                 // function that checks "key_keys_on_guitar"
+#define PORT_EXECUTEDTA 0x824f7e50                   // RockCentralGateway::ExecuteConfig
+#define PORT_BANDLABELSETDISPLAYTEXT 0x823406f8      // BandLabel::SetDisplayText
+#define PORT_SETSONGANDARTISTNAME 0x825c66f8         // BandLabel::SetSongAndArtistName
+#define PORT_DATANODEEVALUATE 0x8274ae98             // DataNode::Evaluate
+#define PORT_HMXFACTORYFUNCAT 0x82359f28             // HmxObjectFactoryFunc::_at
+#define PORT_SETADDRESS 0x82aeb888                   // Quazal::InetAddress::SetAddress
+#define PORT_XL_USESECURESOCKETS 0x82a8eca8          // Inet::UseSecureSockets
+#define PORT_XL_XSESSIONCREATE 0x82a69c90            // XSessionCreate
+#define PORT_XL_XSESSIONJOINREMOTE 0x82a69fb0        // XSessionJoinRemote
+#define PORT_XL_XSESSIONMODIFY 0x82a69e40            // XSessionModify
+#define PORT_XL_XSESSIONSEARCHEX 0x82a6a490          // XSessionSearchEx
+#define PORT_RANDOMINT 0x824f2f90                    // RandomInt(min, max)
+#define PORT_GETWIDGETBYNAME 0x82b9b880              // GemManager::GetWidgetByName
+#define PORT_GETSLOTCOLOR 0x82baa308                 // TrackConfig::GetSlotColor
+#define PORT_ARCHIVE_CT 0x82514408                   // Archive::_ct
+#define PORT_ARCHIVE_SETLOCATIONHARDDRIVE 0x82512b00 // Archive::SetLocationHardDrive
+#define PORT_ARCHIVE_MERGE 0x82513ee8                // Archive::Merge
+#define PORT_ARCHIVE_DT 0x82513af8                   // Archive::_dt
+#define PORT_FILE_EXISTS 0x825175b0                  // FileExists
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
 #define PORT_GDATAFUNCS 0x82e05d30          // address of gDataFuncs
+#define PORT_THEARCHIVE 0x82cc9c60          // address of TheArchive (main ARK)
 // import function stubs
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c
@@ -125,6 +131,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_DATANODEEVALUATE 0x80322e9c        // DataNode::Evaluate
 #define PORT_GETSLOTCOLOR 0x800e42a4            // TrackConfig::GetSlotColor
 #define PORT_USBWIIGETTYPE 0x806c1a3c           // UsbWii::GetType
+#define PORT_FILE_EXISTS 0x802fa134             // FileExists
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

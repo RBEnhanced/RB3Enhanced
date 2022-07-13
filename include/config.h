@@ -26,6 +26,8 @@ typedef struct _RB3E_Config
     char EnableLiveless;
     char DirectConnectIP[RB3E_MAX_IP_LEN];
     char ExternalIP[RB3E_MAX_IP_LEN];
+    char STUNServerIP[RB3E_MAX_IP_LEN];
+    int STUNServerPort;
 #elif RB3E_WII
     char NASServer[RB3E_MAX_DOMAIN];
 #endif

@@ -19,7 +19,9 @@
 #include "SetlistHooks.h"
 #include "SpeedHooks.h"
 #include "gocentral.h"
+#include "STUN.h"
 #include "wii_usbhid.h"
+#include "rb3/File.h"
 #include "rb3/MetaPerformer.h"
 #include "rb3/BandLabel.h"
 #include "rb3/Data.h"
@@ -94,7 +96,7 @@ LOAD_ORIGINAL:
 
 void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
 {
-    // DO NOT USE use_save_value ON THE MODIFIERS HERE OR IT WILL MAKE VANILLA PROFILES UNLOADABLE
+    // DO NOT USE use_save_value ON THE MODIFIERS HERE OR IT WILL MAKE VANILLA WII PROFILES UNLOADABLE
     RB3E_MSG("Adding custom modifiers...", NULL);
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_black_background)}}");
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_force_hopos)}}");
@@ -151,6 +153,7 @@ void InitialiseFunctions()
     POKE_B(&HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
     POKE_B(&RandomInt, PORT_RANDOMINT);
     POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);
+    POKE_B(&FileExists, PORT_FILE_EXISTS);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -169,14 +172,19 @@ void ApplyHooks()
     HookFunction(PORT_SETADDRESS, &SetAddress, &SetAddressHook);
     HookFunction(PORT_GETWIDGETBYNAME, &GetWidgetByName, &GetWidgetByNameHook);
     HookFunction(PORT_GETSLOTCOLOR, &GetSlotColor, &GetSlotColorHook);
-#ifdef RB3E_WII
+#ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
+#else // 360 exclusive hooks
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }
 
 void StartupHook(void *ThisApp, int argc, char **argv)
 {
+#ifdef RB3E_XBOX
+    char returnedIP[50];
+#endif
+
     RB3E_MSG("Loaded! Version " RB3E_BUILDTAG " (" RB3E_BUILDCOMMIT ")", NULL);
 
     InitialiseFunctions();
@@ -191,5 +199,31 @@ void StartupHook(void *ThisApp, int argc, char **argv)
     AppConstructor(ThisApp, argc, argv);
 
     InitGlobalSymbols(); // this has to be done after init
+
+#ifdef RB3E_XBOX
+    if (config.STUNServerIP != NULL)
+    {
+        if (config.STUNServerPort != 0)
+        {
+            if (getExternalIP(config.STUNServerIP, config.STUNServerPort, returnedIP) == 0)
+            {
+                strncpy(config.ExternalIP, returnedIP, RB3E_MAX_IP_LEN);
+                RB3E_DEBUG("IP: %s", returnedIP);
+            }
+            else
+            {
+                RB3E_DEBUG("Could not get IP via STUN!", NULL);
+            }
+        }
+        else
+        {
+            RB3E_DEBUG("STUN port not set!", NULL);
+        }
+    }
+    else
+    {
+        RB3E_DEBUG("STUN server not set!", NULL);
+    }
+#endif
     return;
 }

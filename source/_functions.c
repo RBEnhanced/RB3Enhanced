@@ -31,6 +31,7 @@ RB3E_STUB(HmxFactoryFuncAt)
 RB3E_STUB(BandLabelSetDisplayText)
 RB3E_STUB(RandomInt)
 RB3E_STUB(DataNodeEvaluate)
+RB3E_STUB(FileExists)
 // hooked function stubs
 RB3E_STUB(Localize)
 RB3E_STUB(SetVenue)

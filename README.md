@@ -2,7 +2,7 @@
 
 RB3Enhanced is a mod for Rock Band 3 that adds new features, fixes some flaws and overall makes it a nicer experience, compatible with Xbox 360 and Wii. _(Note: RB3Enhanced requires a modified console. It will not work on a retail console.)_
 
-For more information, check out https://rb3.rbenhanced.rocks or join the [RBEnhanced Discord](https://discord.gg/6rRUWXPYwb).
+For more information, check out https://rb3e.rbenhanced.rocks or join the [RBEnhanced Discord](https://discord.gg/6rRUWXPYwb).
 
 If you want to contribute, check BUILDING.md and CONTRIBUTING.md for more information.
 
