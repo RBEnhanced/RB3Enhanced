@@ -16,7 +16,7 @@ set BINARYPATH=%XEDK%\bin\win32
 
 REM Warning, since this build script is just to tide X360-only people over without the full toolchain.
 echo It is highly recommended that you install the build tools as noted in BUILDING.md, and use "make xbox" to build an Xbox 360 version.
-timeout 3
+timeout /t 3
 
 REM Create folders.
 @mkdir %BUILD_DIR% >nul 2>&1

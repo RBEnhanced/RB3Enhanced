@@ -1,9 +1,8 @@
 if git --version &>/dev/null; then
 # if git is installed, get the current information from the repository
-    cat <<EOF
+    cat > source/version.h <<EOF
 // This file will be auto generated during building, and should
 // not be modified manually
-
 // The git tag used to compile RB3Enhanced
 #define RB3E_BUILDTAG "$(git describe --always --tags --dirty)"
 // The git branch and commit used to compile RB3Enhanced
@@ -11,10 +10,9 @@ if git --version &>/dev/null; then
 EOF
 else
 # if git isn't installed, we don't know the version, use the compile time in logs
-    cat <<EOF
+    cat > source/version.h <<EOF
 // This file will be auto generated during building, and should
 // not be modified manually
-
 // The git tag used to compile RB3Enhanced
 #define RB3E_BUILDTAG "Unknown"
 // The git branch and commit used to compile RB3Enhanced

@@ -1,0 +1,58 @@
+name: Build
+
+on: [push]
+
+jobs:
+  Wii:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+
+    container:
+      image: docker://devkitpro/devkitppc
+      options: --cpus 2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install BrainSlug
+        run: | 
+          git clone https://github.com/Chadderz121/brainslug-wii
+          cd brainslug-wii
+          make install
+          cd ..
+
+      - name: Compile
+        run: make wii -j2 DEBUG=1
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v2
+        with: 
+          name: RB3Enhanced-Wii-Debug
+          path: out/RB3Enhanced.mod
+
+  Xbox:
+    runs-on: windows-2019
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download tools
+        env:
+          BUILD_TOOLS: ${{ secrets.BUILD_TOOLS_FILE }}
+        run: |
+          Invoke-WebRequest -OutFile tools.zip $Env:BUILD_TOOLS
+          7z x tools.zip -otools
+
+      - name: Compile
+        env:
+          XEDK: ${{ github.workspace }}/tools
+        run: make xbox -j2 DEBUG=1
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v2
+        with: 
+          name: RB3Enhanced-Xbox-Debug
+          path: out/RB3Enhanced.dll

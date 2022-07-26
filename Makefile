@@ -96,7 +96,7 @@ all: xbox wii
 
 .PHONY: scripts
 scripts:
-	@scripts/version.sh > source/version.h
+	@bash scripts/version.sh
 
 .PHONY: clean
 clean:
