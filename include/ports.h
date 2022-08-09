@@ -23,6 +23,7 @@
 #define PORT_AUD_PATCH_HDD 0x82515dd4           // patch to make has_hard_drive always return true, probably broken
 #define PORT_AUD_PATCH_UNK 0x823f6074           // idk
 #define PORT_AUD_HANDLE_MESSAGES 0x82563edc     // part of AuditionMgr::Handle that handles disconnected from Rock Central/XBL/etc. messages
+#define PORT_AUD_INVALID_DATA_CHECK 0x825629fc  // check for invalid data in a song submitted to audition mode
 #define PORT_XNQOS_PROBE1 0x823ee7f8            // instruction that checks xnqos probe results
 #define PORT_XNQOS_PROBE2 0x823ee800            // instruction that checks xnqos probe results
 #define PORT_XNQOS_PROBE3 0x823ee80c            // instruction that checks xnqos probe results

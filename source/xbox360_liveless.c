@@ -409,6 +409,7 @@ void InitLivelessHooks()
         POKE_32(PORT_AUD_PATCH_NET5, LI(3, 1));
         POKE_32(PORT_AUD_PATCH_UNK, LI(11, 1));
         POKE_32(PORT_AUD_PATCH_REPL, LI(11, 1));
+        POKE_32(PORT_AUD_INVALID_DATA_CHECK, LI(3, 1));
         POKE_B(PORT_AUD_HANDLE_MESSAGES, 0x82564048);
         RB3E_MSG("Applied GoCentral patches!", NULL);
     }
