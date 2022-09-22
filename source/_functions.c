@@ -34,6 +34,7 @@ RB3E_STUB(BandLabelSetDisplayText)
 RB3E_STUB(RandomInt)
 RB3E_STUB(DataNodeEvaluate)
 RB3E_STUB(FileExists)
+RB3E_STUB(QueueMessage)
 // hooked function stubs
 RB3E_STUB(Localize)
 RB3E_STUB(SetVenue)

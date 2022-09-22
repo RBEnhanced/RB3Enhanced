@@ -9,6 +9,7 @@ typedef union _DataNode_Value
     float floatVal;
     int *dataArray;
     int *object;
+    char *string;
 } DataNode_Value;
 
 typedef enum _DataNode_Type
@@ -44,7 +45,7 @@ typedef struct _DataNode
 
 typedef struct _DataArray
 {
-    DataNode *mNodes[256];
+    DataNode *mNodes[1];
     Symbol mFile; /* Sometimes this is a Symbol, sometimes a type */
     short mNodeCount;
     short mRefCount;

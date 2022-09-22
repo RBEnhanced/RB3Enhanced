@@ -20,21 +20,22 @@
 #include "SpeedHooks.h"
 #include "gocentral.h"
 #include "wii_usbhid.h"
-#include "rb3/File.h"
-#include "rb3/MetaPerformer.h"
+#include "rb3/App.h"
 #include "rb3/BandLabel.h"
 #include "rb3/Data.h"
-#include "rb3/Symbol.h"
-#include "rb3/ModifierManager.h"
-#include "rb3/RockCentralGateway.h"
-#include "rb3/Locale.h"
-#include "rb3/App.h"
+#include "rb3/File.h"
 #include "rb3/Game.h"
 #include "rb3/GameGem.h"
-#include "rb3/Random.h"
-#include "rb3/SortNode.h"
-#include "rb3/TrackPanelDirBase.h"
 #include "rb3/InetAddress.h"
+#include "rb3/Locale.h"
+#include "rb3/MetaPerformer.h"
+#include "rb3/ModifierManager.h"
+#include "rb3/PassiveMessagesPanel.h"
+#include "rb3/Random.h"
+#include "rb3/RockCentralGateway.h"
+#include "rb3/SortNode.h"
+#include "rb3/Symbol.h"
+#include "rb3/TrackPanelDirBase.h"
 #include "rb3/UsbWii.h"
 
 static int DefinesStep = 0;
@@ -171,6 +172,7 @@ void InitialiseFunctions()
     POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);
     POKE_B(&FileExists, PORT_FILE_EXISTS);
     POKE_B(&SetAddress, PORT_SETADDRESS);
+    POKE_B(&QueueMessage, PORT_QUEUEMESSAGE);
     RB3E_MSG("Functions initialized!", NULL);
 }
 

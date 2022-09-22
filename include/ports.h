@@ -74,11 +74,14 @@
 #define PORT_ARCHIVE_MERGE 0x82513ee8                // Archive::Merge
 #define PORT_ARCHIVE_DT 0x82513af8                   // Archive::_dt
 #define PORT_FILE_EXISTS 0x825175b0                  // FileExists
+#define PORT_QUEUEMESSAGE 0x82628e50                 // PassiveMessagesPanel::QueueMessage
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
 #define PORT_GDATAFUNCS 0x82e05d30          // address of gDataFuncs
 #define PORT_THEARCHIVE 0x82cc9c60          // address of TheArchive (main ARK)
+#define PORT_THEUI 0x82dfd2b0               // address of TheUI
+#define PORT_NULLSYMBOL 0x82c71838          // address of gNullSymbol
 // import function stubs
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c
@@ -141,10 +144,13 @@ void DbgPrint(const char *s, ...);
 #define PORT_GETSLOTCOLOR 0x800e42a4            // TrackConfig::GetSlotColor
 #define PORT_USBWIIGETTYPE 0x806c1a3c           // UsbWii::GetType
 #define PORT_FILE_EXISTS 0x802fa134             // FileExists
+#define PORT_QUEUEMESSAGE 0x80253c50            // PassiveMessagesPanel::QueueMessage
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
 #define PORT_GDATAFUNCS 0x8091a528          // address of gDataFuncs
+#define PORT_THEUI 0x808fc398               // address of TheUI
+#define PORT_NULLSYMBOL 0x808540e0          // address of gNullSymbol
 // string pointers
 #define PORT_NASWII_AC_URL 0x808e2310
 #define PORT_NASWII_PR_URL 0x808e2390
