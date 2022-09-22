@@ -15,6 +15,7 @@
 #include "config.h"
 #include "utilities.h"
 #include "ppcasm.h"
+#include "rb3enhanced.h"
 #include "ports.h"
 
 // user's external IP.
@@ -23,16 +24,15 @@ USHORT ExternalIPShort[4];
 
 BOOL CanUseGoCentral()
 {
-#ifndef RB3E_XENIA
-    // Detect a connection to Xbox Live. If this is successful, we can't safely use GoCentral or Liveless features.
     XNQOS *xnqos;
-    int res = XNetQosServiceLookup(0, NULL, &xnqos);
+    int res;
+    // If we're under Xenia, we can always use GoCentral/Liveless.
+    if (RB3E_IsEmulator())
+        return TRUE;
+    // Detect a connection to Xbox Live. If this is successful, we can't safely use GoCentral or Liveless features.
+    res = XNetQosServiceLookup(0, NULL, &xnqos);
     RB3E_DEBUG("XNetQosServiceLookup: %i", res);
     return (res != 0);
-#else
-    // If you're using Xenia, you aren't connected to Xbox Live.
-    return TRUE;
-#endif
 }
 
 int ReturnsZero()
@@ -383,17 +383,19 @@ void InitLivelessHooks()
         POKE_32(PORT_SESSION_MASK_CHECK, NOP);
         // session search hook
         POKE_B(PORT_XL_XSESSIONSEARCHEX, &XSessionSearchExHook);
-        // don't write or expect VDP packets
-        POKE_32(0x82b39ba0, NOP);
-        POKE_32(0x82b39e60, NOP);
-        POKE_32(0x82b3a5e4, NOP);
-        POKE_32(0x82b3a5f0, NOP);
-#ifdef RB3E_XENIA
-        // if on xenia, we need to patch out the xnqos responses
-        POKE_32(PORT_XNQOS_PROBE1, NOP);
-        POKE_32(PORT_XNQOS_PROBE2, NOP);
-        POKE_32(PORT_XNQOS_PROBE3, NOP);
-#endif
+        // don't write or expect VDP packets (crossplat experiments)
+        POKE_32(PORT_VDP_DISABLE1, NOP);
+        POKE_32(PORT_VDP_DISABLE2, NOP);
+        POKE_32(PORT_VDP_DISABLE3, NOP);
+        POKE_32(PORT_VDP_DISABLE4, NOP);
+        // we need to patch out checking for xnqos
+        // TODO: check if real console needs real xnqos for 3+ multiplayer
+        if (RB3E_IsEmulator())
+        {
+            POKE_32(PORT_XNQOS_PROBE1, NOP);
+            POKE_32(PORT_XNQOS_PROBE2, NOP);
+            POKE_32(PORT_XNQOS_PROBE3, NOP);
+        }
         RB3E_MSG("Applied liveless patches!", NULL);
     }
     if (config.EnableGoCentral)
@@ -410,7 +412,7 @@ void InitLivelessHooks()
         POKE_32(PORT_AUD_PATCH_UNK, LI(11, 1));
         POKE_32(PORT_AUD_PATCH_REPL, LI(11, 1));
         POKE_32(PORT_AUD_INVALID_DATA_CHECK, LI(3, 1));
-        POKE_B(PORT_AUD_HANDLE_MESSAGES, 0x82564048);
+        POKE_B(PORT_AUD_HANDLE_MESSAGES, PORT_AUD_HANDLE_MSG_JUMP);
         RB3E_MSG("Applied GoCentral patches!", NULL);
     }
 

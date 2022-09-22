@@ -9,19 +9,40 @@
 #include "ppcasm.h"
 #include "ports.h"
 #include "rb3enhanced.h"
-#ifdef RB3E_XENIA
-#include "version.h"
-// Xenia doesn't allow direct writes, use XBDM export (similar to memcpy) to handle writes
-int DmSetMemory(void *dest, int count, void *buf, void *unk);
-void Write32(void *address, int integer)
-{
-    int intOnStack = integer; // write the integer as a location in memory
-    DmSetMemory(address, 4, &intOnStack, NULL);
-}
-#endif
+#include "xbox360.h"
 
-void InitCryptoHooks();
-void InitLivelessHooks();
+int RB3E_IsEmulator()
+{
+    // Detect if running in Xenia by checking two things:
+    // - The memory address of XAM's first export, real hardware has this after ~0x81C50000 (17559)
+    // - The first instruction of the first exports of both XAM and the kernel, Xenia has this as the "sc" instruction.
+    HANDLE xamhandle = NULL;
+    PDWORD xamimportaddress = NULL;
+    HANDLE kernhandle = NULL;
+    PDWORD kernimportaddress = NULL;
+    // Get the address of a XAM export.
+    XexGetModuleHandle("xam.xex", &xamhandle);
+    XexGetProcedureAddress(xamhandle, 1, &xamimportaddress);
+    if (xamhandle)
+        XCloseHandle(xamhandle);
+    RB3E_DEBUG("Xenia detection (XAM): %p = %08x", xamimportaddress, xamimportaddress[0]);
+    // If XAM is not in the typical memory address space, we're in an emulator.
+    if ((DWORD)xamimportaddress >> 24 != 0x81)
+        return 1;
+    // Get the address of a Kernel export.
+    XexGetModuleHandle("xboxkrnl.exe", &kernhandle);
+    XexGetProcedureAddress(kernhandle, 1, &kernimportaddress);
+    if (kernhandle)
+        XCloseHandle(kernhandle);
+    RB3E_DEBUG("Xenia detection (Kernel): %p = %08x", kernimportaddress, kernimportaddress[0]);
+    // This *shouldn't* happen, but it could, so just in case.
+    if (xamimportaddress == NULL || kernimportaddress == NULL)
+        return 1;
+    // Checks if the first instruction of either a kernel or XAM export is "sc".
+    if (kernimportaddress[0] == 0x44000042 || xamimportaddress[0] == 0x44000042)
+        return 1;
+    return 0;
+}
 
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
@@ -37,6 +58,7 @@ BOOL APIENTRY DllMain(HANDLE hInstDLL, DWORD reason, LPVOID lpReserved)
 {
     if (reason == DLL_PROCESS_ATTACH)
     {
+        RB3E_DEBUG("DLL has been loaded");
         // Replace App::Run with App::RunWithoutDebugging
         POKE_BL(PORT_APP_RUN, PORT_APP_RUNNODEBUG);
         // Apply our hook

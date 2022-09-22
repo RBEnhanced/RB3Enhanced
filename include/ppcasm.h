@@ -6,20 +6,11 @@
 #include <stdint.h>
 
 // Poke values
-#if defined(RB3E_XENIA) && defined(RB3E_XBOX) // rb3enhanced specific define, use a function to write memory on xenia builds
-void Write32(void *address, int integer);
-#define POKE_32(addr, val)                    \
-    do                                        \
-    {                                         \
-        Write32((void *)addr, (uint32_t)val); \
-    } while (0)
-#else
 #define POKE_32(addr, val)                     \
     do                                         \
     {                                          \
         *(uint32_t *)(addr) = (uint32_t)(val); \
     } while (0)
-#endif
 
 // PowerPC instructions!
 #define ADDI(dest, src, val) (0x38000000 + ((uint8_t)dest << 21) + ((uint8_t)src << 16) + ((uint16_t)val))

@@ -14,6 +14,7 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.rb3e_get_music_speed, "rb3e_get_music_speed");
     SymbolConstruct(&globalSymbols.rb3e_get_track_speed, "rb3e_get_track_speed");
     SymbolConstruct(&globalSymbols.rb3e_set_venue, "rb3e_set_venue");
+    SymbolConstruct(&globalSymbols.rb3e_is_emulator, "rb3e_is_emulator");
 
     SymbolConstruct(&globalSymbols.blackBackground, "mod_black_background");
     SymbolConstruct(&globalSymbols.colorShuffle, "mod_color_shuffle");

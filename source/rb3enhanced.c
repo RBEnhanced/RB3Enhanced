@@ -37,6 +37,23 @@
 #include "rb3/InetAddress.h"
 #include "rb3/UsbWii.h"
 
+static int DefinesStep = 0;
+char *DefinesHook(char *string_define, int always_null)
+{
+    switch (DefinesStep++)
+    {
+    case 0:
+        return "RB3E";
+    case 1:
+        // might not be working?
+        if (RB3E_IsEmulator())
+            return "RB3E_EMULATOR";
+        return NULL;
+    default:
+        return NULL;
+    }
+}
+
 void SetVenueHook(int *thisMetaPerformer, Symbol venue)
 {
     Symbol blackBackground;
@@ -77,8 +94,6 @@ void *NewFileHook(char *fileName, int flags)
     strcpy(newFile, "sd:/rb3/");
     strcpy(newFile + 8, fileName);
 #endif
-    if (config.LogFileAccess)
-        RB3E_MSG("%s", fileName);
     // if the file isn't already being loaded from disk, isn't in ".." and exists, use the new file
     if (fileName[0] != '.' && RB3E_FileExists(newFile))
     {
@@ -87,6 +102,8 @@ void *NewFileHook(char *fileName, int flags)
 #endif
         flags = 0x10002; // tell the game to load from GAME/SD
     }
+    if (config.LogFileAccess)
+        RB3E_MSG("File: %s (%s)", fileName, (flags == 0x10002) ? "Raw" : "ARK");
     else
         goto LOAD_ORIGINAL;
 LOAD_ORIGINAL:
@@ -160,6 +177,7 @@ void InitialiseFunctions()
 void ApplyHooks()
 {
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
+    POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
     HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
     HookFunction(PORT_ADDGAMEGEM, &AddGameGem, &AddGameGemHook);

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <xex>
     <format>
+        <unencrypted/>
         <compressed/>
     </format>
     <mediatypes>

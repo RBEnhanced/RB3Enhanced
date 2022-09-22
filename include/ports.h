@@ -23,15 +23,21 @@
 #define PORT_AUD_PATCH_HDD 0x82515dd4           // patch to make has_hard_drive always return true, probably broken
 #define PORT_AUD_PATCH_UNK 0x823f6074           // idk
 #define PORT_AUD_HANDLE_MESSAGES 0x82563edc     // part of AuditionMgr::Handle that handles disconnected from Rock Central/XBL/etc. messages
+#define PORT_AUD_HANDLE_MSG_JUMP 0x82564048     // address to jump PORT_AUD_HANDLE_MESSAGES to, to allow audition mode without GoCentral
 #define PORT_AUD_INVALID_DATA_CHECK 0x825629fc  // check for invalid data in a song submitted to audition mode
 #define PORT_XNQOS_PROBE1 0x823ee7f8            // instruction that checks xnqos probe results
 #define PORT_XNQOS_PROBE2 0x823ee800            // instruction that checks xnqos probe results
 #define PORT_XNQOS_PROBE3 0x823ee80c            // instruction that checks xnqos probe results
+#define PORT_VDP_DISABLE1 0x82b39ba0            // nop over VDP packet sending
+#define PORT_VDP_DISABLE2 0x82b39e60            // nop over VDP packet sending
+#define PORT_VDP_DISABLE3 0x82b3a5e4            // nop over VDP packet sending
+#define PORT_VDP_DISABLE4 0x82b3a5f0            // nop over VDP packet sending
 #define PORT_SESSION_MASK_CHECK 0x82652acc      // beq in while loop for instrument mask check
 #define PORT_CHARACTER_CLOTHES_CHECK 0x82618120 // check to see if the goal required to select a piece of clothing has been achieved or not
 #define PORT_FACE_PAINT_CHECK 0x82614a60        // check to see if face paint is unlocked
 #define PORT_TATTOO_CHECK 0x82614a9c            // check to see if tattoos are unlocked
 #define PORT_VIDEO_VENUE_CHECK 0x82581634       // check to see if video venues are unlocked
+#define PORT_OPTIONSTR_DEFINE 0x82510cc8        // bl to OptionStr("define", NULL) in PreInitSystem
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
@@ -110,6 +116,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_FACE_PAINT_CHECK 0x801fd9a8        // check to see if face paint is unlocked
 #define PORT_TATTOO_CHECK 0x801fd9c4            // check to see if tattoos are unlocked
 #define PORT_VIDEO_VENUE_CHECK 0x80227e34       // check to see if video venues are unlocked
+#define PORT_OPTIONSTR_DEFINE 0x8030e418        // bl to OptionStr("define", NULL) in PreInitSystem
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c            // PlatformMgr::SetDiskError
 #define PORT_NEWFILE 0x802f9ed0                 // NewFile

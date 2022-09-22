@@ -18,12 +18,6 @@ ifeq ($(strip $(DEBUG)),1)
     DEFINES += RB3EDEBUG
 endif
 
-# if EMULATOR=1 then compile "emulator" builds
-ifeq ($(strip $(EMULATOR)),1) 
-    DEFINES += RB3E_XENIA
-	OUTNAME := RB3Enhanced_Emu
-endif
-
 # Wii variables
 # =================
 # build directory for Wii compilation
@@ -130,13 +124,13 @@ xbox: $(OUTPUT)/$(OUTNAME).dll
 $(OUTPUT)/$(OUTNAME).dll: $(BUILD_X)/$(OUTNAME).exe
 	@echo "Creating XEXDLL..."
 	@mkdir -p $(@D)
-	@$(IMAGEXEX_X) $(XEXFLAGS) -out:"$@" "$^"
+	@$(WINDOWS_SHIM) $(IMAGEXEX_X) $(XEXFLAGS) -out:"$@" "$^"
 
 $(BUILD_X)/$(OUTNAME).exe: $(OBJECTS_X)
 	@echo "Linking DLL..."
 	@mkdir -p $(@D)
-	@LIB=$(LIBDIR_X) $(LINKER_X) $(LFLAGS_X) -OUT:"$@" -PDB:"$(BUILD_X)/$(OUTNAME).pdb" -IMPLIB:"$(BUILD_X)/$(OUTNAME)" $^
+	@LIB=$(LIBDIR_X) $(WINDOWS_SHIM) $(LINKER_X) $(LFLAGS_X) -OUT:"$@" -PDB:"$(BUILD_X)/$(OUTNAME).pdb" -IMPLIB:"$(BUILD_X)/$(OUTNAME)" $^
 
 $(BUILD_X)/%.obj: $(SRC_DIR)/%.c | scripts
 	@mkdir -p $(@D)
-	@INCLUDE=$(INCLUDES_X) $(COMPILER_X) $(CFLAGS_X) -Fo"$@" -TC $<
+	@INCLUDE=$(INCLUDES_X) $(WINDOWS_SHIM) $(COMPILER_X) $(CFLAGS_X) -Fo"$@" -TC $<

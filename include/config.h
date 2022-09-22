@@ -30,6 +30,7 @@ typedef struct _RB3E_Config
     int STUNServerPort;
 #elif RB3E_WII
     char NASServer[RB3E_MAX_DOMAIN];
+    char LegacySDMode;
 #endif
 } RB3E_Config;
 

@@ -10,6 +10,7 @@
 #include "GlobalSymbols.h"
 #include "config.h"
 #include "rb3/Data.h"
+#include "rb3enhanced.h"
 
 // TODO: figure out what the type of args truly is
 DataNode *PrintToDebugger(DataNode *node, int *args)
@@ -117,6 +118,13 @@ DataNode *DTASetVenue(DataNode *node, int *args)
     return node;
 }
 
+DataNode *DTAIsEmulator(DataNode *node, int *args)
+{
+    node->type = INT_VALUE;
+    node->value.intVal = RB3E_IsEmulator();
+    return node;
+}
+
 int AddDTAFunctions(int r3_presv)
 {
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.print_debug) = (int)PrintToDebugger;
@@ -125,6 +133,7 @@ int AddDTAFunctions(int r3_presv)
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_music_speed) = (int)GetMusicSpeed;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_track_speed) = (int)GetTrackSpeed;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_set_venue) = (int)DTASetVenue;
+    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_is_emulator) = (int)DTAIsEmulator;
     RB3E_MSG("Added DTA functions!", NULL);
     return r3_presv;
 }

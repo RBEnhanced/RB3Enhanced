@@ -22,7 +22,7 @@ void InitConfig()
 {
     memset(&config, 0, sizeof(config));
 #ifdef RB3E_WII
-    strcpy(config.NASServer, "naswii.wiimmfi.de");
+    // strcpy(config.NASServer, "naswii.wiimmfi.de");
 #endif
     config.SongSpeedMultiplier = 1.0;
     config.TrackSpeedMultiplier = 1.0;
@@ -45,7 +45,7 @@ static int INIHandler(void *user, const char *section, const char *name, const c
         if (strcmp(name, "GameOriginIcons") == 0)
             config.GameOriginIcons = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "LogFileAccess") == 0)
-            config.LogFileAccess = 1;
+            config.LogFileAccess = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "UnlockClothing") == 0)
             config.UnlockClothing = RB3E_CONFIG_BOOL(value);
     }
@@ -61,6 +61,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
     {
         if (strcmp(name, "NASServer") == 0)
             strncpy(config.NASServer, value, RB3E_MAX_DOMAIN);
+        if (strcmp(name, "LegacySDMode") == 0)
+            config.LegacySDMode = RB3E_CONFIG_BOOL(value);
     }
 #elif RB3E_XBOX
     if (strcmp(section, "Xbox360") == 0)
@@ -104,7 +106,8 @@ void LoadConfig()
         }
         else
         {
-            i = 0xff;
+            RB3E_MSG("Loading config from %s", paths[i]);
+            break;
         }
     }
     if (file == -1)
@@ -116,7 +119,7 @@ void LoadConfig()
     RB3E_DEBUG("Read %i bytes from config file, parsing", read);
     if (ini_parse_string(buf, INIHandler, NULL) < 0)
     {
-        RB3E_MSG("Failed to log config file, using default config.", NULL);
+        RB3E_MSG("Failed to load config file, using default config", NULL);
         InitConfig();
     }
     else

@@ -6,9 +6,11 @@
 
 #include "ports.h"
 #include "ppcasm.h"
+// get line number
 #define STRINGIZE(x) STRINGIZE2(x)
 #define STRINGIZE2(x) #x
 #define LINE_STRING STRINGIZE(__LINE__)
+// define small stub using line number to avoid optimisations
 #ifdef RB3E_XBOX // for xbox, use MSVC notation
 #define RB3E_STUB(x)           \
     __declspec(naked) void x() \

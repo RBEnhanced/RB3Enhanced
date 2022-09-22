@@ -13,7 +13,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install BrainSlug
         run: | 
@@ -23,7 +25,9 @@ jobs:
           cd ..
 
       - name: Compile
-        run: make wii -j2 DEBUG=1
+        run: |
+          make clean
+          make wii -j2 DEBUG=1
 
       - name: Upload binaries
         uses: actions/upload-artifact@v2
@@ -37,7 +41,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Download tools
         env:
@@ -49,7 +55,9 @@ jobs:
       - name: Compile
         env:
           XEDK: ${{ github.workspace }}/tools
-        run: make xbox -j2 DEBUG=1
+        run: |
+          make clean
+          make xbox -j2 DEBUG=1
 
       - name: Upload binaries
         uses: actions/upload-artifact@v2
