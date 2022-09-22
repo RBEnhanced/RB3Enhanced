@@ -38,6 +38,9 @@
 #define PORT_TATTOO_CHECK 0x82614a9c            // check to see if tattoos are unlocked
 #define PORT_VIDEO_VENUE_CHECK 0x82581634       // check to see if video venues are unlocked
 #define PORT_OPTIONSTR_DEFINE 0x82510cc8        // bl to OptionStr("define", NULL) in PreInitSystem
+#define PORT_RENDER_RES_X_PATCH1 0x8273bf20     // instruction patch to force render width
+#define PORT_RENDER_RES_X_PATCH2 0x8273bf24     // instruction patch to force render width
+#define PORT_RENDER_RES_Y_PATCH1 0x8273bedc     // instruction patch to force render height
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run

@@ -147,6 +147,17 @@ void ApplyPatches()
 // apply patches conditionally based on config settings
 void ApplyConfigurablePatches()
 {
+    // currently this only works for Xbox 360
+    if (config.RenderResX != 0 && config.RenderResY != 0)
+    {
+        if (config.RenderResX > 1280 || config.RenderResY > 720)
+        {
+            RB3E_MSG("Render resolution set above 1280x720! This will cause graphical issues.", NULL);
+        }
+        POKE_32(PORT_RENDER_RES_X_PATCH1, LI(7, config.RenderResX));
+        POKE_32(PORT_RENDER_RES_X_PATCH2, LI(29, config.RenderResX));
+        POKE_32(PORT_RENDER_RES_Y_PATCH1, LI(11, config.RenderResY));
+    }
     if (config.UnlockClothing == 1)
     {
         // Unlocks all clothing, tattoos, face paint, and video venues

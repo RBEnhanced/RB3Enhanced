@@ -22,6 +22,8 @@ typedef struct _RB3E_Config
     char LogFileAccess;
     char GoCentralAddress[RB3E_MAX_DOMAIN];
     char UnlockClothing;
+    int RenderResX;
+    int RenderResY;
 #ifdef RB3E_XBOX
     char EnableLiveless;
     char DirectConnectIP[RB3E_MAX_IP_LEN];

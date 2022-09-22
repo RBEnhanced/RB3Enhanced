@@ -56,6 +56,13 @@ static int INIHandler(void *user, const char *section, const char *name, const c
         if (strcmp(name, "GoCentralAddress") == 0)
             strncpy(config.GoCentralAddress, value, RB3E_MAX_CONFIG_LEN);
     }
+    if (strcmp(section, "Graphics") == 0)
+    {
+        if (strcmp(name, "RenderResX") == 0)
+            config.RenderResX = atoi(value);
+        if (strcmp(name, "RenderResY") == 0)
+            config.RenderResY = atoi(value);
+    }
 #ifdef RB3E_WII
     if (strcmp(section, "Wii") == 0)
     {
