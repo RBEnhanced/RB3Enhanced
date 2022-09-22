@@ -147,6 +147,7 @@ void ApplyPatches()
 // apply patches conditionally based on config settings
 void ApplyConfigurablePatches()
 {
+#ifdef RB3E_XBOX
     // currently this only works for Xbox 360
     if (config.RenderResX != 0 && config.RenderResY != 0)
     {
@@ -158,6 +159,7 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_RENDER_RES_X_PATCH2, LI(29, config.RenderResX));
         POKE_32(PORT_RENDER_RES_Y_PATCH1, LI(11, config.RenderResY));
     }
+#endif
     if (config.UnlockClothing == 1)
     {
         // Unlocks all clothing, tattoos, face paint, and video venues
