@@ -49,6 +49,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.LanguageOverride, value, RB3E_LANG_LEN);
         if (strcmp(name, "RawfilesDir") == 0 && !RB3E_CONFIG_FALSE(value))
             strncpy(config.RawfilesDir, value, RB3E_MAX_CONFIG_LEN);
+        if (strcmp(name, "DisableRawfiles") == 0)
+            config.DisableRawfiles = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "GoCentral") == 0)
     {
@@ -56,13 +58,6 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.EnableGoCentral = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "GoCentralAddress") == 0)
             strncpy(config.GoCentralAddress, value, RB3E_MAX_CONFIG_LEN);
-    }
-    if (strcmp(section, "Graphics") == 0)
-    {
-        if (strcmp(name, "RenderResX") == 0)
-            config.RenderResX = atoi(value);
-        if (strcmp(name, "RenderResY") == 0)
-            config.RenderResY = atoi(value);
     }
 #ifdef RB3E_WII
     if (strcmp(section, "Wii") == 0)
@@ -73,6 +68,13 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.LegacySDMode = RB3E_CONFIG_BOOL(value);
     }
 #elif RB3E_XBOX
+    if (strcmp(section, "Graphics") == 0)
+    {
+        if (strcmp(name, "RenderResX") == 0)
+            config.RenderResX = atoi(value);
+        if (strcmp(name, "RenderResY") == 0)
+            config.RenderResY = atoi(value);
+    }
     if (strcmp(section, "Xbox360") == 0)
     {
         if (strcmp(name, "EnableLiveless") == 0)

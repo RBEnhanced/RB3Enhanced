@@ -28,6 +28,7 @@ typedef struct _RB3E_Config
     int RenderResY;
     char LanguageOverride[RB3E_LANG_LEN + 1];
     char RawfilesDir[RB3E_MAX_CONFIG_LEN];
+    char DisableRawfiles;
 #ifdef RB3E_XBOX
     char EnableLiveless;
     char DirectConnectIP[RB3E_MAX_IP_LEN];

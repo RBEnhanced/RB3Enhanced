@@ -76,13 +76,17 @@ void SetVenueHook(int *thisMetaPerformer, Symbol venue)
 // New file hook, for ARKless file loading
 void *NewFileHook(char *fileName, int flags)
 {
-    char *new_path = RB3E_GetRawfilePath(fileName, 0);
+    char *new_path = NULL;
+    if (config.DisableRawfiles)
+        goto LOAD_ORIGINAL;
     // checks the platform-specific APIs for the file
+    new_path = RB3E_GetRawfilePath(fileName, 0);
     if (new_path != NULL)
     {
         fileName = new_path;
         flags = 0x10002; // tell the game to load this file raw
     }
+LOAD_ORIGINAL:
     if (config.LogFileAccess)
         RB3E_MSG("File: %s (%s)", fileName, (flags & 0x10000) ? "Raw" : "ARK");
     return NewFile(fileName, flags);
@@ -98,6 +102,8 @@ DataArray *DataReadFileHook(char *path, int dtb)
     char *hasdtb = strstr(path, ".dtb");
 #endif
     char *rawpath = NULL;
+    if (config.DisableRawfiles)
+        goto LOAD_ORIGINAL;
     if (hasdtb == NULL && dtb == 1)
     {
         rawpath = RB3E_GetRawfilePath(path, 0);
@@ -110,6 +116,7 @@ DataArray *DataReadFileHook(char *path, int dtb)
             return DataReadFile(rawpath, 0);
         }
     }
+LOAD_ORIGINAL:
     return DataReadFile(path, dtb);
 }
 
