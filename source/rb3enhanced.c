@@ -76,39 +76,41 @@ void SetVenueHook(int *thisMetaPerformer, Symbol venue)
 // New file hook, for ARKless file loading
 void *NewFileHook(char *fileName, int flags)
 {
-    static char newFile[256] = {0};
-#ifdef RB3E_XBOX
-    unsigned int i = 0;
-    for (i = 0; i < strlen(fileName); i++)
+    char *new_path = RB3E_GetRawfilePath(fileName, 0);
+    // checks the platform-specific APIs for the file
+    if (new_path != NULL)
     {
-        if (fileName[i] == ':')
-            goto LOAD_ORIGINAL; // drive letter, we can't do this
-    }
-    memcpy(newFile, "GAME:/", 6);
-    strcpy(newFile + 6, fileName);
-    for (i = 0; i < strlen(newFile); i++)
-    {
-        if (newFile[i] == '/')
-            newFile[i] = '\\'; // fix backticks
-    }
-#elif RB3E_WII
-    strcpy(newFile, "sd:/rb3/");
-    strcpy(newFile + 8, fileName);
-#endif
-    // if the file isn't already being loaded from disk, isn't in ".." and exists, use the new file
-    if (fileName[0] != '.' && RB3E_FileExists(newFile))
-    {
-#ifdef RB3E_WII
-        fileName = newFile; // the emvolution DVD hooks use this path directly
-#endif
-        flags = 0x10002; // tell the game to load from GAME/SD
+        fileName = new_path;
+        flags = 0x10002; // tell the game to load this file raw
     }
     if (config.LogFileAccess)
-        RB3E_MSG("File: %s (%s)", fileName, (flags == 0x10002) ? "Raw" : "ARK");
-    else
-        goto LOAD_ORIGINAL;
-LOAD_ORIGINAL:
+        RB3E_MSG("File: %s (%s)", fileName, (flags & 0x10000) ? "Raw" : "ARK");
     return NewFile(fileName, flags);
+}
+
+DataArray *DataReadFileHook(char *path, int dtb)
+{
+#ifdef RB3E_WII
+    // strstr doesn't exist on Wii and I don't trust that it works.
+    // TODO(Emma): check
+    char *hasdtb = (char *)0x80000000;
+#else
+    char *hasdtb = strstr(path, ".dtb");
+#endif
+    char *rawpath = NULL;
+    if (hasdtb == NULL && dtb == 1)
+    {
+        rawpath = RB3E_GetRawfilePath(path, 0);
+        if (rawpath != NULL)
+        {
+            RB3E_DEBUG("DataReadFile: %s", rawpath);
+            // This works on Xbox (and maybe Wii)? I don't know how but it does.
+            // Changing r4 doesn't seem to have any effect, it's the path's work
+            // This game fuckin sucks
+            return DataReadFile(rawpath, 0);
+        }
+    }
+    return DataReadFile(path, dtb);
 }
 
 void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
@@ -207,6 +209,7 @@ void ApplyHooks()
     HookFunction(PORT_GETWIDGETBYNAME, &GetWidgetByName, &GetWidgetByNameHook);
     HookFunction(PORT_GETSLOTCOLOR, &GetSlotColor, &GetSlotColorHook);
     HookFunction(PORT_SETSYSTEMLANGUAGE, &SetSystemLanguage, &SetSystemLanguageHook);
+    HookFunction(PORT_DATAREADFILE, &DataReadFile, &DataReadFileHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
 #else // 360 exclusive hooks

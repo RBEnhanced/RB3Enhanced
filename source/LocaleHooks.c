@@ -60,7 +60,6 @@ int IsSupportedLanguageHook(Symbol lang, int r4)
 char *LocalizeHook(int thisLocale, Symbol sym, int fail)
 {
     int i = 0;
-    int x = 0;
     char newLocaleName[100];
     char *original;
     // game origin icons relies on using different formatting for the song/artist name

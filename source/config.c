@@ -12,15 +12,12 @@
 
 RB3E_Config config;
 
-#ifdef RB3E_XBOX
-const char *paths[8] = {"GAME:\\rb3.ini", "RB3HDD:\\rb3.ini", "RB3USB0:\\rb3.ini", "RB3USB1:\\rb3.ini", "RB3USB2:\\rb3.ini", "RB3MUINT:\\rb3.ini", "RB3INTUSB:\\rb3.ini", "RB3INTMMC:\\rb3.ini"};
-#elif RB3E_WII
-const char *paths[1] = {"sd:/rb3/rb3.ini"};
-#endif
+#define CONFIG_FILENAME "rb3.ini"
 
 void InitConfig()
 {
     memset(&config, 0, sizeof(config));
+    strcpy(config.RawfilesDir, "rb3");
 #ifdef RB3E_WII
     // strcpy(config.NASServer, "naswii.wiimmfi.de");
 #endif
@@ -50,6 +47,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.UnlockClothing = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "LanguageOverride") == 0 && strlen(value) == RB3E_LANG_LEN)
             strncpy(config.LanguageOverride, value, RB3E_LANG_LEN);
+        if (strcmp(name, "RawfilesDir") == 0 && !RB3E_CONFIG_FALSE(value))
+            strncpy(config.RawfilesDir, value, RB3E_MAX_CONFIG_LEN);
     }
     if (strcmp(section, "GoCentral") == 0)
     {
@@ -95,35 +94,20 @@ void LoadConfig()
 {
     char buf[0x2000] = {0};
     int file = -1;
-    int i = 0;
     int read = 0;
+    char *filepath;
     if (!RB3E_Mounted)
     {
         RB3E_MSG("No drives mounted, using default config.", NULL);
         return;
     }
-    for (i = 0; i < (sizeof(paths) / sizeof(paths[0])); i++)
+    filepath = RB3E_GetRawfilePath(CONFIG_FILENAME, 1);
+    if (filepath == NULL)
     {
-        RB3E_DEBUG("Checking %s", paths[i]);
-        if (!RB3E_FileExists(paths[i]))
-            continue;
-        file = RB3E_OpenFile(paths[i], 0);
-        if (file == -1)
-        {
-            RB3E_MSG("%s found, but failed to load", paths[i]);
-            continue;
-        }
-        else
-        {
-            RB3E_MSG("Loading config from %s", paths[i]);
-            break;
-        }
-    }
-    if (file == -1)
-    {
-        RB3E_MSG("No config file loaded, using default config.", NULL);
+        RB3E_MSG("No config file found, using default config.", NULL);
         return;
     }
+    file = RB3E_OpenFile(filepath, 0);
     read = RB3E_ReadFile(file, 0, buf, sizeof(buf));
     RB3E_DEBUG("Read %i bytes from config file, parsing", read);
     if (ini_parse_string(buf, INIHandler, NULL) < 0)

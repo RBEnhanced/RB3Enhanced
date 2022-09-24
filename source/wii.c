@@ -71,6 +71,7 @@ static void CTHook(void *ThisApp, int argc, char **argv)
     {
         RB3E_DEBUG("Unmounting SD card...", NULL);
         FAT_partition_destructor(&sd_partition);
+        RB3E_Mounted = 0;
     }
 }
 

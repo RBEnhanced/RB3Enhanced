@@ -8,7 +8,9 @@
 #include <xtl.h>
 #include <stdio.h>
 #include "ports.h"
+#include "config.h"
 #include "xbox360.h"
+#include "rb3enhanced.h"
 
 int RB3E_Mounted = 0;
 char *mountToPoint[][2] = {
@@ -33,6 +35,54 @@ BOOL RB3E_MountXboxDrive(char *mountPoint, char *deviceName)
     return ObCreateSymbolicLink(&sLinkName, &sDeviceName) >= 0;
 }
 
+static char path_to_check[300] = {0};
+char *RB3E_GetRawfilePath(char *path, int root_allowed)
+{
+    // TODO(Emma): this function likely has a lot of inefficiencies
+    // it shouldn't affect in-game performance but it'd be nice to load faster
+    char corrected_path[256] = {0};
+    int path_length = strlen(path);
+    int i = 0;
+    // if its bigger than this, we're unsafe, we might buffer overflow
+    if (path_length > sizeof(corrected_path))
+        return NULL;
+    // run through our original path
+    for (i = 0; i < path_length; i++)
+    {
+        // if this is already a drive path, we shouldn't patch that
+        if (path[i] == ':')
+            return NULL;
+        // if we're a .. path, change to x.
+        if (path[i] == '.' && (path[i + 1] == '.' || path[i + 1] == '/'))
+            corrected_path[i] = 'x';
+        // the 360 OS expects \paths\like\this because its stupid and dumb
+        else if (path[i] == '/')
+            corrected_path[i] = '\\';
+        else
+            corrected_path[i] = path[i];
+    }
+    // scan GAME: to see if we have it there
+    sprintf(path_to_check, "GAME:\\%s", corrected_path);
+    if (RB3E_FileExists(path_to_check))
+        return path_to_check;
+    // scan through every drive's "rb3" folder
+    for (i = 0; i < numMountToPoint; i++)
+    {
+        // check the root of the drive, basically only for config
+        if (root_allowed)
+        {
+            sprintf(path_to_check, "%s\\%s", mountToPoint[i][0], corrected_path);
+            if (RB3E_FileExists(path_to_check))
+                return path_to_check;
+        }
+        sprintf(path_to_check, "%s\\%s\\%s", mountToPoint[i][0], config.RawfilesDir, corrected_path);
+        if (RB3E_FileExists(path_to_check))
+            return path_to_check;
+    }
+    // we don't have it, just give up
+    return NULL;
+}
+
 void RB3E_MountFileSystems()
 {
     int i = 0;
@@ -46,7 +96,7 @@ int RB3E_FileExists(char *filename)
 {
     DWORD attr = GetFileAttributesA(filename);
     DWORD lastError = GetLastError();
-    return !(attr == -1 && (lastError == 2 || lastError == 3));
+    return !(attr == -1 && (lastError == 2 || lastError == 3 || lastError == 1617));
 }
 int RB3E_OpenFile(char *filename, char readWrite)
 {

@@ -60,6 +60,6 @@ extern int *HmxFactoryFuncAt(int *gDataFuncs, Symbol *sym);
 
 extern DataNode *DataNodeEvaluate(DataNode *ret);
 
-extern DataArray *DataReadFile(char *file, int unk);
+extern DataArray *DataReadFile(char *file, int dtb);
 
 #endif // _DATA_H

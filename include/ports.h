@@ -80,6 +80,7 @@
 #define PORT_QUEUEMESSAGE 0x82628e50                 // PassiveMessagesPanel::QueueMessage
 #define PORT_SETSYSTEMLANGUAGE 0x82510590            // SetSystemLanguage
 #define PORT_ISSUPPORTEDLANGUAGE 0x82510510          // IsSupportedLanguage
+#define PORT_DATAREADFILE 0x8276c700                 // DataReadFile
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -152,6 +153,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_QUEUEMESSAGE 0x80253c50            // PassiveMessagesPanel::QueueMessage
 #define PORT_SETSYSTEMLANGUAGE 0x8030f308       // SetSystemLanguage
 #define PORT_ISSUPPORTEDLANGUAGE 0x8030f280     // IsSupportedLanguage
+#define PORT_DATAREADFILE 0x80319bdc            // DataReadFile
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

@@ -11,7 +11,9 @@
 #include "rb3enhanced.h"
 #include "xbox360.h"
 
-int RB3E_IsEmulator()
+static int HasRunDetection = 0;
+static int DetectionResult = 0;
+static int DetectXenia()
 {
     // Detect if running in Xenia by checking two things:
     // - The memory address of XAM's first export, real hardware has this after ~0x81C50000 (17559)
@@ -42,6 +44,14 @@ int RB3E_IsEmulator()
     if (kernimportaddress[0] == 0x44000042 || xamimportaddress[0] == 0x44000042)
         return 1;
     return 0;
+}
+
+int RB3E_IsEmulator()
+{
+    if (HasRunDetection)
+        return DetectionResult;
+    DetectionResult = DetectXenia();
+    return DetectionResult;
 }
 
 static void CTHook(void *ThisApp, int argc, char **argv)
