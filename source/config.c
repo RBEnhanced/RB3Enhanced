@@ -40,7 +40,7 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.SongSpeedMultiplier = (float)atof(value);
         if (strcmp(name, "TrackSpeedMultiplier") == 0)
             config.TrackSpeedMultiplier = (float)atof(value);
-        if (strcmp(name, "ForcedVenue") == 0 && strcmp(value, "false") != 0)
+        if (strcmp(name, "ForcedVenue") == 0 && !RB3E_CONFIG_FALSE(value))
             strncpy(config.ForcedVenue, value, RB3E_MAX_CONFIG_LEN);
         if (strcmp(name, "GameOriginIcons") == 0)
             config.GameOriginIcons = RB3E_CONFIG_BOOL(value);
@@ -48,6 +48,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.LogFileAccess = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "UnlockClothing") == 0)
             config.UnlockClothing = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "LanguageOverride") == 0 && strlen(value) == RB3E_LANG_LEN)
+            strncpy(config.LanguageOverride, value, RB3E_LANG_LEN);
     }
     if (strcmp(section, "GoCentral") == 0)
     {

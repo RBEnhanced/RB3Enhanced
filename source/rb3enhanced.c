@@ -192,6 +192,7 @@ void InitialiseFunctions()
 void ApplyHooks()
 {
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
+    POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
     HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
@@ -205,6 +206,7 @@ void ApplyHooks()
     HookFunction(PORT_SETADDRESS, &SetAddress, &SetAddressHook);
     HookFunction(PORT_GETWIDGETBYNAME, &GetWidgetByName, &GetWidgetByNameHook);
     HookFunction(PORT_GETSLOTCOLOR, &GetSlotColor, &GetSlotColorHook);
+    HookFunction(PORT_SETSYSTEMLANGUAGE, &SetSystemLanguage, &SetSystemLanguageHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
 #else // 360 exclusive hooks
@@ -216,7 +218,6 @@ void StartupHook(void *ThisApp, int argc, char **argv)
 {
 
     RB3E_MSG("Loaded! Version " RB3E_BUILDTAG " (" RB3E_BUILDCOMMIT ")", NULL);
-
     InitialiseFunctions();
     ApplyPatches();
     ApplyHooks();
