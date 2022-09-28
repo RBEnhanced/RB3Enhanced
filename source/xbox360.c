@@ -22,6 +22,7 @@ static int DetectXenia()
     PDWORD xamimportaddress = NULL;
     HANDLE kernhandle = NULL;
     PDWORD kernimportaddress = NULL;
+    HasRunDetection = 1;
     // Get the address of a XAM export.
     XexGetModuleHandle("xam.xex", &xamhandle);
     XexGetProcedureAddress(xamhandle, 1, &xamimportaddress);

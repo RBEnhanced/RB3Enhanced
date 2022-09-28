@@ -81,6 +81,7 @@
 #define PORT_SETSYSTEMLANGUAGE 0x82510590            // SetSystemLanguage
 #define PORT_ISSUPPORTEDLANGUAGE 0x82510510          // IsSupportedLanguage
 #define PORT_DATAREADFILE 0x8276c700                 // DataReadFile
+#define PORT_STAGEKIT_SET_STATE 0x82524DE0           // StageKit::SetState(?) - actual name not known
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway

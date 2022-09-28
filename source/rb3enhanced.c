@@ -20,6 +20,8 @@
 #include "SpeedHooks.h"
 #include "gocentral.h"
 #include "wii_usbhid.h"
+#include "net.h"
+#include "net_events.h"
 #include "rb3/App.h"
 #include "rb3/BandLabel.h"
 #include "rb3/Data.h"
@@ -131,6 +133,19 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
     return ModifierManagerConstructor(thisModifierManager, unk);
 }
 
+#ifdef RB3E_XBOX
+// broadcasts stagekit events via the local network. not worth making a header file for imo
+void StagekitSetState(int state1, int state2);
+void StagekitSetStateHook(int state1, int state2)
+{
+    RB3E_EventStagekit event;
+    event.LeftChannel = state1;
+    event.RightChannel = state2;
+    RB3E_SendEvent(RB3E_PACKET_STAGEKIT, &event, sizeof(RB3E_EventStagekit));
+    StagekitSetState(state1, state2);
+}
+#endif
+
 void ApplyPatches()
 {
     // Patch out PlatformMgr::SetDiskError - this effectively nullifies checksum checks on ARKs and MIDs.
@@ -219,7 +234,8 @@ void ApplyHooks()
     HookFunction(PORT_DATAREADFILE, &DataReadFile, &DataReadFileHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
-#else // 360 exclusive hooks
+#elif RB3E_XBOX // 360 exclusive hooks
+    HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }

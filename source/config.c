@@ -19,6 +19,7 @@ void InitConfig()
     memset(&config, 0, sizeof(config));
     strcpy(config.RawfilesDir, "rb3");
 #ifdef RB3E_WII
+    // uncomment when GoCentral has a default instance that uses naswii auth
     // strcpy(config.NASServer, "naswii.wiimmfi.de");
 #endif
     config.SongSpeedMultiplier = 1.0;
@@ -51,6 +52,13 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.RawfilesDir, value, RB3E_MAX_CONFIG_LEN);
         if (strcmp(name, "DisableRawfiles") == 0)
             config.DisableRawfiles = RB3E_CONFIG_BOOL(value);
+    }
+    if (strcmp(section, "Events") == 0)
+    {
+        if (strcmp(name, "EnableEvents") == 0)
+            config.EnableEvents = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "BroadcastTarget") == 0)
+            strncpy(config.BroadcastTarget, value, RB3E_MAX_DOMAIN);
     }
     if (strcmp(section, "GoCentral") == 0)
     {

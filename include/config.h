@@ -16,26 +16,35 @@
 
 typedef struct _RB3E_Config
 {
+    // [General]
     float TrackSpeedMultiplier;
     float SongSpeedMultiplier;
     char ForcedVenue[RB3E_MAX_CONFIG_LEN];
     char GameOriginIcons;
-    char EnableGoCentral;
     char LogFileAccess;
-    char GoCentralAddress[RB3E_MAX_DOMAIN];
     char UnlockClothing;
-    int RenderResX;
-    int RenderResY;
     char LanguageOverride[RB3E_LANG_LEN + 1];
     char RawfilesDir[RB3E_MAX_CONFIG_LEN];
     char DisableRawfiles;
+    // [Graphics]
+    int RenderResX;
+    int RenderResY;
+    // [Events]
+    char BroadcastTarget[RB3E_MAX_DOMAIN];
+    char EnableEvents;
+    char SendStagekit;
+    // [GoCentral]
+    char EnableGoCentral;
+    char GoCentralAddress[RB3E_MAX_DOMAIN];
 #ifdef RB3E_XBOX
+    // [Xbox360]
     char EnableLiveless;
     char DirectConnectIP[RB3E_MAX_IP_LEN];
     char ExternalIP[RB3E_MAX_IP_LEN];
     char STUNServer[RB3E_MAX_DOMAIN];
     int STUNServerPort;
 #elif RB3E_WII
+    // [Wii]
     char NASServer[RB3E_MAX_DOMAIN];
     char LegacySDMode;
 #endif

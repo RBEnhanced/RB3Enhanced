@@ -5,12 +5,18 @@
 typedef struct _SongMetadata
 {
 #ifdef RBE3_WII
-    // char unknown[0x20]; song id
     char unknown[0x2c];
 #else
     char unknown[0x38];
 #endif
     char *gameOrigin;
+    char unknown2[0x18];
+    char *title;
+    char unknown3[0x28];
+    char *genre;
+    int animTempo;
+    char *vocalGender;
+    int lengthMs;
 } SongMetadata;
 
 typedef struct _Unknown2
