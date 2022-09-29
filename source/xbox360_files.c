@@ -18,9 +18,10 @@ char *mountToPoint[][2] = {
     {"RB3USB0:", "\\Device\\Mass0"},
     {"RB3USB1:", "\\Device\\Mass1"},
     {"RB3USB2:", "\\Device\\Mass2"},
-    {"RB3INTUSB:", "\\Device\\BuiltInMuUsb\\Storage"},
-    {"RB3INTMMC:", "\\Device\\BuiltInMuMmc\\Storage"},
-    {"RB3MUINT:", "\\Device\\BuiltInMuSfc"},
+    // TODO(Emma): some consoles will report a different error from these devices
+    // {"RB3INTUSB:", "\\Device\\BuiltInMuUsb\\Storage"},
+    // {"RB3INTMMC:", "\\Device\\BuiltInMuMmc\\Storage"},
+    // {"RB3MUINT:", "\\Device\\BuiltInMuSfc"},
 };
 int numMountToPoint = sizeof(mountToPoint) / sizeof(mountToPoint[0]);
 
