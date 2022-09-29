@@ -153,7 +153,7 @@ void StagekitSetStateHook(int state1, int state2)
     RB3E_EventStagekit event;
     event.LeftChannel = state1;
     event.RightChannel = state2;
-    RB3E_SendEvent(RB3E_PACKET_STAGEKIT, &event, sizeof(RB3E_EventStagekit));
+    RB3E_SendEvent(RB3E_EVENT_STAGEKIT, &event, sizeof(RB3E_EventStagekit));
     StagekitSetState(state1, state2);
 }
 #endif
