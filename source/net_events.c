@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "rb3/InetAddress.h"
+#include "rb3enhanced.h"
 #include "version.h"
 #include "ports.h"
 #include "config.h"
@@ -58,7 +59,7 @@ void RB3E_InitEvents()
     RB3E_BindPort(RB3E_EventsSocket, BROADCAST_PORT);
     // send an init message
     // TODO(Emma): put this in a loop and send it out every 10 seconds or so
-    RB3E_SendEvent(RB3E_PACKET_ALIVE, RB3E_BUILDTAG, sizeof(RB3E_BUILDTAG));
+    RB3E_SendEvent(RB3E_EVENT_ALIVE, RB3E_BUILDTAG, sizeof(RB3E_BUILDTAG));
 }
 
 void RB3E_SendEvent(int type, void *data, int size)
@@ -82,6 +83,13 @@ void RB3E_SendEvent(int type, void *data, int size)
     packet.Header.ProtocolVersion = RB3E_EVENTS_PROTOCOL;
     packet.Header.PacketType = type;
     packet.Header.PacketSize = size;
+#ifdef RB3E_XBOX
+    packet.Header.Platform = RB3E_IsEmulator() ? RB3E_PLATFORM_XENIA : RB3E_PLATFORM_XBOX;
+#elif RB3E_WII
+    packet.Header.Platform = RB3E_IsEmulator() ? RB3E_PLATFORM_DOLPHIN : RB3E_PLATFORM_WII;
+#else
+    packet.Header.Platform = RB3E_PLATFORM_UNKNOWN;
+#endif
     memcpy(packet.Data, data, size);
     // Deploy!
     RB3E_UDP_SendTo(RB3E_EventsSocket, EventsIP, EventsPort, &packet, sizeof(RB3E_EventHeader) + size);

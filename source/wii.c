@@ -29,7 +29,9 @@ BSLUG_MODULE_LICENSE("GPLv2");
 char ACURL[RB3E_MAX_DOMAIN + 16];
 char PRURL[RB3E_MAX_DOMAIN + 16];
 
-int RB3E_IsEmulator()
+static int HasRunDetection = 0;
+static int DetectionResult = 0;
+static int DetectDolphin()
 {
     int dolphin_fd = IOS_Open("/dev/dolphin", IPC_OPEN_NONE);
     if (dolphin_fd)
@@ -44,6 +46,14 @@ int RB3E_IsEmulator()
         // TODO: Ye Olde Dolphin will report not emulator. Those versions probably wouldn't run RB3E at all tbh.
         return 0;
     }
+}
+
+int RB3E_IsEmulator()
+{
+    if (HasRunDetection)
+        return DetectionResult;
+    DetectionResult = DetectDolphin();
+    return DetectionResult;
 }
 
 static void CTHook(void *ThisApp, int argc, char **argv)

@@ -6,6 +6,12 @@ For more information, check out https://rb3e.rbenhanced.rocks or join the [RBEnh
 
 If you want to contribute, check BUILDING.md and CONTRIBUTING.md for more information.
 
+## Downloading
+
+* **(Recommended)** For the most tested and stable version, download from https://rb3e.rbenhanced.rocks/download.html
+* For the bleeding edge latest commit, download the latest debug build from https://nightly.link/RBEnhanced/RB3Enhanced/workflows/build/master
+    * You will need files from the stable release to use debug builds.
+
 ## Features
 
 * Raised song limit, allowing you to have up to 8000 songs in your library.
@@ -16,6 +22,8 @@ If you want to contribute, check BUILDING.md and CONTRIBUTING.md for more inform
 * Fixes the infamous infinite loading bug on modified Corona consoles and development kits.
 * Easy mod support by placing raw files in the game directory without repacking the archives.
 * Online multiplayer without using Xbox Live or Nintendo WFC.
+* Sending data from the game to another device, for stream overlays and status indicators.
+* ...and more!
 
 ## License
 

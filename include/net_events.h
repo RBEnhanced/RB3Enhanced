@@ -24,16 +24,27 @@
 #define RB3E_EVENTS_MAGIC 0x52423345
 
 // types of packets that can be sent via the local socket
-typedef enum _RB3E_PacketTypes
+typedef enum _RB3E_Events_PacketTypes
 {
-    RB3E_PACKET_ALIVE,          // content is a string of the RB3E_BUILDTAG value
-    RB3E_PACKET_STATE,          // content is a char - 00=menus, 01=ingame
-    RB3E_PACKET_SONG_NAME,      // content is a string of the current song name
-    RB3E_PACKET_SONG_ARTIST,    // content is a string of the current song artist
-    RB3E_PACKET_SONG_SHORTNAME, // content is a string of the current shortname
-    RB3E_PACKET_SCORE,          // content is a RB3E_EventScore struct with score info
-    RB3E_PACKET_STAGEKIT        // content is a RB3E_EventStagekit struct with stagekit info
-} RB3E_EventTypes;
+    RB3E_EVENT_ALIVE,          // content is a string of the RB3E_BUILDTAG value
+    RB3E_EVENT_STATE,          // content is a char - 00=menus, 01=ingame
+    RB3E_EVENT_SONG_NAME,      // content is a string of the current song name
+    RB3E_EVENT_SONG_ARTIST,    // content is a string of the current song artist
+    RB3E_EVENT_SONG_SHORTNAME, // content is a string of the current shortname
+    RB3E_EVENT_SCORE,          // content is a RB3E_EventScore struct with score info
+    RB3E_EVENT_STAGEKIT        // content is a RB3E_EventStagekit struct with stagekit info
+} RB3E_Events_EventTypes;
+// identifiers for each platform RB3E can or will run on
+typedef enum _RB3E_Events_PlatformIDs
+{
+    RB3E_PLATFORM_XBOX,          // RB3E is running on a physical Xbox 360
+    RB3E_PLATFORM_XENIA,         // RB3E is running on Xenia emulator
+    RB3E_PLATFORM_WII,           // RB3E is running on a physical Wii
+    RB3E_PLATFORM_DOLPHIN,       // RB3E is running on Dolphin emulator
+    RB3E_PLATFORM_PS3,           // RB3E is running on a physical PS3
+    RB3E_PLATFORM_RPCS3,         // RB3E is running on RPCS3 emulator
+    RB3E_PLATFORM_UNKNOWN = 0xFF // just a nice placeholder
+} RB3E_Events_PlatformIDs;
 
 PACKSTART
 // header for all local packets
@@ -43,7 +54,7 @@ typedef struct _RB3E_EventHeader
     char ProtocolVersion;
     char PacketType;
     char PacketSize;
-    char Unused;
+    char Platform;
 } PACKED RB3E_EventHeader;
 // local socket packet
 typedef struct _RB3E_EventPacket
