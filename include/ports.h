@@ -41,6 +41,7 @@
 #define PORT_RENDER_RES_X_PATCH1 0x8273bf20     // instruction patch to force render width
 #define PORT_RENDER_RES_X_PATCH2 0x8273bf24     // instruction patch to force render width
 #define PORT_RENDER_RES_Y_PATCH1 0x8273bedc     // instruction patch to force render height
+#define PORT_RUNLOOP_SPARE 0x822700e0           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
@@ -135,6 +136,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_TATTOO_CHECK 0x801fd9c4            // check to see if tattoos are unlocked
 #define PORT_VIDEO_VENUE_CHECK 0x80227e34       // check to see if video venues are unlocked
 #define PORT_OPTIONSTR_DEFINE 0x8030e418        // bl to OptionStr("define", NULL) in PreInitSystem
+#define PORT_RUNLOOP_SPARE 0x8000f740           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c            // PlatformMgr::SetDiskError
 #define PORT_NEWFILE 0x802f9ed0                 // NewFile

@@ -135,6 +135,16 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
     return ModifierManagerConstructor(thisModifierManager, unk);
 }
 
+static unsigned int framecount = 0;
+// This function runs every frame.
+// DO NOT TAKE LONGER THAN A FEW MILLISECONDS, DO **NOT** DO ANYTHING BLOCKING HERE
+// STUFF YOU DO HERE WILL **DIRECTLY** IMPACT THE GAME'S FRAMERATE!
+void RB3E_RunLoop()
+{
+    framecount++;
+    // TODO(Emma): do stuff here
+}
+
 #ifdef RB3E_XBOX
 // broadcasts stagekit events via the local network. not worth making a header file for imo
 void StagekitSetState(int state1, int state2);
@@ -223,6 +233,7 @@ void ApplyHooks()
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
     POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
+    POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
     HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
     HookFunction(PORT_ADDGAMEGEM, &AddGameGem, &AddGameGemHook);
