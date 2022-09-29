@@ -82,6 +82,9 @@
 #define PORT_ISSUPPORTEDLANGUAGE 0x82510510          // IsSupportedLanguage
 #define PORT_DATAREADFILE 0x8276c700                 // DataReadFile
 #define PORT_STAGEKIT_SET_STATE 0x82524DE0           // StageKit::SetState(?) - actual name not known
+#define PORT_GETSONGIDFROMSHORTNAME 0x82577140       // BandSongMgr::GetSongIDFromShortname
+#define PORT_GETMETADATA 0x827a8e30                  // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
+#define PORT_GETSONGSHORTNAME 0x8257c498             // MetaPerformer::GetSongShortname(?) - actual name not known
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -89,6 +92,9 @@
 #define PORT_THEARCHIVE 0x82cc9c60          // address of TheArchive (main ARK)
 #define PORT_THEUI 0x82dfd2b0               // address of TheUI
 #define PORT_NULLSYMBOL 0x82c71838          // address of gNullSymbol
+#define PORT_THESONGDB 0x82e023f8           // address of TheSongDB
+#define PORT_THESONGMGR 0x82dfe7b4          // address of TheSongMgr
+#define PORT_THEMETAPERFORMER 0x82dfe954    // address of TheMetaPerformer
 // import function stubs
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c

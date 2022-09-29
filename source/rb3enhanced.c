@@ -24,6 +24,7 @@
 #include "net_events.h"
 #include "rb3/App.h"
 #include "rb3/BandLabel.h"
+#include "rb3/BandSongMgr.h"
 #include "rb3/Data.h"
 #include "rb3/File.h"
 #include "rb3/Game.h"
@@ -199,6 +200,9 @@ void InitialiseFunctions()
 {
 #ifndef RB3E_WII // AppConstructor is handled by the BrainSlug engine
     POKE_B(&AppConstructor, PORT_APP_CT);
+    POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
+    POKE_B(&GetMetadata, PORT_GETMETADATA);
+    POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
 #endif
     POKE_B(&ExecuteDTA, PORT_EXECUTEDTA);
     POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
