@@ -7,12 +7,21 @@ typedef struct _SongMetadata
 #ifdef RBE3_WII
     char unknown[0x2c];
 #else
-    char unknown[0x38];
+    int *vtable;
+    char unknown[0x28];
+    char *shortname;
+    int song_id;
+    char unknown2[0x4];
 #endif
+    // TODO(Emma): is this all right on Wii too????
     char *gameOrigin;
-    char unknown2[0x18];
+    char unknown3[0x18];
     char *title;
-    char unknown3[0x28];
+    char unknown4[0x8]; // these may be String:: objects
+    char *artist;
+    char unknown5[0x8];
+    char *album;
+    char unknown6[0x18];
     char *genre;
     int animTempo;
     char *vocalGender;

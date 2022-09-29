@@ -11,7 +11,7 @@
 #include "rb3/BandLabel.h"
 #include "rb3/SortNode.h"
 
-char *originToIcon[][2] = {
+static char *originToIcon[][2] = {
     {"rb1", "<alt>Y</alt> "},
     {"rb2", "<alt>2</alt> "},
     {"rb3", "<alt>B</alt> "},
@@ -28,28 +28,26 @@ char *originToIcon[][2] = {
     {"gh3", "<alt>s</alt> "},
     {"onyxite", "<alt>G</alt> "},
 };
-int numOriginToIcon = sizeof(originToIcon) / sizeof(originToIcon[0]);
+static int numOriginToIcon = sizeof(originToIcon) / sizeof(originToIcon[0]);
 
 void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
 {
-    // TODO: fix the buffer overflow that is present here
     char newLabel[1024] = {0};
+    char *originLabel = "<alt>0</alt> "; // default
     int i = 0;
-    // TODO: make this func smaller by using a game origin --> icon character table or something
-    if (config.GameOriginIcons == 1)
+
+    if (config.GameOriginIcons == 1 && strlen(label->string) < 1000)
     {
         SetSongAndArtistName(label, sortNode);
         for (i = 0; i < numOriginToIcon; i++)
         {
             if (strcmp(sortNode->somethingElse->metaData->gameOrigin, originToIcon[i][0]) == 0)
             {
-                strcat(newLabel, originToIcon[i][1]);
-                strcat(newLabel, label->string);
-                BandLabelSetDisplayText(label, newLabel, 1);
-                return;
+                originLabel = originToIcon[i][1];
+                break;
             }
         }
-        strcat(newLabel, "<alt>0</alt> ");
+        strcat(newLabel, originLabel);
         strcat(newLabel, label->string);
         BandLabelSetDisplayText(label, newLabel, 1);
         return;

@@ -13,6 +13,7 @@
 #include "version.h"
 #include "LocaleHooks.h"
 #include "GemHooks.h"
+#include "GameHooks.h"
 #include "GlobalSymbols.h"
 #include "rb3enhanced.h"
 #include "DTAFunctions.h"
@@ -240,6 +241,9 @@ void ApplyHooks()
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
+    // TODO(Emma): port these two Game hooks to Wii
+    HookFunction(PORT_GAME_CT, &GameConstruct, &GameConstructHook);
+    HookFunction(PORT_GAME_DT, &GameDestruct, &GameDestructHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }

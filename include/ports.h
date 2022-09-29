@@ -85,6 +85,8 @@
 #define PORT_GETSONGIDFROMSHORTNAME 0x82577140       // BandSongMgr::GetSongIDFromShortname
 #define PORT_GETMETADATA 0x827a8e30                  // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
 #define PORT_GETSONGSHORTNAME 0x8257c498             // MetaPerformer::GetSongShortname(?) - actual name not known
+#define PORT_GAME_CT 0x8267bf30                      // Game::__ct
+#define PORT_GAME_DT 0x8267b1f0                      // Game::__dt
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
