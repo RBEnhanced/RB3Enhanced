@@ -30,6 +30,8 @@ int RB3E_CreateSocket(int protocol)
     }
     // create the socket
     sock = socket(AF_INET, type, sock_protocol);
+    if (sock == INVALID_SOCKET)
+        return -1;
     // mark the socket as insecure
     setsockopt(sock, SOL_SOCKET, 0x5801, (PCSTR)&opt_true, sizeof(BOOL));
     if (protocol == RB3E_TYPE_TCP) // tcp sockets need this as well

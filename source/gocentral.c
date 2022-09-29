@@ -11,6 +11,15 @@
 #include "gocentral.h"
 #include "rb3/InetAddress.h"
 
+#ifdef RB3E_WII
+int StartDNSLookupHook(void *wiiNetInit, char *domain)
+{
+    if ((strcmp(domain + 10, ".hmxservices.com") == 0) && config.EnableGoCentral)
+        domain = config.GoCentralAddress;
+    return StartDNSLookup(wiiNetInit, domain);
+}
+#endif
+
 void *SetAddressHook(void *thisInetAddress, char *addr)
 {
     RB3E_DEBUG("InetAddress::SetAddress %s", addr);

@@ -3,9 +3,8 @@
     Local network events API for sending out game state.
 */
 
-// socket stuff only exists on 360 for now, unguard when wii_net.c is completed
-#ifdef RB3E_XBOX
-
+#include <stddef.h>
+#include <stdio.h>
 #include "rb3/InetAddress.h"
 #include "version.h"
 #include "ports.h"
@@ -16,7 +15,7 @@
 #define BROADCAST_IP 0xFFFFFFFF // 255.255.255.255, UDP multicast address
 #define BROADCAST_PORT 0x524E   // 'RN' for uhhh rocknet or something
 
-int RB3E_EventsSocket = 0;
+int RB3E_EventsSocket = -1;
 static int InitFailed = 0;
 static int EventsIP = BROADCAST_IP;
 static short EventsPort = BROADCAST_PORT;
@@ -41,9 +40,16 @@ void RB3E_InitEvents()
     // try to create the socket, but this might fail, if it does then don't try doing anything else
     RB3E_EventsSocket = RB3E_CreateSocket(RB3E_TYPE_UDP);
     // TODO(Emma): will the socket api ever return another error?
-    if (RB3E_EventsSocket == 0 || RB3E_EventsSocket == -1)
+    if (RB3E_EventsSocket == -1)
     {
-        RB3E_EventsSocket = -1;
+#ifdef RB3E_WII
+        int wii_lasterror = RB3E_LastError();
+        // check for SO_ENOENT/SO_ENOLINK and just fail out without setting failed
+        // the game mightn't have initialised networking yet
+        // TODO(Emma): is there any Xbox edge case similar to this?
+        if (wii_lasterror == -48 || wii_lasterror == -45)
+            return;
+#endif
         InitFailed = 1;
         return;
     }
@@ -62,10 +68,11 @@ void RB3E_SendEvent(int type, void *data, int size)
     if (config.EnableEvents == 0 || InitFailed)
         return;
     // if we don't have a socket, initialise one
-    if (RB3E_EventsSocket == 0)
+    if (RB3E_EventsSocket == -1)
     {
         RB3E_InitEvents();
-        return;
+        if (RB3E_EventsSocket == -1)
+            return;
     }
     // truncate packets bigger than this, to avoid buffer overflows and network congestion
     if (size > RB3E_EVENTS_MAXPACKET)
@@ -79,5 +86,3 @@ void RB3E_SendEvent(int type, void *data, int size)
     // Deploy!
     RB3E_UDP_SendTo(RB3E_EventsSocket, EventsIP, EventsPort, &packet, sizeof(RB3E_EventHeader) + size);
 }
-
-#endif

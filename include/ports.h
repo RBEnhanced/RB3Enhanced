@@ -165,6 +165,9 @@ void DbgPrint(const char *s, ...);
 #define PORT_SETSYSTEMLANGUAGE 0x8030f308       // SetSystemLanguage
 #define PORT_ISSUPPORTEDLANGUAGE 0x8030f280     // IsSupportedLanguage
 #define PORT_DATAREADFILE 0x80319bdc            // DataReadFile
+#define PORT_GAME_CT 0x80110f20                 // Game::__ct
+#define PORT_GAME_DT 0x80111614                 // Game::__dt
+#define PORT_WIINETINIT_DNSLOOKUP 0x8030c3a0    // WiiNetInit::StartDNSLookup
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

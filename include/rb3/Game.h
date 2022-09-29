@@ -3,6 +3,6 @@
 
 extern void SetMusicSpeed(void *thisGame, float speed);
 extern void *GameConstruct(void *thisGame);
-extern void *GameDestruct(void *thisGame);
+extern void *GameDestruct(void *thisGame, int r4);
 
 #endif // _GAME_H

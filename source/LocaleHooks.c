@@ -62,7 +62,7 @@ int IsSupportedLanguageHook(Symbol lang, int r4)
 static char mod_locale_string[0x80];
 char *LocalizeHook(int thisLocale, Symbol sym, int fail)
 {
-    int i, x = 0;
+    int i = 0;
     char newLocaleName[0x50];
     Symbol newLocale;
     char *original;

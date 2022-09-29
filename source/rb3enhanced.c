@@ -248,13 +248,13 @@ void ApplyHooks()
     HookFunction(PORT_GETSLOTCOLOR, &GetSlotColor, &GetSlotColorHook);
     HookFunction(PORT_SETSYSTEMLANGUAGE, &SetSystemLanguage, &SetSystemLanguageHook);
     HookFunction(PORT_DATAREADFILE, &DataReadFile, &DataReadFileHook);
-#ifdef RB3E_WII // wii exclusive hooks
-    HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
-#elif RB3E_XBOX // 360 exclusive hooks
-    HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
-    // TODO(Emma): port these two Game hooks to Wii
     HookFunction(PORT_GAME_CT, &GameConstruct, &GameConstructHook);
     HookFunction(PORT_GAME_DT, &GameDestruct, &GameDestructHook);
+#ifdef RB3E_WII // wii exclusive hooks
+    HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
+    HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
+#elif RB3E_XBOX // 360 exclusive hooks
+    HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }
