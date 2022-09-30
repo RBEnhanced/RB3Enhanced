@@ -1,6 +1,14 @@
 #ifndef _BANDUSER_H
 #define _BANDUSER_H
 
+typedef enum _Difficulty
+{
+    EASY = 0,
+    MEDIUM = 1,
+    HARD = 2,
+    EXPERT = 3
+} Difficulty;
+
 typedef enum _TrackType
 {
     BASS = 2,
@@ -16,16 +24,16 @@ typedef enum _TrackType
 
 typedef struct _BandUser
 {
-    float saveLevel;
-    float timeToReturnFromBrink;
-    float crowdLoss;
-    float deployBeats;
+    int unknown_0x0;
+    int unknown_0x4;
+    Difficulty difficulty;
+    int unknown_0xc;
     TrackType trackType;
-    int controllerType; // TODO: - Figure out all the controller types
-    float deployThreshold;
-    float saveEnergy;
-    int unknown; // perhaps this is individual score?
-    float pointBonus;
+    int controllerType; // TODO: - figure these out
+    int unknown_0x14;
+    int unknown_0x18;
+    int unknown_0x1c;
+    int unknown_0x20;
 } BandUser;
 
 #endif // _BANDUSER_H
