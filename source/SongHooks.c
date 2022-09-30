@@ -4,6 +4,7 @@
 */
 
 #include <string.h>
+#include <stdio.h>
 #include "ports.h"
 #include "rb3/PassiveMessagesPanel.h"
 #include "rb3/Data.h"
@@ -52,7 +53,7 @@ int GetSongIDHook(DataArray *song, DataArray *missing_data_maybe)
         array = DataFindArray(missing_data_maybe, song_id);
     if (array == NULL)
         return 0;
-    found = DataNodeEvaluate(array->mNodes[0] + 1);
+    found = DataNodeEvaluate(&array->mNodes->n[1]);
     if (found == NULL)
         return 0;
     if (found->type != INT_VALUE)

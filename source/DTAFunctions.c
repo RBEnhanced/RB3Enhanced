@@ -12,10 +12,9 @@
 #include "rb3/Data.h"
 #include "rb3enhanced.h"
 
-// TODO: figure out what the type of args truly is
-DataNode *PrintToDebugger(DataNode *node, int *args)
+DataNode *PrintToDebugger(DataNode *node, DataArray *args)
 {
-    DataNode *firstArg = DataNodeEvaluate((DataNode *)(*args + 0x8));
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
     switch (firstArg->type)
     {
     case FLOAT_VALUE:
@@ -50,9 +49,9 @@ DataNode *GetTrackSpeed(DataNode *node, int *args)
     return node;
 }
 // Set configuration values
-DataNode *ChangeMusicSpeed(DataNode *node, int *args)
+DataNode *ChangeMusicSpeed(DataNode *node, DataArray *args)
 {
-    DataNode *firstArg = DataNodeEvaluate((DataNode *)(*args + 0x8));
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
     switch (firstArg->type)
     {
     case FLOAT_VALUE:
@@ -71,9 +70,9 @@ DataNode *ChangeMusicSpeed(DataNode *node, int *args)
     node->value.intVal = 1;
     return node;
 }
-DataNode *ChangeTrackSpeed(DataNode *node, int *args)
+DataNode *ChangeTrackSpeed(DataNode *node, DataArray *args)
 {
-    DataNode *firstArg = DataNodeEvaluate((DataNode *)(*args + 0x8));
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
     switch (firstArg->type)
     {
     case FLOAT_VALUE:
@@ -92,9 +91,9 @@ DataNode *ChangeTrackSpeed(DataNode *node, int *args)
     node->value.intVal = 1;
     return node;
 }
-DataNode *DTASetVenue(DataNode *node, int *args)
+DataNode *DTASetVenue(DataNode *node, DataArray *args)
 {
-    DataNode *firstArg = DataNodeEvaluate((DataNode *)(*args + 0x8));
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
     char *venue;
     switch (firstArg->type)
     {
