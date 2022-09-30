@@ -17,6 +17,7 @@
 #include "GlobalSymbols.h"
 #include "rb3enhanced.h"
 #include "DTAFunctions.h"
+#include "SongHooks.h"
 #include "SetlistHooks.h"
 #include "SpeedHooks.h"
 #include "gocentral.h"
@@ -210,13 +211,17 @@ void ApplyConfigurablePatches()
 
 void InitialiseFunctions()
 {
-#ifndef RB3E_WII // AppConstructor is handled by the BrainSlug engine
+#ifndef RB3E_WII
+    // AppConstructor is handled by the BrainSlug engine
     POKE_B(&AppConstructor, PORT_APP_CT);
+    // TODO: port these to Wii
     POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
     POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
     POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
+    POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
+    POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
 #endif
     POKE_B(&ExecuteDTA, PORT_EXECUTEDTA);
     POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
@@ -258,6 +263,9 @@ void ApplyHooks()
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
+    // TODO: port these to Wii
+    POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
+    POKE_B(PORT_GETSONGID, &GetSongIDHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }

@@ -42,6 +42,7 @@
 #define PORT_RENDER_RES_X_PATCH2 0x8273bf24     // instruction patch to force render width
 #define PORT_RENDER_RES_Y_PATCH1 0x8273bedc     // instruction patch to force render height
 #define PORT_RUNLOOP_SPARE 0x822700e0           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
+#define PORT_SONG_ID_EVALUATE 0x827aa7d4        // branch to DataNode::Evaluate in SongMetadata::__ct
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
@@ -63,6 +64,8 @@
 #define PORT_BANDLABELSETDISPLAYTEXT 0x823406f8      // BandLabel::SetDisplayText
 #define PORT_SETSONGANDARTISTNAME 0x825c66f8         // BandLabel::SetSongAndArtistName
 #define PORT_DATANODEEVALUATE 0x8274ae98             // DataNode::Evaluate
+#define PORT_DATAARRAYFINDARRAY 0x8274c5a0           // DataArray::FindArray
+#define PORT_DATAARRAYFINDDATA 0x8274c7f0            // DataArray::FindData
 #define PORT_HMXFACTORYFUNCAT 0x82359f28             // HmxObjectFactoryFunc::_at
 #define PORT_SETADDRESS 0x82aeb888                   // Quazal::InetAddress::SetAddress
 #define PORT_XL_USESECURESOCKETS 0x82a8eca8          // Inet::UseSecureSockets
@@ -90,6 +93,7 @@
 #define PORT_GAME_DT 0x8267b1f0                      // Game::__dt
 #define PORT_GETBANDUSERS 0x82683b78                 // BandUserMgr::GetBandUsers
 #define PORT_GETBANDUSERFROMSLOT 0x82682b60          // BandUserMgr::GetBandUserFromSlot
+#define PORT_GETSONGID 0x827a87f0                    // GetSongID, function used when adding songs to BandSongMgr
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway

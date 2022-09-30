@@ -62,4 +62,7 @@ extern DataNode *DataNodeEvaluate(DataNode *ret);
 
 extern DataArray *DataReadFile(char *file, int dtb);
 
+extern DataArray *DataFindArray(DataArray *data, Symbol name);
+extern int DataFindData(DataArray *data, Symbol name, DataNode *out);
+
 #endif // _DATA_H
