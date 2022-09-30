@@ -6,37 +6,41 @@
 #include <string.h>
 #include <stdio.h>
 #include "ports.h"
+#include "crc32.h"
 #include "rb3/PassiveMessagesPanel.h"
 #include "rb3/Data.h"
 #include "rb3/Random.h"
 
 static int HasShownCorrectionError = 0;
-static int CorrectSongID(DataNode *id_node)
+static int CorrectSongID(DataNode *id_node, int ct_metadata)
 {
-    unsigned int i, sum = 0;
-    // do a very basic shitty checksum.. maybe move into xxhash?
-    // WARNING: this may collide. BAD CUSTOMS ARE STILL BAD!!!
-    if (id_node->value.string == NULL) // never meant to get here
-        return 0x41414141;
-    for (i = 0; i < strlen(id_node->value.string); i++)
-        sum += id_node->value.string[i];
+    unsigned int checksum = 0;
+    // shouldn't be possible to get here
+    if (id_node->type == INT_VALUE || id_node->value.string == NULL)
+        return id_node->value.intVal;
+    // run a CRC32 sum over the whole length of the string
+    crc32(id_node->value.string, strlen(id_node->value.string), &checksum);
     // move it around a bit just to make things more consistent
-    sum &= 0x8FFFFF;
-    sum += 2130000000;
-    RB3E_MSG("Corrected song_id '%s' into ID: %i", id_node->value.string, sum);
+    // risks introducing more collisions, BAD CUSTOMS ARE STILL BAD!!
+    checksum %= 9999999;
+    checksum += 2130000000;
+    // output to the log whenever things are corrected when crafting SongMetadata
+    if (ct_metadata)
+        RB3E_MSG("Corrected song_id '%s' into ID: %i", id_node->value.string, checksum);
+    // display a warning message on screen for the first bad song found
     if (HasShownCorrectionError == 0)
     {
         HasShownCorrectionError = 1;
         DisplayMessage("One (or more) of your songs has been corrected.");
     }
-    return sum;
+    return checksum;
 }
 
 int MetadataSongIDHook(DataNode *song_id)
 {
     DataNode *eval = DataNodeEvaluate(song_id);
     if (eval->type != INT_VALUE)
-        eval->value.intVal = CorrectSongID(eval);
+        eval->value.intVal = CorrectSongID(eval, 1);
     return eval->value.intVal;
 }
 
@@ -57,6 +61,6 @@ int GetSongIDHook(DataArray *song, DataArray *missing_data_maybe)
     if (found == NULL)
         return 0;
     if (found->type != INT_VALUE)
-        return CorrectSongID(found);
+        return CorrectSongID(found, 0);
     return found->value.intVal;
 }
