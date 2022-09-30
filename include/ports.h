@@ -88,6 +88,8 @@
 #define PORT_GETSONGSHORTNAME 0x8257c498             // MetaPerformer::GetSongShortname(?) - actual name not known
 #define PORT_GAME_CT 0x8267bf30                      // Game::__ct
 #define PORT_GAME_DT 0x8267b1f0                      // Game::__dt
+#define PORT_GETBANDUSERS 0x82683b78                 // BandUserMgr::GetBandUsers
+#define PORT_GETBANDUSERFROMSLOT 0x82682b60          // BandUserMgr::GetBandUserFromSlot
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -98,6 +100,7 @@
 #define PORT_THESONGDB 0x82e023f8           // address of TheSongDB
 #define PORT_THESONGMGR 0x82dfe7b4          // address of TheSongMgr
 #define PORT_THEMETAPERFORMER 0x82dfe954    // address of TheMetaPerformer
+#define PORT_THEBANDUSERMGR 0x82e023b8      // address of TheBandUserMgr
 // import function stubs
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c

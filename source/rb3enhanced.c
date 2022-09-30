@@ -26,6 +26,7 @@
 #include "rb3/App.h"
 #include "rb3/BandLabel.h"
 #include "rb3/BandSongMgr.h"
+#include "rb3/BandUserMgr.h"
 #include "rb3/Data.h"
 #include "rb3/File.h"
 #include "rb3/Game.h"
@@ -214,6 +215,8 @@ void InitialiseFunctions()
     POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
+    POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
+    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
 #endif
     POKE_B(&ExecuteDTA, PORT_EXECUTEDTA);
     POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);

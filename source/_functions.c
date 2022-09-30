@@ -38,6 +38,8 @@ RB3E_STUB(QueueMessage)
 RB3E_STUB(GetMetadata)
 RB3E_STUB(GetSongIDFromShortname)
 RB3E_STUB(GetSongShortname)
+RB3E_STUB(GetBandUsers)
+RB3E_STUB(GetBandUserFromSlot)
 // hooked function stubs
 RB3E_STUB(Localize)
 RB3E_STUB(SetVenue)
