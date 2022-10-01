@@ -54,7 +54,12 @@ int GetSongIDHook(DataArray *song, DataArray *missing_data_maybe)
         return 0;
     array = DataFindArray(song, song_id);
     if (array == NULL)
-        array = DataFindArray(missing_data_maybe, song_id);
+    {
+        if (missing_data_maybe == NULL)
+            return 0;
+        else
+            array = DataFindArray(missing_data_maybe, song_id);
+    }
     if (array == NULL)
         return 0;
     found = DataNodeEvaluate(&array->mNodes->n[1]);
