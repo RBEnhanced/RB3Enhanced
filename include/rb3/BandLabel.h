@@ -14,7 +14,8 @@ typedef struct _BandLabel
     char *string;
 } BandLabel;
 
-extern int SetSongAndArtistName(BandLabel *label, SortNode *unk);
+extern void SetSongAndArtistName(BandLabel *label, SortNode *unk);
+extern void SetSongNameFromNode(BandLabel *label, SortNode *unk);
 extern void BandLabelSetDisplayText(BandLabel *label, char *text, int unk);
 
 #endif // _BANDLABEL_H

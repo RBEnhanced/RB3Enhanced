@@ -63,6 +63,7 @@
 #define PORT_EXECUTEDTA 0x824f7e50                   // RockCentralGateway::ExecuteConfig
 #define PORT_BANDLABELSETDISPLAYTEXT 0x823406f8      // BandLabel::SetDisplayText
 #define PORT_SETSONGANDARTISTNAME 0x825c66f8         // BandLabel::SetSongAndArtistName
+#define PORT_SETSONGNAMEFROMNODE 0x825c56a0          // BandLabel::SetSongNameFromNode
 #define PORT_DATANODEEVALUATE 0x8274ae98             // DataNode::Evaluate
 #define PORT_DATAARRAYFINDARRAY 0x8274c5a0           // DataArray::FindArray
 #define PORT_DATAARRAYFINDDATA 0x8274c7f0            // DataArray::FindData

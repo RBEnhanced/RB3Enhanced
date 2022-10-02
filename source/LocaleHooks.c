@@ -43,13 +43,14 @@ static char ActiveLocale[RB3E_LANG_LEN + 1] = {0};
 
 void SetSystemLanguageHook(Symbol lang, int r4)
 {
+    Symbol language = lang;
     // if the config file has overridden the language, set that
     if (config.LanguageOverride[0] != '\0')
-        lang.sym = config.LanguageOverride;
+        SymbolConstruct(&language, config.LanguageOverride);
     // also keep track of our language, as we may need to add our own localisations
-    strncpy(ActiveLocale, lang.sym, RB3E_LANG_LEN);
+    strncpy(ActiveLocale, language.sym, RB3E_LANG_LEN);
     RB3E_DEBUG("Setting language '%s'", ActiveLocale);
-    SetSystemLanguage(lang, r4);
+    SetSystemLanguage(language, r4);
 }
 
 int IsSupportedLanguageHook(Symbol lang, int r4)

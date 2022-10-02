@@ -55,3 +55,31 @@ void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
     SetSongAndArtistName(label, sortNode);
     return;
 }
+
+void SetSongNameFromNodeHook(BandLabel *label, SortNode *sortNode)
+{
+    char newLabel[1024] = {0};
+    char *originLabel = "<alt>0</alt> "; // default
+    int i = 0;
+
+    RB3E_DEBUG("SetSongNameFromNode: %s", label->string);
+
+    if (config.GameOriginIcons == 1 && strlen(label->string) < 1000)
+    {
+        SetSongNameFromNode(label, sortNode);
+        for (i = 0; i < numOriginToIcon; i++)
+        {
+            if (strcmp(sortNode->somethingElse->metaData->gameOrigin, originToIcon[i][0]) == 0)
+            {
+                originLabel = originToIcon[i][1];
+                break;
+            }
+        }
+        strcat(newLabel, originLabel);
+        strcat(newLabel, label->string);
+        BandLabelSetDisplayText(label, newLabel, 1);
+        return;
+    }
+    SetSongNameFromNode(label, sortNode);
+    return;
+}

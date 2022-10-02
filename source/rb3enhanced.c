@@ -263,6 +263,7 @@ void ApplyHooks()
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
+    HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
     // TODO: port these to Wii
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
