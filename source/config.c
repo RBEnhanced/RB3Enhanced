@@ -76,13 +76,6 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.LegacySDMode = RB3E_CONFIG_BOOL(value);
     }
 #elif RB3E_XBOX
-    if (strcmp(section, "Graphics") == 0)
-    {
-        if (strcmp(name, "RenderResX") == 0)
-            config.RenderResX = atoi(value);
-        if (strcmp(name, "RenderResY") == 0)
-            config.RenderResY = atoi(value);
-    }
     if (strcmp(section, "Xbox360") == 0)
     {
         if (strcmp(name, "EnableLiveless") == 0)
@@ -97,6 +90,17 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.STUNServerPort = atoi(value);
     }
 #endif
+    if (strcmp(section, "Graphics") == 0)
+    {
+#ifdef RB3E_XBOX
+        if (strcmp(name, "RenderResX") == 0)
+            config.RenderResX = atoi(value);
+        if (strcmp(name, "RenderResY") == 0)
+            config.RenderResY = atoi(value);
+#endif
+        if (strcmp(name, "DisablePostProcessing") == 0)
+            config.DisablePostProcessing = RB3E_CONFIG_BOOL(value);
+    }
     return 1;
 }
 

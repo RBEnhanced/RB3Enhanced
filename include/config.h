@@ -29,6 +29,7 @@ typedef struct _RB3E_Config
     // [Graphics]
     int RenderResX;
     int RenderResY;
+    char DisablePostProcessing;
     // [Events]
     char BroadcastTarget[RB3E_MAX_DOMAIN];
     char EnableEvents;

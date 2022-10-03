@@ -145,7 +145,6 @@ static unsigned int framecount = 0;
 void RB3E_RunLoop()
 {
     framecount++;
-    // TODO(Emma): do stuff here
 }
 
 #ifdef RB3E_XBOX
@@ -207,6 +206,12 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_TATTOO_CHECK, LI(3, 1));
         POKE_32(PORT_FACE_PAINT_CHECK, LI(3, 1));
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
+    }
+    if (config.DisablePostProcessing == 1)
+    {
+        // Disables post processing effects
+        // Should improve framerate on emulators and maybe Wii
+        POKE_32(PORT_POSTPROC_DOPOST, BLR);
     }
 }
 
