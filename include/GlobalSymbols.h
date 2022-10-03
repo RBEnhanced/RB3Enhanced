@@ -30,6 +30,19 @@ typedef struct _GlobalSymbols
     Symbol yellowGem;
     Symbol blueGem;
     Symbol orangeGem;
+
+    // drum gem widgets
+    Symbol redDrumGem;
+    Symbol yellowDrumGem;
+    Symbol blueDrumGem;
+    Symbol greenDrumGem;
+
+    // drum cymbal gem widgets
+    Symbol redCymbalGem;
+    Symbol yellowCymbalGem;
+    Symbol blueCymbalGem;
+    Symbol greenCymbalGem;
+
     // hopo widgets
     Symbol greenHopoGem;
     Symbol redHopoGem;
