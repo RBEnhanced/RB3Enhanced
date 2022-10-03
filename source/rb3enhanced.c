@@ -15,6 +15,7 @@
 #include "GemHooks.h"
 #include "GameHooks.h"
 #include "GlobalSymbols.h"
+#include "OvershellHooks.h"
 #include "rb3enhanced.h"
 #include "DTAFunctions.h"
 #include "SongHooks.h"
@@ -223,6 +224,8 @@ void InitialiseFunctions()
     POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
     POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
 #endif
+    POKE_B(&PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
+    POKE_B(&SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);
     POKE_B(&ExecuteDTA, PORT_EXECUTEDTA);
     POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
     POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
@@ -240,6 +243,7 @@ void ApplyHooks()
 {
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
     POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
+    POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
@@ -273,7 +277,6 @@ void ApplyHooks()
 
 void StartupHook(void *ThisApp, int argc, char **argv)
 {
-
     RB3E_MSG("Loaded! Version " RB3E_BUILDTAG " (" RB3E_BUILDCOMMIT ")", NULL);
     InitialiseFunctions();
     ApplyPatches();

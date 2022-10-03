@@ -95,6 +95,9 @@
 #define PORT_GETBANDUSERS 0x82683b78                 // BandUserMgr::GetBandUsers
 #define PORT_GETBANDUSERFROMSLOT 0x82682b60          // BandUserMgr::GetBandUserFromSlot
 #define PORT_GETSONGID 0x827a87f0                    // GetSongID, function used when adding songs to BandSongMgr
+#define PORT_BUILDINSTRUMENTSELECTION 0x82668c70     // BuildInstrumentSelectionList(?) - actual name not known
+#define PORT_PREPARESOMEVECTORMAYBE 0x82796d90       // Prepares some vector, used by BuildInstrumentSelectionList
+#define PORT_SOMEVECTORPUSHBACKMAYBE 0x82b6aa10      // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -146,36 +149,39 @@ void DbgPrint(const char *s, ...);
 #define PORT_OPTIONSTR_DEFINE 0x8030e418        // bl to OptionStr("define", NULL) in PreInitSystem
 #define PORT_RUNLOOP_SPARE 0x8000f740           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
 // function patch addresses
-#define PORT_SETDISKERROR 0x8030ce7c            // PlatformMgr::SetDiskError
-#define PORT_NEWFILE 0x802f9ed0                 // NewFile
-#define PORT_SETTRACKSPEED 0x80441ee0           // TrackPanelDirBase::UpdateTrackSpeed
-#define PORT_SETSONGSPEED 0x801130d0            // Game::SetMusicSpeed
-#define PORT_MODIFIERMGR_CT 0x8022c1b4          // ModifierManager::__ct
-#define PORT_MODIFIERMGR_ACTIVE 0x8022c830      // ModifierManager::ModifierActive
-#define PORT_SYMBOL_CT 0x80363f60               // Symbol::Symbol
-#define PORT_LOCALIZE 0x803506f4                // Locale::Localize
-#define PORT_SETVENUE 0x802282dc                // MetaPerformer::SetVenue(?) (actual func name is not known)
-#define PORT_EXECUTEDTA 0x802cf7e0              // RockCentralGateway::ExecuteConfig
-#define PORT_BANDLABELSETDISPLAYTEXT 0x803b1858 // BandLabel::SetDisplayText
-#define PORT_SETSONGANDARTISTNAME 0x801b68a8    // BandLabel::SetSongAndArtistName
-#define PORT_KEYSONGUITAR 0x80242ab4            // function that checks "key_keys_on_guitar"
-#define PORT_HMXFACTORYFUNCAT 0x8031b2f8        // HmxObjectFactoryFunc::_at
-#define PORT_WILLBENOSTRUM 0x80463010           // GameGemList::WillBeNoStrum
-#define PORT_ADDGAMEGEM 0x80463198              // GameGemList::AddGameGem
-#define PORT_SETADDRESS 0x8001bf74              // Quazal::InetAddress::SetAddress
-#define PORT_RANDOMINT 0x802ddd60               // RandomInt(min, max)
-#define PORT_GETWIDGETBYNAME 0x800d59b0         // GemManager::GetWidgetByName
-#define PORT_DATANODEEVALUATE 0x80322e9c        // DataNode::Evaluate
-#define PORT_GETSLOTCOLOR 0x800e42a4            // TrackConfig::GetSlotColor
-#define PORT_USBWIIGETTYPE 0x806c1a3c           // UsbWii::GetType
-#define PORT_FILE_EXISTS 0x802fa134             // FileExists
-#define PORT_QUEUEMESSAGE 0x80253c50            // PassiveMessagesPanel::QueueMessage
-#define PORT_SETSYSTEMLANGUAGE 0x8030f308       // SetSystemLanguage
-#define PORT_ISSUPPORTEDLANGUAGE 0x8030f280     // IsSupportedLanguage
-#define PORT_DATAREADFILE 0x80319bdc            // DataReadFile
-#define PORT_GAME_CT 0x80110f20                 // Game::__ct
-#define PORT_GAME_DT 0x80111614                 // Game::__dt
-#define PORT_WIINETINIT_DNSLOOKUP 0x8030c3a0    // WiiNetInit::StartDNSLookup
+#define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError
+#define PORT_NEWFILE 0x802f9ed0                  // NewFile
+#define PORT_SETTRACKSPEED 0x80441ee0            // TrackPanelDirBase::UpdateTrackSpeed
+#define PORT_SETSONGSPEED 0x801130d0             // Game::SetMusicSpeed
+#define PORT_MODIFIERMGR_CT 0x8022c1b4           // ModifierManager::__ct
+#define PORT_MODIFIERMGR_ACTIVE 0x8022c830       // ModifierManager::ModifierActive
+#define PORT_SYMBOL_CT 0x80363f60                // Symbol::Symbol
+#define PORT_LOCALIZE 0x803506f4                 // Locale::Localize
+#define PORT_SETVENUE 0x802282dc                 // MetaPerformer::SetVenue(?) (actual func name is not known)
+#define PORT_EXECUTEDTA 0x802cf7e0               // RockCentralGateway::ExecuteConfig
+#define PORT_BANDLABELSETDISPLAYTEXT 0x803b1858  // BandLabel::SetDisplayText
+#define PORT_SETSONGANDARTISTNAME 0x801b68a8     // BandLabel::SetSongAndArtistName
+#define PORT_KEYSONGUITAR 0x80242ab4             // function that checks "key_keys_on_guitar"
+#define PORT_HMXFACTORYFUNCAT 0x8031b2f8         // HmxObjectFactoryFunc::_at
+#define PORT_WILLBENOSTRUM 0x80463010            // GameGemList::WillBeNoStrum
+#define PORT_ADDGAMEGEM 0x80463198               // GameGemList::AddGameGem
+#define PORT_SETADDRESS 0x8001bf74               // Quazal::InetAddress::SetAddress
+#define PORT_RANDOMINT 0x802ddd60                // RandomInt(min, max)
+#define PORT_GETWIDGETBYNAME 0x800d59b0          // GemManager::GetWidgetByName
+#define PORT_DATANODEEVALUATE 0x80322e9c         // DataNode::Evaluate
+#define PORT_GETSLOTCOLOR 0x800e42a4             // TrackConfig::GetSlotColor
+#define PORT_USBWIIGETTYPE 0x806c1a3c            // UsbWii::GetType
+#define PORT_FILE_EXISTS 0x802fa134              // FileExists
+#define PORT_QUEUEMESSAGE 0x80253c50             // PassiveMessagesPanel::QueueMessage
+#define PORT_SETSYSTEMLANGUAGE 0x8030f308        // SetSystemLanguage
+#define PORT_ISSUPPORTEDLANGUAGE 0x8030f280      // IsSupportedLanguage
+#define PORT_DATAREADFILE 0x80319bdc             // DataReadFile
+#define PORT_GAME_CT 0x80110f20                  // Game::__ct
+#define PORT_GAME_DT 0x80111614                  // Game::__dt
+#define PORT_WIINETINIT_DNSLOOKUP 0x8030c3a0     // WiiNetInit::StartDNSLookup
+#define PORT_BUILDINSTRUMENTSELECTION 0x802478a8 // BuildInstrumentSelectionList(?) - actual name not known
+#define PORT_PREPARESOMEVECTORMAYBE 0x80247c58   // Prepares some vector, used by BuildInstrumentSelectionList
+#define PORT_SOMEVECTORPUSHBACKMAYBE 0x802484a8  // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

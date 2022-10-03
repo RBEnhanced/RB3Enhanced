@@ -22,6 +22,15 @@ typedef enum _TrackType
     VOCALS = 3
 } TrackType;
 
+typedef enum _ControllerType
+{
+    DRUM_CONT = 0,
+    GUITAR_CONT = 1,
+    VOX_CONT = 2,
+    KEYBOARD_CONT = 3,
+    PRO_GUITAR_CONT = 4,
+} ControllerType;
+
 typedef struct _BandUser
 {
     int unknown_0x0;
@@ -29,7 +38,7 @@ typedef struct _BandUser
     Difficulty difficulty;
     int unknown_0xc;
     TrackType trackType;
-    int controllerType; // TODO: - figure these out
+    ControllerType controllerType;
     int unknown_0x14;
     int unknown_0x18;
     int unknown_0x1c;

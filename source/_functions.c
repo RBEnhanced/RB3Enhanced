@@ -23,8 +23,8 @@
 #endif
 
 // function stub definitions
-#ifndef RB3E_WII // AppConstructor is handled by the BrainSlug engine
-RB3E_STUB(AppConstructor)
+#ifndef RB3E_WII
+RB3E_STUB(AppConstructor) // AppConstructor is handled by the BrainSlug engine
 #endif
 RB3E_STUB(ExecuteDTA)
 RB3E_STUB(SymbolConstruct)
@@ -65,3 +65,5 @@ RB3E_STUB(StagekitSetState)
 RB3E_STUB(GameConstruct)
 RB3E_STUB(GameDestruct)
 RB3E_STUB(SetSongNameFromNode)
+RB3E_STUB(PrepareSomeVectorMaybe)
+RB3E_STUB(SomeVectorPushBackMaybe)

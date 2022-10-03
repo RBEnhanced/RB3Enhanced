@@ -48,4 +48,15 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.yellow, "yellow");
     SymbolConstruct(&globalSymbols.blue, "blue");
     SymbolConstruct(&globalSymbols.orange, "orange");
+
+    SymbolConstruct(&globalSymbols.overshell_guitar, "overshell_guitar");
+    SymbolConstruct(&globalSymbols.overshell_real_guitar, "overshell_real_guitar");
+    SymbolConstruct(&globalSymbols.overshell_bass, "overshell_bass");
+    SymbolConstruct(&globalSymbols.overshell_real_bass, "overshell_real_bass");
+    SymbolConstruct(&globalSymbols.overshell_keys, "overshell_keys");
+    SymbolConstruct(&globalSymbols.overshell_real_keys, "overshell_real_keys");
+    SymbolConstruct(&globalSymbols.overshell_drums, "overshell_drums");
+    SymbolConstruct(&globalSymbols.overshell_drums_pro, "overshell_drums_pro");
+    SymbolConstruct(&globalSymbols.overshell_vocal_solo, "overshell_vocal_solo");
+    SymbolConstruct(&globalSymbols.overshell_vocal_harmony, "overshell_vocal_harmony");
 }

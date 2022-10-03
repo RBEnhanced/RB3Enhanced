@@ -57,6 +57,17 @@ typedef struct _GlobalSymbols
     Symbol blue;
     Symbol orange;
 
+    // overshell instrument entries
+    Symbol overshell_guitar;
+    Symbol overshell_bass;
+    Symbol overshell_keys;
+    Symbol overshell_drums;
+    Symbol overshell_real_guitar;
+    Symbol overshell_real_bass;
+    Symbol overshell_real_keys;
+    Symbol overshell_drums_pro;
+    Symbol overshell_vocal_solo;
+    Symbol overshell_vocal_harmony;
 } GlobalSymbols;
 
 extern GlobalSymbols globalSymbols;
