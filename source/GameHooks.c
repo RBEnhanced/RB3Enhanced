@@ -10,6 +10,8 @@
 #include "rb3/Game.h"
 #include "rb3/Symbol.h"
 #include "rb3/SongMetadata.h"
+#include "rb3/BandUser.h"
+#include "rb3/BandUserMgr.h"
 #include "rb3/BandSongMgr.h"
 #include "rb3/MetaPerformer.h"
 #include "rb3enhanced.h"
@@ -21,7 +23,10 @@ void *GameConstructHook(void *theGame) // You just lost
 #ifdef RB3E_XBOX
     Symbol song;
     int song_id;
+    int i;
     SongMetadata *metadata;
+    BandUser *bandUser;
+    RB3E_EventBandInfo bandevent = {0};
     GetSongShortname(&song, *(int *)PORT_THEMETAPERFORMER);
     if (song.sym != NULL)
     {
@@ -31,11 +36,28 @@ void *GameConstructHook(void *theGame) // You just lost
         metadata = GetMetadata((BandSongMgr *)PORT_THESONGMGR, song_id);
         if (metadata != NULL)
         {
+            RB3E_DEBUG("Metadata: %p", metadata);
             RB3E_DEBUG("Started song: '%s' - %s (ID: %i, %s)", metadata->title.buf, metadata->artist.buf, metadata->song_id, metadata->shortname);
             RB3E_SendEvent(RB3E_EVENT_SONG_NAME, metadata->title.buf, metadata->title.length);
             RB3E_SendEvent(RB3E_EVENT_SONG_ARTIST, metadata->artist.buf, metadata->artist.length);
         }
     }
+    for (i = 0; i < 4; i++)
+    {
+        bandUser = GetBandUserFromSlot(*(int *)PORT_THEBANDUSERMGR, i);
+        if (bandUser != NULL)
+        {
+            RB3E_DEBUG("BandUser %i: %p - Track: %i, Controller: %i, Difficulty: %i", i, bandUser, bandUser->trackType, bandUser->controllerType, bandUser->difficulty);
+            bandevent.MemberExists[i] = 1;
+            bandevent.Difficulty[i] = bandUser->difficulty;
+            bandevent.TrackType[i] = bandUser->trackType;
+        }
+        else
+        {
+            bandevent.MemberExists[i] = 0;
+        }
+    }
+    RB3E_SendEvent(RB3E_EVENT_BAND_INFO, &bandevent, sizeof(bandevent));
 #endif
     RB3E_SendEvent(RB3E_EVENT_STATE, &in_game, sizeof(in_game));
     return GameConstruct(theGame);

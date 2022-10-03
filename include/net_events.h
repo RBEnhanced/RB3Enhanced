@@ -32,7 +32,8 @@ typedef enum _RB3E_Events_PacketTypes
     RB3E_EVENT_SONG_ARTIST,    // content is a string of the current song artist
     RB3E_EVENT_SONG_SHORTNAME, // content is a string of the current shortname
     RB3E_EVENT_SCORE,          // content is a RB3E_EventScore struct with score info
-    RB3E_EVENT_STAGEKIT        // content is a RB3E_EventStagekit struct with stagekit info
+    RB3E_EVENT_STAGEKIT,       // content is a RB3E_EventStagekit struct with stagekit info
+    RB3E_EVENT_BAND_INFO       // content is a RB3E_EventBandInfo struct with band info
 } RB3E_Events_EventTypes;
 // identifiers for each platform RB3E can or will run on
 typedef enum _RB3E_Events_PlatformIDs
@@ -75,6 +76,13 @@ typedef struct _RB3E_EventStagekit
     char LeftChannel;
     char RightChannel;
 } PACKED RB3E_EventStagekit;
+// packet that contains band member data
+typedef struct _RB3E_EventBandInfo
+{
+    char MemberExists[4];
+    char Difficulty[4];
+    char TrackType[4];
+} PACKED RB3E_EventBandInfo;
 PACKEND
 
 // start up the events socket
