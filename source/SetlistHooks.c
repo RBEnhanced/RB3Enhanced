@@ -20,6 +20,8 @@ static char *originToIcon[][2] = {
     {"ugc", "<alt>U</alt> "},
     {"ugc_c3", "<alt>y</alt> "},
     {"ugc_plus", "<alt>U</alt> "},
+    {"ugc1", "<alt>U</alt> "},
+    {"ugc2", "<alt>U</alt> "},
     {"lego", "<alt>A</alt> "},
     {"greenday", "<alt>0</alt> "},
     {"beatles", "<alt>b</alt> "},

@@ -6,5 +6,6 @@
 #include "rb3/Symbol.h"
 #include "rb3/SongSortByRecentEntry.h"
 
-SongSortByRecentEntry * SongSortHook(int * songSortByRecent, int * unk, char * songName, char * gameOrigin, int * unk2);
-Symbol * GetSymbolByGameOriginHook(Symbol * sym, int gameOrigin);
+SongSortByRecentEntry *SongSortByRecentHook(int *songSortByRecent, int *unk, char *songName, char *gameOrigin, int *unk2);
+Symbol *GetSymbolByGameOriginHook(Symbol *sym, int gameOrigin);
+int GetGameOriginBySymbolHook(Symbol sym);

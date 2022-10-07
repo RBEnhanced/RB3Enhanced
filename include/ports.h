@@ -99,6 +99,10 @@
 #define PORT_PREPARESOMEVECTORMAYBE 0x82796d90       // Prepares some vector, used by BuildInstrumentSelectionList
 #define PORT_SOMEVECTORPUSHBACKMAYBE 0x82b6aa10      // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
 #define PORT_POSTPROC_DOPOST 0x82b89a08              // NgPostProc::DoPost
+#define PORT_MUSICLIBRARYSELECTMAYBE 0x8253EB00      // Selects an entry in the Music Library screen - actual name not known
+#define PORT_GETSYMBOLBYGAMEORIGIN 0x8265bb78        // SongSortByRecent::GetSymbolByGameOrigin
+#define PORT_GETGAMEORIGINBYSYMBOL 0x8265b910        // SongSortByRecent::GetGameOriginBySymbol
+#define PORT_SONGSORTBYRECENT 0x8265bde8             // RecentCmp::__ct
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -110,6 +114,8 @@
 #define PORT_THESONGMGR 0x82dfe7b4          // address of TheSongMgr
 #define PORT_THEMETAPERFORMER 0x82dfe954    // address of TheMetaPerformer
 #define PORT_THEBANDUSERMGR 0x82e023b8      // address of TheBandUserMgr
+#define PORT_THESONGSORTMGR 0x82dfee5c      // pointer to TheSongSortMgr
+#define PORT_THEMUSICLIBRARY 0x82dfd3a8     // pointer to TheMusicLibrary
 // import function stubs
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c
@@ -184,12 +190,18 @@ void DbgPrint(const char *s, ...);
 #define PORT_PREPARESOMEVECTORMAYBE 0x80247c58   // Prepares some vector, used by BuildInstrumentSelectionList
 #define PORT_SOMEVECTORPUSHBACKMAYBE 0x802484a8  // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
 #define PORT_POSTPROC_DOPOST 0x806b52b4          // WiiPostProc::DoPost
+#define PORT_MUSICLIBRARYSELECTMAYBE 0x80230d64  // Selects an entry in the Music Library screen - actual name not known
+#define PORT_GETSYMBOLBYGAMEORIGIN 0x8027dd3c    // SongSortByRecent::GetSymbolByGameOrigin
+#define PORT_GETGAMEORIGINBYSYMBOL 0x8027dc58    // SongSortByRecent::GetGameOriginBySymbol
+#define PORT_SONGSORTBYRECENT 0x8027dba8         // RecentCmp::__ct
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
 #define PORT_GDATAFUNCS 0x8091a528          // address of gDataFuncs
 #define PORT_THEUI 0x808fc398               // address of TheUI
 #define PORT_NULLSYMBOL 0x808540e0          // address of gNullSymbol
+#define PORT_THEMUSICLIBRARY 0x808fda84     // pointer to TheMusicLibrary
+#define PORT_THESONGSORTMGR 0x808ff988      // pointer to TheSongSortMgr
 // string pointers
 #define PORT_NASWII_AC_URL 0x808e2310
 #define PORT_NASWII_PR_URL 0x808e2390

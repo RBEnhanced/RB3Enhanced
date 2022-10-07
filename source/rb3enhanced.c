@@ -6,44 +6,9 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
-#include "ports.h"
-#include "ppcasm.h"
-#include "config.h"
-#include "utilities.h"
 #include "version.h"
-#include "LocaleHooks.h"
-#include "GemHooks.h"
-#include "GameHooks.h"
-#include "GlobalSymbols.h"
-#include "OvershellHooks.h"
-#include "rb3enhanced.h"
-#include "DTAFunctions.h"
-#include "SongHooks.h"
-#include "SetlistHooks.h"
-#include "SpeedHooks.h"
-#include "gocentral.h"
-#include "wii_usbhid.h"
-#include "net.h"
-#include "net_events.h"
-#include "rb3/App.h"
-#include "rb3/BandLabel.h"
-#include "rb3/BandSongMgr.h"
-#include "rb3/BandUserMgr.h"
-#include "rb3/Data.h"
-#include "rb3/File.h"
-#include "rb3/Game.h"
-#include "rb3/GameGem.h"
-#include "rb3/InetAddress.h"
-#include "rb3/Locale.h"
-#include "rb3/MetaPerformer.h"
-#include "rb3/ModifierManager.h"
-#include "rb3/PassiveMessagesPanel.h"
-#include "rb3/Random.h"
-#include "rb3/RockCentralGateway.h"
-#include "rb3/SortNode.h"
-#include "rb3/Symbol.h"
-#include "rb3/TrackPanelDirBase.h"
-#include "rb3/UsbWii.h"
+#include "rb3_include.h"
+#include "rb3e_include.h"
 
 static int DefinesStep = 0;
 char *DefinesHook(char *string_define, int always_null)
@@ -207,12 +172,6 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_FACE_PAINT_CHECK, LI(3, 1));
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
     }
-    if (config.DisablePostProcessing == 1)
-    {
-        // Disables post processing effects
-        // Should improve framerate on emulators and maybe Wii
-        POKE_32(PORT_POSTPROC_DOPOST, BLR);
-    }
 }
 
 void InitialiseFunctions()
@@ -241,6 +200,7 @@ void InitialiseFunctions()
     POKE_B(&FileExists, PORT_FILE_EXISTS);
     POKE_B(&SetAddress, PORT_SETADDRESS);
     POKE_B(&QueueMessage, PORT_QUEUEMESSAGE);
+    POKE_B(&MusicLibrarySelectMaybe, PORT_MUSICLIBRARYSELECTMAYBE);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -267,6 +227,8 @@ void ApplyHooks()
     HookFunction(PORT_DATAREADFILE, &DataReadFile, &DataReadFileHook);
     HookFunction(PORT_GAME_CT, &GameConstruct, &GameConstructHook);
     HookFunction(PORT_GAME_DT, &GameDestruct, &GameDestructHook);
+    HookFunction(PORT_GETSYMBOLBYGAMEORIGIN, &GetSymbolByGameOrigin, &GetSymbolByGameOriginHook);
+    HookFunction(PORT_GETGAMEORIGINBYSYMBOL, &GetGameOriginBySymbol, &GetGameOriginBySymbolHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
