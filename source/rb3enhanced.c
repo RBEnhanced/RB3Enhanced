@@ -179,6 +179,8 @@ void InitialiseFunctions()
 #ifndef RB3E_WII
     // AppConstructor is handled by the BrainSlug engine
     POKE_B(&AppConstructor, PORT_APP_CT);
+#endif
+#ifdef RB3E_XBOX
     // TODO: port these to Wii
     POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
     POKE_B(&GetMetadata, PORT_GETMETADATA);

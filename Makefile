@@ -68,9 +68,6 @@ INCLUDES_X := "$(XEDK)/include/xbox"
 LIBDIR_X := "$(XEDK)/lib/xbox"
 # library includes
 LIBS_X := xapilib.lib xboxkrnl.lib xnet.lib xonline.lib
-ifeq ($(strip $(EMULATOR)),1) # for emulator builds we need xbdm
-	LIBS_X += xbdm.lib
-endif
 # compiler flags
 CFLAGS_X := -c -Zi -nologo -W3 -WX- -Ox -Os -D _XBOX -D RB3E_XBOX $(patsubst %,-D %,$(DEFINES)) \
 			-GF -Gm- -MT -GS- -Gy -fp:fast -fp:except- -Zc:wchar_t -Zc:forScope \
@@ -85,6 +82,40 @@ LFLAGS_X := -ERRORREPORT:PROMPT -INCREMENTAL:NO -NOLOGO $(LIBS_X) \
 XEXFLAGS := -nologo -config:"xex.xml"
 # =================
 
+# PS3 variables
+# =================
+# build directory for PS3 compilation
+BUILD_P := build_ps3
+# .o object files for PS3 compilation
+OBJECTS_P :=$(subst $(SRC_DIR),$(BUILD_P),$(patsubst %.c,%.c.o,$(SOURCES)))
+# executable tool path
+TOOLPATH_P := $(PS3DEV)/bin
+PPUPATH_P := $(PS3DEV)/ppu
+COMPILER_P := $(PPUPATH_P)/bin/powerpc64-ps3-elf-gcc
+LINKER_P := $(PPUPATH_P)/bin/powerpc64-ps3-elf-ld
+MAKESELF_P := $(TOOLPATH_P)/make_self_sprx
+# include directories
+GCC_VER_P := 7.2.0
+ifneq ($(strip $(PS3DEV)),) 
+    GCC_VER_P := $(shell $(COMPILER_P) -dumpversion)
+endif
+INCLUDES_P := $(PPUPATH_P)/lib/gcc/powerpc64-ps3-elf/$(GCC_VER_P)/include \
+				$(PPUPATH_P)/lib/gcc/powerpc64-ps3-elf/$(GCC_VER_P)/include-fixed \
+				$(PPUPATH_P)/include $(PPUPATH_P)/include/simdmath $(INC_DIR)
+# library directories
+LIBDIR_P := $(PPUPATH_P)/lib 
+# library includes
+LIBS_P := io sysutil rt lv2
+# compiler flags
+CFLAGS_P := -O2 -Wall -Wno-format-extra-args -x c -std=gnu99 \
+			-DRB3E_PS3 $(patsubst %,-D%,$(DEFINES)) \
+			-mcpu=cell -mhard-float -fmodulo-sched \
+			-ffunction-sections -fdata-sections \
+			$(patsubst %,-I %,$(INCLUDES_P)) -iquote src
+# linker flags for final compile
+LFLAGS_P := --relocatable
+# =================
+
 .PHONY: all
 all: xbox wii
 
@@ -94,7 +125,7 @@ scripts:
 
 .PHONY: clean
 clean:
-	@rm -rf $(wildcard $(BUILD_W) $(BUILD_X) $(OUTPUT))
+	@rm -rf $(wildcard $(BUILD_W) $(BUILD_X) $(BUILD_P) $(OUTPUT))
 
 # Wii compilation, creates BrainSlug .MOD file
 
@@ -134,3 +165,24 @@ $(BUILD_X)/$(OUTNAME).exe: $(OBJECTS_X)
 $(BUILD_X)/%.obj: $(SRC_DIR)/%.c | scripts
 	@mkdir -p $(@D)
 	@INCLUDE=$(INCLUDES_X) $(WINDOWS_SHIM) $(COMPILER_X) $(CFLAGS_X) -Fo"$@" -TC $<
+
+
+# PS3 compilation, creates .SPRX file
+
+.PHONY: ps3
+ps3: $(OUTPUT)/$(OUTNAME).sprx
+
+$(OUTPUT)/$(OUTNAME).sprx: $(BUILD_P)/output.elf
+	@echo "Creating SPRX...(BROKEN!)"
+	@mkdir -p $(@D)
+	@$(MAKESELF_P) $^ $@
+
+$(BUILD_P)/output.elf: $(OBJECTS_P)
+	@echo "Linking ELF...(BROKEN!)"
+	@mkdir -p $(@D)
+	@$(LINKER_P) $^ $(LFLAGS_P) -o $@
+
+$(BUILD_P)/%.c.o: $(SRC_DIR)/%.c | scripts
+	@echo $<
+	@mkdir -p $(@D)
+	@$(COMPILER_P) -c $(CFLAGS_P) $< -o $@

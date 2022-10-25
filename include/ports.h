@@ -211,6 +211,76 @@ void DbgPrint(const char *s, ...);
 
 #endif // RB3E_WII
 
+#ifdef RB3E_PS3 // Rock Band 3 1.05 BLUS30463 PS3
+
+#include <string.h>
+
+// instruction patch addresses
+#define PORT_SONGLIMIT 0x4141414141               // call to "max_song_count" DataNode::_value
+#define PORT_SONGBLACKLIST 0x4141414141           // call to a function that checks song blacklist
+#define PORT_DATAINITFUNCS_TAIL 0x4141414141      // blr of DataInitFuncs
+#define PORT_FASTSTART_CHECK 0x4141414141         // beq after OptionBool("fast",0) in App::_ct
+#define PORT_STRAPSCREEN_1 0x4141414141           // branch to CustomSplash::Show in App::_ct
+#define PORT_STRAPSCREEN_2 0x4141414141           // branch to CustomSplash::EndShow in App::_ct
+#define PORT_NASWII_HOST 0x4141414141             // branch to the add header function in the DWCDL login function
+#define PORT_CHARACTER_CLOTHES_CHECK 0x4141414141 // check to see if the goal required to select a piece of clothing has been unlocked
+#define PORT_FACE_PAINT_CHECK 0x4141414141        // check to see if face paint is unlocked
+#define PORT_TATTOO_CHECK 0x4141414141            // check to see if tattoos are unlocked
+#define PORT_VIDEO_VENUE_CHECK 0x4141414141       // check to see if video venues are unlocked
+#define PORT_OPTIONSTR_DEFINE 0x4141414141        // bl to OptionStr("define", NULL) in PreInitSystem
+#define PORT_RUNLOOP_SPARE 0x4141414141           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
+// function patch addresses
+#define PORT_SETDISKERROR 0x4141414141             // PlatformMgr::SetDiskError
+#define PORT_APP_CT 0x4141414141                   // App::_ct
+#define PORT_NEWFILE 0x4141414141                  // NewFile
+#define PORT_SETTRACKSPEED 0x4141414141            // TrackPanelDirBase::UpdateTrackSpeed
+#define PORT_SETSONGSPEED 0x4141414141             // Game::SetMusicSpeed
+#define PORT_MODIFIERMGR_CT 0x4141414141           // ModifierManager::__ct
+#define PORT_MODIFIERMGR_ACTIVE 0x4141414141       // ModifierManager::ModifierActive
+#define PORT_SYMBOL_CT 0x4141414141                // Symbol::Symbol
+#define PORT_LOCALIZE 0x4141414141                 // Locale::Localize
+#define PORT_SETVENUE 0x4141414141                 // MetaPerformer::SetVenue(?) (actual func name is not known)
+#define PORT_EXECUTEDTA 0x4141414141               // RockCentralGateway::ExecuteConfig
+#define PORT_BANDLABELSETDISPLAYTEXT 0x4141414141  // BandLabel::SetDisplayText
+#define PORT_SETSONGANDARTISTNAME 0x4141414141     // BandLabel::SetSongAndArtistName
+#define PORT_KEYSONGUITAR 0x4141414141             // function that checks "key_keys_on_guitar"
+#define PORT_HMXFACTORYFUNCAT 0x4141414141         // HmxObjectFactoryFunc::_at
+#define PORT_WILLBENOSTRUM 0x4141414141            // GameGemList::WillBeNoStrum
+#define PORT_ADDGAMEGEM 0x4141414141               // GameGemList::AddGameGem
+#define PORT_SETADDRESS 0x4141414141               // Quazal::InetAddress::SetAddress
+#define PORT_RANDOMINT 0x4141414141                // RandomInt(min, max)
+#define PORT_GETWIDGETBYNAME 0x4141414141          // GemManager::GetWidgetByName
+#define PORT_DATANODEEVALUATE 0x4141414141         // DataNode::Evaluate
+#define PORT_GETSLOTCOLOR 0x4141414141             // TrackConfig::GetSlotColor
+#define PORT_FILE_EXISTS 0x4141414141              // FileExists
+#define PORT_QUEUEMESSAGE 0x4141414141             // PassiveMessagesPanel::QueueMessage
+#define PORT_SETSYSTEMLANGUAGE 0x4141414141        // SetSystemLanguage
+#define PORT_ISSUPPORTEDLANGUAGE 0x4141414141      // IsSupportedLanguage
+#define PORT_DATAREADFILE 0x4141414141             // DataReadFile
+#define PORT_GAME_CT 0x4141414141                  // Game::__ct
+#define PORT_GAME_DT 0x4141414141                  // Game::__dt
+#define PORT_BUILDINSTRUMENTSELECTION 0x4141414141 // BuildInstrumentSelectionList(?) - actual name not known
+#define PORT_PREPARESOMEVECTORMAYBE 0x4141414141   // Prepares some vector, used by BuildInstrumentSelectionList
+#define PORT_SOMEVECTORPUSHBACKMAYBE 0x4141414141  // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
+#define PORT_POSTPROC_DOPOST 0x4141414141          // WiiPostProc::DoPost
+#define PORT_MUSICLIBRARYSELECTMAYBE 0x4141414141  // Selects an entry in the Music Library screen - actual name not known
+#define PORT_GETSYMBOLBYGAMEORIGIN 0x4141414141    // SongSortByRecent::GetSymbolByGameOrigin
+#define PORT_GETGAMEORIGINBYSYMBOL 0x4141414141    // SongSortByRecent::GetGameOriginBySymbol
+#define PORT_SONGSORTBYRECENT 0x4141414141         // RecentCmp::__ct
+// instance addresses
+#define PORT_MODIFIERMGR_POINTER 0x4141414141 // pointer to ModifierManager
+#define PORT_ROCKCENTRALGATEWAY 0x4141414141  // address of RockCentralGateway
+#define PORT_GDATAFUNCS 0x4141414141          // address of gDataFuncs
+#define PORT_THEUI 0x4141414141               // address of TheUI
+#define PORT_NULLSYMBOL 0x4141414141          // address of gNullSymbol
+#define PORT_THEMUSICLIBRARY 0x4141414141     // pointer to TheMusicLibrary
+#define PORT_THESONGSORTMGR 0x4141414141      // pointer to TheSongSortMgr
+
+// define logging functions
+#define RB3E_PRINT printf
+
+#endif
+
 #define RB3E_MSG(x, ...) RB3E_PRINT("[RB3E:MSG] " x "\n", __VA_ARGS__)
 #ifdef RB3EDEBUG
 #define RB3E_DEBUG(x, ...) RB3E_PRINT("[RB3E:DBG] " x "\n", __VA_ARGS__)

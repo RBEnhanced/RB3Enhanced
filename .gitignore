@@ -14,5 +14,8 @@ build_wii/
 *.elf
 *.map
 *.o
+# ps3 build artifacts
+build_ps3/
+*.sprx
 # automatically generated files
 version.h
