@@ -25,6 +25,14 @@ int RB3E_HTTPSocket = -1;
 static int InitFailed = 0;
 static char *PendingShortname = NULL;
 
+typedef struct _song_list_vector
+{
+    int *start;
+    int *end;
+    int unk1;
+} song_list_vector;
+static song_list_vector song_list = {0};
+
 void HTTP_Server_Init()
 {
     RB3E_HTTPSocket = RB3E_CreateSocket(RB3E_TYPE_TCP);
@@ -69,6 +77,8 @@ void HTTP_Server_Accept(void *connection)
     int song_id = 0;
     char *shortname = NULL;
     SongMetadata *song_metadata = NULL;
+    int list_count = 0;
+    int i = 0;
 
     // TODO(Emma): Properly evaluate the security (and stability!) of this.
     while (req_state < HTTP_REQUEST_DONE)
@@ -192,6 +202,50 @@ void HTTP_Server_Accept(void *connection)
         while (PendingShortname != NULL)
             RB3E_Sleep(1);
         RB3E_TCP_Send(s, (void *)ok_response, strlen(ok_response));
+        goto close_connection;
+    }
+    else if (strcmp(request_path, "/list_songs") == 0)
+    {
+        if (song_list.start == NULL)
+            SongMgrGetRankedSongs((BandSongMgr *)PORT_THESONGMGR, &song_list, 0, 0);
+        list_count = ((int)song_list.end - (int)song_list.start) / 4;
+        // TODO(Emma): ...This, also, is not very great.
+        strcat(response_buffer, "HTTP/1.1 200 OK\r\n");
+        strcat(response_buffer, "Server: RB3Enhanced " RB3E_BUILDTAG "\r\n");
+        strcat(response_buffer, "Content-Type: text/plain\r\n");
+        strcat(response_buffer, "\r\n");
+        // flush our buffer and send each song as its own packet
+        RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
+        memset(response_buffer, 0, sizeof(response_buffer));
+        for (i = 0; i < list_count; i++)
+        {
+            song_id = song_list.start[i];
+            song_metadata = GetMetadata((BandSongMgr *)PORT_THESONGMGR, song_id);
+            if (song_metadata != NULL)
+            {
+                strcat(response_buffer, "[");
+                strcat(response_buffer, song_metadata->shortname);
+                strcat(response_buffer, "]\r\n");
+                strcat(response_buffer, "shortname=");
+                strcat(response_buffer, song_metadata->shortname);
+                strcat(response_buffer, "\r\n");
+                strcat(response_buffer, "title=");
+                strcat(response_buffer, song_metadata->title.buf);
+                strcat(response_buffer, "\r\n");
+                strcat(response_buffer, "artist=");
+                strcat(response_buffer, song_metadata->artist.buf);
+                strcat(response_buffer, "\r\n");
+                strcat(response_buffer, "album=");
+                strcat(response_buffer, song_metadata->album.buf);
+                strcat(response_buffer, "\r\n");
+                strcat(response_buffer, "origin=");
+                strcat(response_buffer, song_metadata->gameOrigin);
+                strcat(response_buffer, "\r\n");
+                strcat(response_buffer, "\r\n");
+                RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
+                memset(response_buffer, 0, sizeof(response_buffer));
+            }
+        }
         goto close_connection;
     }
     else

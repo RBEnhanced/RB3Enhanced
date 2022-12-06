@@ -10,5 +10,6 @@ typedef struct _BandSongMgr
 
 extern int GetSongIDFromShortname(BandSongMgr *thisSongMgr, char *shortName, int unknown2);
 extern SongMetadata *GetMetadata(BandSongMgr *thisSongMgr, int songId);
+extern int SongMgrGetRankedSongs(BandSongMgr *thisSongMgr, void *vector, char unk1, char unk2);
 
 #endif // _BANDSONGMGR_H

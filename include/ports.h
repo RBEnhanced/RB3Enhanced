@@ -95,6 +95,7 @@
 #define PORT_GETBANDUSERS 0x82683b78                 // BandUserMgr::GetBandUsers
 #define PORT_GETBANDUSERFROMSLOT 0x82682b60          // BandUserMgr::GetBandUserFromSlot
 #define PORT_GETSONGID 0x827a87f0                    // GetSongID, function used when adding songs to BandSongMgr
+#define PORT_SONGMGRGETRANKEDSONGS 0x82577340        // BandSongMgr::GetRankedSongs(?) - not sure on the real name of the function
 #define PORT_BUILDINSTRUMENTSELECTION 0x82668c70     // BuildInstrumentSelectionList(?) - actual name not known
 #define PORT_PREPARESOMEVECTORMAYBE 0x82796d90       // Prepares some vector, used by BuildInstrumentSelectionList
 #define PORT_SOMEVECTORPUSHBACKMAYBE 0x82b6aa10      // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back

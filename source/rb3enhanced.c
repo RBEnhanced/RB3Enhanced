@@ -190,6 +190,7 @@ void InitialiseFunctions()
     POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
     POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
+    POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
 #endif
     POKE_B(&PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
     POKE_B(&SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);
