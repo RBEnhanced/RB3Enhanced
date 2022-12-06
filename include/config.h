@@ -39,6 +39,7 @@ typedef struct _RB3E_Config
     char GoCentralAddress[RB3E_MAX_DOMAIN];
     // [HTTP]
     char EnableHTTPServer;
+    char AllowCORS;
 #ifdef RB3E_XBOX
     // [Xbox360]
     char EnableLiveless;

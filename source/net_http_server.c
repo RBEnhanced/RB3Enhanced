@@ -63,7 +63,7 @@ void HTTP_Server_Accept(void *connection)
 {
     int s = (int)connection;
     int conn_time_passed = 0;
-    char work_buffer[1000] = {0};
+    char work_buffer[512] = {0};
     char *work_ptr = work_buffer;
     int req_state = HTTP_REQUEST_METHOD;
     int state_read_bytes = 0;
@@ -71,9 +71,9 @@ void HTTP_Server_Accept(void *connection)
     char request_path[250] = {0};
     int request_valid = 0;
     char last_byte = '\0';
-    char ok_response[] = "HTTP/1.1 200 OK\r\nServer: RB3Enhanced " RB3E_BUILDTAG "\r\nContent-Type: text/html\r\nContent-Length: 2\r\n\r\nOK";
-    char notfound_response[] = "HTTP/1.1 404 Not Found\r\nServer: RB3Enhanced " RB3E_BUILDTAG "\r\nContent-Length: 9\r\n\r\nNot Found";
-    char response_buffer[1000] = {0};
+    const char ok_response[] = "HTTP/1.1 200 OK\r\nServer: RB3Enhanced " RB3E_BUILDTAG "\r\nContent-Type: text/html\r\nContent-Length: 2\r\n\r\nOK";
+    const char notfound_response[] = "HTTP/1.1 404 Not Found\r\nServer: RB3Enhanced " RB3E_BUILDTAG "\r\nContent-Length: 9\r\n\r\nNot Found";
+    char response_buffer[2000] = {0};
     int song_id = 0;
     char *shortname = NULL;
     SongMetadata *song_metadata = NULL;
@@ -170,6 +170,8 @@ void HTTP_Server_Accept(void *connection)
             // TODO(Emma): Good fucking christ what is this
             strcat(response_buffer, "HTTP/1.1 200 OK\r\n");
             strcat(response_buffer, "Server: RB3Enhanced " RB3E_BUILDTAG "\r\n");
+            if (config.AllowCORS)
+                strcat(response_buffer, "Access-Control-Allow-Origin: *\r\n");
             strcat(response_buffer, "Content-Type: text/plain\r\n");
             strcat(response_buffer, "\r\n");
             strcat(response_buffer, "shortname=");
@@ -213,6 +215,8 @@ void HTTP_Server_Accept(void *connection)
         strcat(response_buffer, "HTTP/1.1 200 OK\r\n");
         strcat(response_buffer, "Server: RB3Enhanced " RB3E_BUILDTAG "\r\n");
         strcat(response_buffer, "Content-Type: text/plain\r\n");
+        if (config.AllowCORS)
+            strcat(response_buffer, "Access-Control-Allow-Origin: *\r\n");
         strcat(response_buffer, "\r\n");
         // flush our buffer and send each song as its own packet
         RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
@@ -242,9 +246,18 @@ void HTTP_Server_Accept(void *connection)
                 strcat(response_buffer, song_metadata->gameOrigin);
                 strcat(response_buffer, "\r\n");
                 strcat(response_buffer, "\r\n");
-                RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
-                memset(response_buffer, 0, sizeof(response_buffer));
+                if (strlen(response_buffer) > 1500)
+                {
+                    RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
+                    memset(response_buffer, 0, sizeof(response_buffer));
+                    // attempt to somewhat stagger the packets out
+                    RB3E_Sleep(1);
+                }
             }
+        }
+        if (strlen(response_buffer) > 0)
+        {
+            RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
         }
         goto close_connection;
     }
