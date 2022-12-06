@@ -135,4 +135,24 @@ int RB3E_TCP_Recv(int socket, void *data, int size)
     return recv((SOCKET)socket, data, size, 0);
 }
 
+int RB3E_TCP_Listen(int socket)
+{
+    return listen((SOCKET)socket, SOMAXCONN);
+}
+
+int RB3E_TCP_Accept(int socket, unsigned int *ipv4, unsigned short *port)
+{
+    SOCKET sock = (SOCKET)socket;
+    struct sockaddr_in connection_addr = {0};
+    int fromlen = sizeof(connection_addr);
+    SOCKET r = accept(sock, (struct sockaddr *)&connection_addr, &fromlen);
+    if (r == INVALID_SOCKET)
+        return -1;
+    if (port != NULL)
+        *port = connection_addr.sin_port;
+    if (ipv4 != NULL)
+        *ipv4 = connection_addr.sin_addr.S_un.S_addr;
+    return (int)r;
+}
+
 #endif

@@ -56,6 +56,22 @@ int RB3E_IsEmulator()
     return DetectionResult;
 }
 
+// i just made some limits up on the spot, sorry ~Emma
+//    bad idea? maybe!
+//    don't call more than 10 threads with more than 0x10000 bytes of stack
+static int thread_stack[0x10000];
+static void *thread_stack_ptr = thread_stack;
+static OSThread_t threads[10];
+static int made_threads = 0;
+int RB3E_CreateThread(void *address, void *arg, int stack_size)
+{
+    OSThread_t *thread = &threads[made_threads++];
+    thread_stack_ptr += stack_size;
+    if (OSCreateThread(thread, address, arg, thread_stack_ptr, stack_size, 0x18, false))
+        return (int)thread;
+    return -1;
+}
+
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
     // launch game

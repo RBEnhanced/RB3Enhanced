@@ -22,3 +22,5 @@ int RB3E_UDP_RecvFrom(int socket, unsigned int *ipv4, unsigned short *port, void
 int RB3E_TCP_Connect(int socket, unsigned int ipv4, unsigned short port);
 int RB3E_TCP_Send(int socket, void *data, int size);
 int RB3E_TCP_Recv(int socket, void *data, int size);
+int RB3E_TCP_Listen(int socket);
+int RB3E_TCP_Accept(int socket, unsigned int *ipv4, unsigned short *port);

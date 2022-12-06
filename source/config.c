@@ -67,6 +67,11 @@ static int INIHandler(void *user, const char *section, const char *name, const c
         if (strcmp(name, "GoCentralAddress") == 0)
             strncpy(config.GoCentralAddress, value, RB3E_MAX_CONFIG_LEN);
     }
+    if (strcmp(section, "HTTP") == 0)
+    {
+        if (strcmp(name, "EnableHTTPServer") == 0)
+            config.EnableHTTPServer = RB3E_CONFIG_BOOL(value);
+    }
 #ifdef RB3E_WII
     if (strcmp(section, "Wii") == 0)
     {

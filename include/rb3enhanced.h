@@ -15,7 +15,7 @@ void ApplyHooks();
 // Startup hook
 void StartupHook(void *ThisApp, int argc, char **argv);
 
-// File functions - defined in their platform specific C files
+// OS functions - defined in their platform specific C files
 extern int RB3E_Mounted;
 void RB3E_MountFileSystems();
 char *RB3E_GetRawfilePath(char *path, int root_allowed);
@@ -24,6 +24,8 @@ int RB3E_OpenFile(char *filename, char readWrite);
 int RB3E_FileSize(int file);
 int RB3E_ReadFile(int file, int offset, void *buffer, int size);
 void RB3E_CloseFile(int file);
+int RB3E_CreateThread(void *address, void *arg, int stack_size);
+void RB3E_Sleep(int ms);
 
 // Emulator detection
 int RB3E_IsEmulator();

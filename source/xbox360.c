@@ -55,6 +55,19 @@ int RB3E_IsEmulator()
     return DetectionResult;
 }
 
+void RB3E_Sleep(int ms)
+{
+    Sleep(ms);
+}
+
+int RB3E_CreateThread(void *address, void *arg, int stack_size)
+{
+    unsigned int thread_id;
+    if (CreateThread(NULL, stack_size, address, arg, 0, &thread_id) != NULL)
+        return thread_id;
+    return -1;
+}
+
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
     // initialise hooks for XeCrypt

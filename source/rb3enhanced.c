@@ -107,8 +107,11 @@ static unsigned int framecount = 0;
 // This function runs every frame.
 // DO NOT TAKE LONGER THAN A FEW MILLISECONDS, DO **NOT** DO ANYTHING BLOCKING HERE
 // STUFF YOU DO HERE WILL **DIRECTLY** IMPACT THE GAME'S FRAMERATE!
+void HTTP_Server_RunLoop();
 void RB3E_RunLoop()
 {
+    if (config.EnableHTTPServer)
+        HTTP_Server_RunLoop();
     framecount++;
 }
 
