@@ -43,6 +43,7 @@
 #define PORT_RENDER_RES_Y_PATCH1 0x8273bedc     // instruction patch to force render height
 #define PORT_RUNLOOP_SPARE 0x822700e0           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
 #define PORT_SONG_ID_EVALUATE 0x827aa7d4        // branch to DataNode::Evaluate in SongMetadata::__ct
+#define PORT_LOADOBJS_BCTRL 0x827562e4          // bctrl to Object::PreLoad insie of DirLoader::LoadObjs
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
@@ -104,6 +105,8 @@
 #define PORT_GETSYMBOLBYGAMEORIGIN 0x8265bb78        // SongSortByRecent::GetSymbolByGameOrigin
 #define PORT_GETGAMEORIGINBYSYMBOL 0x8265b910        // SongSortByRecent::GetGameOriginBySymbol
 #define PORT_SONGSORTBYRECENT 0x8265bde8             // RecentCmp::__ct
+#define PORT_FILESTREAM_CT 0x827c3340                // FileStream::__ct (the one that takes a char * path instead of a File object)
+#define PORT_CHUNKSTREAM_CT 0x827ca488               // ChunkStream::__ct
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -156,6 +159,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_VIDEO_VENUE_CHECK 0x80227e34       // check to see if video venues are unlocked
 #define PORT_OPTIONSTR_DEFINE 0x8030e418        // bl to OptionStr("define", NULL) in PreInitSystem
 #define PORT_RUNLOOP_SPARE 0x8000f740           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
+// #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError
 #define PORT_NEWFILE 0x802f9ed0                  // NewFile
@@ -195,6 +199,8 @@ void DbgPrint(const char *s, ...);
 #define PORT_GETSYMBOLBYGAMEORIGIN 0x8027dd3c    // SongSortByRecent::GetSymbolByGameOrigin
 #define PORT_GETGAMEORIGINBYSYMBOL 0x8027dc58    // SongSortByRecent::GetGameOriginBySymbol
 #define PORT_SONGSORTBYRECENT 0x8027dba8         // RecentCmp::__ct
+#define PORT_FILESTREAM_CT 0x8034c9f8            // FileStream::__ct (the one that takes a char * path instead of a File object)
+#define PORT_CHUNKSTREAM_CT 0x8034aa90           // ChunkStream::__ct
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

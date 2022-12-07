@@ -205,6 +205,8 @@ void InitialiseFunctions()
     POKE_B(&SetAddress, PORT_SETADDRESS);
     POKE_B(&QueueMessage, PORT_QUEUEMESSAGE);
     POKE_B(&MusicLibrarySelectMaybe, PORT_MUSICLIBRARYSELECTMAYBE);
+    POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
+    POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -242,6 +244,7 @@ void ApplyHooks()
     // TODO: port these to Wii
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
+    POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }

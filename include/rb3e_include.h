@@ -11,6 +11,7 @@
 #include "gocentral.h"
 #include "inih.h"
 #include "LocaleHooks.h"
+#include "MiloSceneHooks.h"
 #include "MusicLibrary.h"
 #include "net_events.h"
 #include "net.h"

@@ -42,6 +42,8 @@ RB3E_STUB(GetSongIDFromShortname)
 RB3E_STUB(GetSongShortname)
 RB3E_STUB(GetBandUsers)
 RB3E_STUB(GetBandUserFromSlot)
+RB3E_STUB(ChunkStreamConstructor)
+RB3E_STUB(FileStreamConstructor)
 // hooked function stubs
 RB3E_STUB(Localize)
 RB3E_STUB(SetVenue)

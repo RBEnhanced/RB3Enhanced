@@ -53,6 +53,10 @@ char *RB3E_GetRawfilePath(char *path, int root_allowed)
         // if this is already a drive path, we shouldn't patch that
         if (path[i] == ':')
             return NULL;
+        // TODO: Figure out why paths containing + do not work
+        // if path contains + character, ignore it
+        if (path[i] == '+')
+            return NULL;
         // if we're a .. path, change to x.
         if (path[i] == '.' && (path[i + 1] == '.' || path[i + 1] == '/'))
             corrected_path[i] = 'x';
