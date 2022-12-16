@@ -146,6 +146,9 @@ void ApplyPatches()
     POKE_32(PORT_STRAPSCREEN_2, NOP);
     // Patch out erroneous second host header
     POKE_32(PORT_NASWII_HOST, NOP);
+#elif RB3E_XBOX
+    if (RB3E_IsEmulator())
+        POKE_32(PORT_SONGMGR_ISDEMO_CHECK, NOP);
 #endif
     RB3E_MSG("Patches applied!", NULL);
 }
