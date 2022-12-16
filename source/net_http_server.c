@@ -79,6 +79,10 @@ void HTTP_Server_Accept(void *connection)
     SongMetadata *song_metadata = NULL;
     int list_count = 0;
     int i = 0;
+    char *file_path = NULL;
+    int file_r = 0;
+    int file_pointer = 0;
+    int file_fd = 0;
 
     // TODO(Emma): Properly evaluate the security (and stability!) of this.
     while (req_state < HTTP_REQUEST_DONE)
@@ -258,6 +262,38 @@ void HTTP_Server_Accept(void *connection)
         if (strlen(response_buffer) > 0)
         {
             RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
+        }
+        goto close_connection;
+    }
+    else if (strcmp(request_path, "/") == 0)
+    {
+        file_path = RB3E_GetRawfilePath("rb3e_index.html", 1);
+        if (file_path == NULL)
+        {
+            RB3E_TCP_Send(s, (void *)notfound_response, sizeof(notfound_response));
+            goto close_connection;
+        }
+        file_fd = RB3E_OpenFile(file_path, 0);
+        strcat(response_buffer, "HTTP/1.1 200 OK\r\n");
+        strcat(response_buffer, "Server: RB3Enhanced " RB3E_BUILDTAG "\r\n");
+        strcat(response_buffer, "Content-Type: text/html\r\n");
+        if (config.AllowCORS)
+            strcat(response_buffer, "Access-Control-Allow-Origin: *\r\n");
+        strcat(response_buffer, "\r\n");
+        // flush our buffer and send out the file in split chunks
+        RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
+        memset(response_buffer, 0, sizeof(response_buffer));
+        while ((file_r = RB3E_ReadFile(file_fd, file_pointer, response_buffer, sizeof(response_buffer)) > 0))
+        {
+            // fix an issue where a bunch of 0xFFs get added by the xbonx fs API
+            work_ptr = strstr(response_buffer, "\xFF");
+            if (work_ptr != NULL)
+                work_ptr[0] = 0x00;
+            RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
+            file_pointer += strlen(response_buffer);
+            memset(response_buffer, 0, sizeof(response_buffer));
+            // attempt to somewhat stagger the packets out
+            RB3E_Sleep(1);
         }
         goto close_connection;
     }
