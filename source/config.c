@@ -38,7 +38,7 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.SongSpeedMultiplier = (float)atof(value);
         if (strcmp(name, "TrackSpeedMultiplier") == 0)
             config.TrackSpeedMultiplier = (float)atof(value);
-        if (strcmp(name, "ForcedVenue") == 0 && !RB3E_CONFIG_FALSE(value))
+        if (strcmp(name, "ForcedVenue") == 0 && strcmp(value, "false") != 0)
             strncpy(config.ForcedVenue, value, RB3E_MAX_CONFIG_LEN);
         if (strcmp(name, "GameOriginIcons") == 0)
             config.GameOriginIcons = RB3E_CONFIG_BOOL(value);
