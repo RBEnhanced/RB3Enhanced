@@ -32,15 +32,15 @@ void SetVenueHook(int *thisMetaPerformer, Symbol venue)
     Symbol blackBackground;
     Modifier *blackBackgroundModifier;
 
-    RB3E_MSG("Original venue: %s", venue.sym);
     SymbolConstruct(&blackBackground, "mod_black_background");
-
     blackBackgroundModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, blackBackground, 0);
     if (blackBackgroundModifier->enabled)
-    {
         venue.sym = "none";
-        RB3E_MSG("New venue: %s", venue.sym);
-    }
+
+    if (config.ForcedVenue[0] != '\0')
+        venue.sym = config.ForcedVenue;
+
+    RB3E_MSG("Setting venue: %s", venue.sym);
 
     SetVenue(thisMetaPerformer, venue);
 }
