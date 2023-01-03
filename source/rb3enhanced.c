@@ -110,8 +110,10 @@ static unsigned int framecount = 0;
 void HTTP_Server_RunLoop();
 void RB3E_RunLoop()
 {
+#ifdef RB3E_XBOX
     if (config.EnableHTTPServer)
         HTTP_Server_RunLoop();
+#endif
     framecount++;
 }
 
