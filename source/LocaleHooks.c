@@ -71,7 +71,7 @@ char *LocalizeHook(int thisLocale, Symbol sym, int fail)
     if (config.GameOriginIcons == 1 && sym.sym != NULL && strcmp(sym.sym, "song_artist_fmt") == 0)
         return "%s <it>%s</it>";
     // if the string starts with message_motd_ (but isn't message_motd), it's our motd
-    if (strncmp(sym.sym, "message_motd_", 13) == 0)
+    if (memcmp(sym.sym, "message_motd_", 13) == 0)
     {
         // check for "rb3e_mod_string"
         SymbolConstruct(&newLocale, "rb3e_mod_string");
