@@ -188,11 +188,6 @@ void InitialiseFunctions()
     // AppConstructor is handled by the BrainSlug engine
     POKE_B(&AppConstructor, PORT_APP_CT);
     // TODO: port these to Wii
-    POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
-    POKE_B(&GetMetadata, PORT_GETMETADATA);
-    POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
-    POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
-    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
     POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
     POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
@@ -210,6 +205,11 @@ void InitialiseFunctions()
     POKE_B(&SetAddress, PORT_SETADDRESS);
     POKE_B(&QueueMessage, PORT_QUEUEMESSAGE);
     POKE_B(&MusicLibrarySelectMaybe, PORT_MUSICLIBRARYSELECTMAYBE);
+    POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
+    POKE_B(&GetMetadata, PORT_GETMETADATA);
+    POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
+    POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
+    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
     POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
     RB3E_MSG("Functions initialized!", NULL);

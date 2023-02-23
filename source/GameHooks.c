@@ -19,19 +19,21 @@
 void *GameConstructHook(void *theGame) // You just lost
 {
     char in_game = 0x01;
-    // TODO(Emma): Port addresses to Wii
-#ifdef RB3E_XBOX
-    Symbol song;
     int song_id;
     int i;
     SongMetadata *metadata;
     BandUser *bandUser;
     RB3E_EventBandInfo bandevent = {0};
+#ifdef RB3E_XBOX
+    Symbol song;
     GetSongShortname(&song, *(int *)PORT_THEMETAPERFORMER);
+#else
+    Symbol song = GetSongShortname(*(int *)PORT_THEMETAPERFORMER);
+#endif
     if (song.sym != NULL)
     {
         RB3E_SendEvent(RB3E_EVENT_SONG_SHORTNAME, song.sym, strlen(song.sym));
-        song_id = GetSongIDFromShortname((BandSongMgr *)PORT_THESONGMGR, song.sym, 1);
+        song_id = GetSongIDFromShortname((BandSongMgr *)PORT_THESONGMGR, song, 1);
         RB3E_DEBUG("GetSongIDFromShortname(%s) = %i", song.sym, song_id);
         metadata = GetMetadata((BandSongMgr *)PORT_THESONGMGR, song_id);
         if (metadata != NULL)
@@ -58,7 +60,6 @@ void *GameConstructHook(void *theGame) // You just lost
         }
     }
     RB3E_SendEvent(RB3E_EVENT_BAND_INFO, &bandevent, sizeof(bandevent));
-#endif
     RB3E_SendEvent(RB3E_EVENT_STATE, &in_game, sizeof(in_game));
     return GameConstruct(theGame);
 }

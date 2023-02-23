@@ -61,6 +61,9 @@ char *RB3E_GetRawfilePath(char *path, int root_allowed)
 int RB3E_FileExists(char *filename)
 {
     static struct stat st;
+    // make sure there's a mounted card before trying
+    if (RB3E_Mounted == 0)
+        return 0;
     return (SD_stat(filename, &st) == 0);
 }
 int RB3E_OpenFile(char *filename, char readWrite)

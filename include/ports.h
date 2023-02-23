@@ -202,6 +202,12 @@ void DbgPrint(const char *s, ...);
 #define PORT_SONGSORTBYRECENT 0x8027dba8         // RecentCmp::__ct
 #define PORT_FILESTREAM_CT 0x8034c9f8            // FileStream::__ct (the one that takes a char * path instead of a File object)
 #define PORT_CHUNKSTREAM_CT 0x8034aa90           // ChunkStream::__ct
+#define PORT_GETBANDUSERFROMSLOT 0x8010021c      // BandUserMgr::GetBandUserFromSlot
+#define PORT_GETBANDUSERS 0x80100558             // BandUserMgr::GetBandUsers
+#define PORT_GETSONGSHORTNAME 0x80224edc         // MetaPerformer::GetSongShortname(?) - actual name not known
+#define PORT_GETMETADATA 0x80515510              // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
+#define PORT_GETSONGID 0x8051513c                // GetSongID, function used when adding songs to BandSongMgr
+#define PORT_GETSONGIDFROMSHORTNAME 0x801d0b44   // BandSongMgr::GetSongIDFromShortname
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
@@ -210,6 +216,9 @@ void DbgPrint(const char *s, ...);
 #define PORT_NULLSYMBOL 0x808540e0          // address of gNullSymbol
 #define PORT_THEMUSICLIBRARY 0x808fda84     // pointer to TheMusicLibrary
 #define PORT_THESONGSORTMGR 0x808ff988      // pointer to TheSongSortMgr
+#define PORT_THESONGMGR 0x808fbda4          // address of TheSongMgr
+#define PORT_THEMETAPERFORMER 0x808fd6f8    // address of TheMetaPerformer
+#define PORT_THEBANDUSERMGR 0x808f9350      // pointer to TheBandUserMgr
 // string pointers
 #define PORT_NASWII_AC_URL 0x808e2310
 #define PORT_NASWII_PR_URL 0x808e2390
