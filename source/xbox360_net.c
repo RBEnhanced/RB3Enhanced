@@ -43,6 +43,7 @@ int RB3E_CreateSocket(int protocol)
 
 void RB3E_DisposeSocket(int socket)
 {
+    shutdown((SOCKET)socket, SD_SEND);
     closesocket((SOCKET)socket);
 }
 

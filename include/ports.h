@@ -77,6 +77,7 @@
 #define PORT_XL_XSESSIONJOINREMOTE 0x82a69fb0        // XSessionJoinRemote
 #define PORT_XL_XSESSIONMODIFY 0x82a69e40            // XSessionModify
 #define PORT_XL_XSESSIONSEARCHEX 0x82a6a490          // XSessionSearchEx
+#define PORT_XL_XINVITEGETACCEPTEDINFO 0x82a6a7c8    // XInviteGetAcceptedInfo
 #define PORT_RANDOMINT 0x824f2f90                    // RandomInt(min, max)
 #define PORT_GETWIDGETBYNAME 0x82b9b880              // GemManager::GetWidgetByName
 #define PORT_GETSLOTCOLOR 0x82baa308                 // TrackConfig::GetSlotColor
@@ -147,6 +148,7 @@
 #define PORT_XAMUSERGETSIGNININFO 0x82c4be1c
 #define PORT_XAMUSERGETSIGNINSTATE 0x82c4bcfc
 #define PORT_XAMUSERCHECKPRIVILEGE 0x82c4bd1c
+#define PORT_XAMSHOWFRIENDSUI 0x8283d710
 
 // define logging functions
 void DbgPrint(const char *s, ...);

@@ -43,6 +43,7 @@ typedef struct _RB3E_Config
 #ifdef RB3E_XBOX
     // [Xbox360]
     char EnableLiveless;
+    char LivelessAddress[RB3E_MAX_DOMAIN];
     char DirectConnectIP[RB3E_MAX_IP_LEN];
     char ExternalIP[RB3E_MAX_IP_LEN];
     char STUNServer[RB3E_MAX_DOMAIN];
