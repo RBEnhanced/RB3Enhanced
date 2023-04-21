@@ -11,7 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "net_liveless_online.h"
-#include "rb3/InetAddress.h"
+#include "quazal/InetAddress.h"
+#include "quazal/QuazalSocket.h"
 #include "net.h"
 #include "gocentral.h"
 #include "config.h"
@@ -44,6 +45,26 @@ int ReturnsZero()
 int ReturnsOne()
 {
     return 1;
+}
+
+// try to capture the native socket the game uses
+QuazalSocket *game_socket = NULL;
+char QueuingSocketBindHook(QuazalSocket *socket, InetAddress *address, unsigned short *bind_port)
+{
+    char r = 0;
+    RB3E_DEBUG("Binding socket %p to address %08x:%i", socket, address->address, address->port);
+    r = QueuingSocketBind(socket, address, bind_port);
+    if (bind_port != NULL)
+    {
+        RB3E_DEBUG("Bound %p to port %i", socket, *bind_port);
+        if (*bind_port == 9103)
+        { // might need to change this once we get dynamic ports working
+            RB3E_DEBUG("Native socket obtained!");
+            game_socket = socket;
+        }
+    }
+
+    return r;
 }
 
 // Socket creation hook to allow insecure networking
@@ -149,6 +170,7 @@ int XNetXnAddrToInAddrHook(XNADDR *pxna, XNKID *pxnkid, IN_ADDR *pina)
             pina->S_un.S_addr = Liveless_PendingInternalIPv4;
         else
             pina->S_un.S_addr = Liveless_PendingExternalIPv4;
+        // TODO(Emma): it seems it tries reverting back to direct connect if this connection fails once
         Liveless_PendingJoin = 0;
         return ERROR_SUCCESS;
     }
@@ -313,6 +335,8 @@ void InitLivelessHooks()
         POKE_B(PORT_XAMSHOWFRIENDSUI, &XamShowFriendsUIShim);
         // hook invite accepted notification
         POKE_B(PORT_XL_XINVITEGETACCEPTEDINFO, &XInviteGetAcceptedInfoHook);
+        // hook the queueing socket bind function
+        HookFunction(PORT_QUEUINGSOCKET_BIND, &QueuingSocketBind, &QueuingSocketBindHook);
         RB3E_MSG("Applied liveless patches!", NULL);
     }
     if (config.EnableGoCentral)

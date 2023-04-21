@@ -9,7 +9,7 @@
 #include "ports.h"
 #include "config.h"
 #include "gocentral.h"
-#include "rb3/InetAddress.h"
+#include "quazal/InetAddress.h"
 
 #ifdef RB3E_WII
 int StartDNSLookupHook(void *wiiNetInit, char *domain)

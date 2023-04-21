@@ -119,6 +119,8 @@
 #define PORT_MEMFREE 0x827bc430                      // MemFree
 #define PORT_MEMALLOC 0x827bcd38                     // MemAlloc
 #define PORT_SYMBOLPREINIT 0x827c04f8                // Symbol::PreInit
+#define PORT_QUEUINGSOCKET_BIND 0x82b397b0           // Quazal::QueuingSocket::Bind
+#define PORT_QUAZALSOCKET_BIND 0x82b1a830            // Quazal::Socket::Bind
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway

@@ -11,7 +11,7 @@
 #include "net.h"
 #include "net_events.h"
 #include "ports.h"
-#include "rb3/InetAddress.h"
+#include "quazal/InetAddress.h"
 #include "rb3/Random.h"
 
 // structs for data types - not worth a whole header file

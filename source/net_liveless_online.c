@@ -11,7 +11,8 @@
 #include "net.h"
 #include "rb3enhanced.h"
 #include "ports.h"
-#include "rb3/InetAddress.h"
+#include "quazal/InetAddress.h"
+#include "quazal/QuazalSocket.h"
 #include "rb3/PassiveMessagesPanel.h"
 #include "rb3/RockCentralGateway.h"
 #include "xbox360.h"
@@ -19,6 +20,9 @@
 
 // done in LocaleHooks.c
 extern char RB3E_ActiveLocale[RB3E_LANG_LEN + 1];
+
+// done in xbox360_liveless.c
+extern QuazalSocket *game_socket;
 
 static int Liveless_Socket = -1;
 
@@ -117,15 +121,11 @@ void Liveless_DoClientLogin(int player_num, char make_proof, unsigned char *proo
     // make console signature proof
     if (make_proof)
     {
+        XeCryptHmacSha(proof_key, 0x10, config.LivelessAddress, strlen(config.LivelessAddress), &login->xuid, sizeof(XUID), NULL, 0, hash, 0x14);
         if (RB3E_IsEmulator() == 0)
-        {
-            XeCryptHmacSha(proof_key, 0x10, config.LivelessAddress, strlen(config.LivelessAddress), &login->xuid, sizeof(XUID), NULL, 0, hash, 0x14);
             XeKeysConsolePrivateKeySign(hash, login->proof);
-        }
         else // can't console sign on Xenia, TODO: passcode system as proof
-        {
-            strcpy(login->proof, "XENIA!");
-        }
+            memcpy(login->proof, hash, 0x14);
     }
 
     RB3E_TCP_Send(Liveless_Socket, &packet, sizeof(LLMM_PacketHeader) + sizeof(LLMM_ClientLogin));
@@ -263,9 +263,9 @@ void Liveless_Poll()
     if (Liveless_Connected == 0)
         return;
 
-    // 10 second timeout since last packet?
+    // 30 second timeout since last packet?
     // server should keep sending LL_Ping
-    if (frames_since_last_packet > (60 * 10))
+    if (frames_since_last_packet > (60 * 30))
     {
         RB3E_DEBUG("Connection with Liveless server timed out, disconnecting.", NULL);
         connection_error = 4;
@@ -277,13 +277,20 @@ void Liveless_Poll()
     memset(&recv_buf, 0, sizeof(LLMM_PacketHeader));
     // read from the socket
     r = RB3E_TCP_Recv(Liveless_Socket, &recv_buf, sizeof(LLMM_Packet));
-    if (r < 0 && RB3E_LastError() != 10035) // packet error that wasn't nonblocking
+    if (r < 0) // packet error
     {
-        // connection error
-        RB3E_DEBUG("Connection to Liveless socket severed, err %i", RB3E_LastError());
-        connection_error = 3;
-        Liveless_Disconnect();
-        return;
+        int err = RB3E_LastError();
+        // if the error wasn't cause we were blocking, and the error wasn't zero, AND
+        // we aren't on xenia OR, if on xenia, the error isn't WSAENOTSOCK(?) and is over 10000 (so a socket error)
+        // i don't know, i'm just trying to get it to work, lol -Emma
+        if (err != 10035 && err != 0 && (!RB3E_IsEmulator() || (err != 10038 && err > 10000)))
+        {
+            // connection error
+            RB3E_DEBUG("Connection to Liveless socket severed, ret %i err %i", r, err);
+            connection_error = 3;
+            Liveless_Disconnect();
+            return;
+        }
     }
     else if (r > 0) // got a packet, do something about it
     {
@@ -329,6 +336,16 @@ void Liveless_Poll()
             else if (recv_buf.header.packet_type == LL_Ping)
             {
                 Liveless_DoPong();
+            }
+            else if (recv_buf.header.packet_type == LL_NATPunchRequest)
+            {
+                LLMM_NATPunchRequest *packet = (LLMM_NATPunchRequest *)recv_buf.data;
+                RB3E_DEBUG("Server is asking us to punch through to public IP %08x", packet->public_ipv4);
+                if (game_socket != NULL)
+                {
+                    RB3E_DEBUG("We've got a game socket so send it", NULL);
+                    RB3E_UDP_SendTo((int)game_socket->native_socket, packet->public_ipv4, 9103, "NAT!", 4);
+                }
             }
             else
             {

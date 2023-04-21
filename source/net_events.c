@@ -5,7 +5,7 @@
 
 #include <stddef.h>
 #include <stdio.h>
-#include "rb3/InetAddress.h"
+#include "quazal/InetAddress.h"
 #include "rb3enhanced.h"
 #include "version.h"
 #include "ports.h"

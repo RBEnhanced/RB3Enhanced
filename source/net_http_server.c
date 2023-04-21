@@ -8,7 +8,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
-#include "rb3/InetAddress.h"
+#include "quazal/InetAddress.h"
 #include "rb3/SongMetadata.h"
 #include "rb3/BandSongMgr.h"
 #include "rb3enhanced.h"
