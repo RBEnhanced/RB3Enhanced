@@ -78,6 +78,12 @@ SOCKET socketHook(int af, int type, int protocol)
     return newSock;
 }
 
+void XNetStartupHook(XNetStartupParams *params)
+{
+    params->cfgFlags = XNET_STARTUP_BYPASS_SECURITY;
+    XNetStartup(params);
+}
+
 // XSession hook
 DWORD XSessionSearchExHook(DWORD dwProcedureIndex,
                            DWORD dwUserIndex,
@@ -309,6 +315,7 @@ void InitLivelessHooks()
         POKE_B(PORT_XNETREGISTERKEY, &ReturnsZero);
         POKE_B(PORT_XNETUNREGISTERKEY, &ReturnsZero);
         POKE_B(PORT_XNETUNREGISTERINADDR, &ReturnsZero);
+        POKE_B(PORT_XNETSTARTUP, &XNetStartupHook);
         // XNet patches for XnAddr handling
         POKE_B(PORT_XNETGETTITLEXNADDR, &XNetGetTitleXnAddrHook);
         POKE_B(PORT_XNETXNADDRTOINADDR, &XNetXnAddrToInAddrHook);

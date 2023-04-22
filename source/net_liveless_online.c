@@ -176,7 +176,7 @@ void Liveless_StartConnect(void *arg)
     r = RB3E_TCP_Connect(Liveless_Socket, liveless_address.address, LLMM_PORT);
     if (r < 0)
     {
-        RB3E_DEBUG("Connection failed %i", r);
+        RB3E_DEBUG("Connection failed %i %i", r, WSAGetLastError());
         connection_error = 2;
         connecting = 0;
         return;
