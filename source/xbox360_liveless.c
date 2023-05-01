@@ -12,6 +12,7 @@
 #include <string.h>
 #include "rb3/InetAddress.h"
 #include "net.h"
+#include "net_natpmp.h"
 #include "gocentral.h"
 #include "config.h"
 #include "utilities.h"
@@ -160,7 +161,11 @@ int XNetGetTitleXnAddrHook(XNADDR *pxna)
     ExternalIP.S_un.S_un_b.s_b3 = (BYTE)ExternalIPShort[2];
     ExternalIP.S_un.S_un_b.s_b4 = (BYTE)ExternalIPShort[3];
 
-    pxna->inaOnline.S_un.S_addr = ExternalIP.S_un.S_addr;
+    if (NATPMP_Success && NATPMP_ExternalIP != 0)
+        pxna->inaOnline.S_un.S_addr = NATPMP_ExternalIP;
+    else
+        pxna->inaOnline.S_un.S_addr = ExternalIP.S_un.S_addr;
+
     pxna->wPortOnline = 9103;
     for (i = 0; i < 20; i++)
     {

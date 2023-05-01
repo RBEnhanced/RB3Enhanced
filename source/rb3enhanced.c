@@ -114,6 +114,8 @@ void RB3E_RunLoop()
     if (config.EnableHTTPServer)
         HTTP_Server_RunLoop();
 #endif
+    if (config.EnableNATPMP)
+        NATPMP_Poll();
     framecount++;
 }
 

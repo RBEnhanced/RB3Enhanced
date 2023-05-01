@@ -52,6 +52,22 @@ int RB3E_LastError()
     return WSAGetLastError();
 }
 
+unsigned int RB3E_GetInternalIP()
+{
+    XNADDR xna = {0};
+    XNetGetTitleXnAddr(&xna);
+    return xna.ina.S_un.S_addr;
+}
+
+unsigned int RB3E_GetGatewayIP()
+{
+    // TODO(Emma): THIS IS A HACK LOL - replaces last octet of IP with .1
+    unsigned int int_ip = RB3E_GetInternalIP();
+    int_ip &= 0xFFFFFF00;
+    int_ip |= 0x00000001;
+    return int_ip;
+}
+
 int RB3E_BindPort(int socket, unsigned short port)
 {
     SOCKET sock = (SOCKET)socket;
