@@ -148,6 +148,9 @@ void ApplyPatches()
     POKE_32(PORT_STRAPSCREEN_2, NOP);
     // Patch out erroneous second host header
     POKE_32(PORT_NASWII_HOST, NOP);
+
+    // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
+    POKE_32(PORT_MICCHECK, 0x42800140);
 #elif RB3E_XBOX
     if (RB3E_IsEmulator())
         POKE_32(PORT_SONGMGR_ISDEMO_CHECK, NOP);
