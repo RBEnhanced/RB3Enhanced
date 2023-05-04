@@ -23,6 +23,7 @@
 #include "rb3/MusicLibrary.h"
 #include "rb3/Object.h"
 #include "rb3/PassiveMessagesPanel.h"
+#include "rb3/PropSync.h"
 #include "rb3/Random.h"
 #include "rb3/RockCentralGateway.h"
 #include "rb3/SongMetadata.h"

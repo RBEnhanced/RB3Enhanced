@@ -260,6 +260,7 @@ void ApplyHooks()
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
+    HookFunction(PORT_PROPSYNCBOOL, &PropSyncBool, &PropSyncHook); // hook to restore Wii venue intros for crossplay
 
     /////////////////////
     // crossplay hooks //

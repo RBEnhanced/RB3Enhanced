@@ -19,6 +19,7 @@
 #include "OvershellHooks.h"
 #include "ports.h"
 #include "ppcasm.h"
+#include "PropSyncHooks.h"
 #include "rb3enhanced.h"
 #include "SetlistHooks.h"
 #include "SongHooks.h"

@@ -215,6 +215,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_BINSTREAMWRITE 0x80342f48           // BinStream::Write
 #define PORT_BINSTREAMREAD 0x80342e7c            // BinStream::Read
 #define PORT_BINSTREAMWRITEENDIAN 0x800a7638     // BinStream::WriteEndian
+#define PORT_PROPSYNCBOOL 0x800fd3d4             // PropSync::Bool
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
