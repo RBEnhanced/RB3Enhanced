@@ -100,6 +100,11 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_force_hopos)}}");
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_mirror_mode)}}");
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_color_shuffle)}}");
+
+    // wii specific modifiers
+#ifdef RB3E_WII
+    ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_use_crossplay_netcode)}}");
+#endif
     return ModifierManagerConstructor(thisModifierManager, unk);
 }
 
@@ -148,6 +153,12 @@ void ApplyPatches()
     POKE_32(PORT_STRAPSCREEN_2, NOP);
     // Patch out erroneous second host header
     POKE_32(PORT_NASWII_HOST, NOP);
+
+    // remove registration of unused wii netmessage (RequestEnterFlowMsg, doesn't exist on PS3 and is unused on Wii, but will fuck up indices in packets on the PS3 side so needs to be removed)
+    POKE_32(0x8021f974, NOP);
+
+    // change part of Quazal RV short version to 0x1b0 to match PS3
+    POKE_32(0x8007b3d4, LI(6, 0x1b0));
 
     // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
     POKE_32(PORT_MICCHECK, 0x42800140);
@@ -215,6 +226,9 @@ void InitialiseFunctions()
     POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
     POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
+    POKE_B(&BinstreamWrite, PORT_BINSTREAMWRITE);
+    POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
+    POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -246,6 +260,24 @@ void ApplyHooks()
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
+
+    /////////////////////
+    // crossplay hooks //
+    /////////////////////
+
+    // patch user data in all applicable messages
+    POKE_BL(0x800b92f8, &GetUserDataWriteHook);
+    POKE_BL(0x800b8794, &GetUserDataWriteHook);
+    POKE_BL(0x800b8d2c, &GetUserDataWriteHook);
+    POKE_BL(0x800b8f7c, &GetUserDataWriteHook);
+    POKE_BL(0x800b89ec, &GetUserDataReadHook);
+    POKE_BL(0x800b8dfc, &GetUserDataReadHook);
+    POKE_BL(0x800b93e0, &GetUserDataReadHook);
+    POKE_BL(0x800b90c4, &GetUserDataReadHook);
+    POKE_BL(0x800b9028, &GetUserDataWriteEndianHook);
+    POKE_BL(0x800b9358, &GetUserDataWriteEndianHook);
+    POKE_BL(0x800b8d80, &GetUserDataWriteEndianHook);
+    POKE_BL(0x800b88c4, &GetUserDataWriteEndianHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);

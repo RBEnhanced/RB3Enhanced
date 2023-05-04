@@ -24,6 +24,10 @@ typedef struct _GlobalSymbols
     Symbol mirrorMode;
     Symbol blackBackground;
 
+#ifdef RB3E_WII
+    Symbol useCrossplayNetcode;
+#endif
+
     // gem widgets
     Symbol greenGem;
     Symbol redGem;
