@@ -5,6 +5,7 @@
 #include <xtl.h>
 #elif RB3E_WII
 #include <rvl/so.h>
+typedef so_fd_t SOCKET;
 #endif
 #include "quazal/InetAddress.h"
 
