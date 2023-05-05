@@ -27,7 +27,8 @@ char *RB3E_GetRawfilePath(char *path, int root_allowed)
     int path_length = strlen(path);
     int i = 0;
     // if the drive isn't mounted, don't bother
-    RB3E_Mounted = 0;
+    if (RB3E_Mounted == 0)
+        return NULL;
     // if its bigger than this, we're unsafe, we might buffer overflow
     if (path_length > sizeof(corrected_path))
         return NULL;
