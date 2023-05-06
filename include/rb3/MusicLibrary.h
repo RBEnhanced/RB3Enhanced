@@ -4,6 +4,6 @@
 #include "Symbol.h"
 
 // Jumps to a given entry in the music library
-void MusicLibrarySelectMaybe(int theMusicLibrary, Symbol entryName, int sortType, int unk_r6);
+void MusicLibrarySelect(int theMusicLibrary, Symbol entryName, int sortType, int unk_r6);
 
 #endif // _MUSICLIBRARY_H_

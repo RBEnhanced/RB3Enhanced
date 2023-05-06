@@ -9,6 +9,7 @@
 #include "config.h"
 #include "ports.h"
 #include "rb3/BandLabel.h"
+#include "rb3/UI/UIPanel.h"
 #include "rb3/SortNode.h"
 
 static char *originToIcon[][2] = {

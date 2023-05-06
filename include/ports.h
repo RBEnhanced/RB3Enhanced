@@ -94,6 +94,7 @@
 #define PORT_GETSONGSHORTNAME 0x8257c498             // MetaPerformer::GetSongShortname(?) - actual name not known
 #define PORT_GAME_CT 0x8267bf30                      // Game::__ct
 #define PORT_GAME_DT 0x8267b1f0                      // Game::__dt
+#define PORT_GAMEGETACTIVEPLAYER 0x82678e88          // Game::GetActivePlayer
 #define PORT_GETBANDUSERS 0x82683b78                 // BandUserMgr::GetBandUsers
 #define PORT_GETBANDUSERFROMSLOT 0x82682b60          // BandUserMgr::GetBandUserFromSlot
 #define PORT_GETSONGID 0x827a87f0                    // GetSongID, function used when adding songs to BandSongMgr
@@ -108,6 +109,9 @@
 #define PORT_SONGSORTBYRECENT 0x8265bde8             // RecentCmp::__ct
 #define PORT_FILESTREAM_CT 0x827c3340                // FileStream::__ct (the one that takes a char * path instead of a File object)
 #define PORT_CHUNKSTREAM_CT 0x827ca488               // ChunkStream::__ct
+#define PORT_RNDPROPANIMSETFRAME 0x82426dd0          // RndPropAnim::SetFrame
+#define PORT_DYNAMICCAST 0x8282a0c8                  // dynamic_cast
+#define PORT_OBJECTFINDUIPANEL 0x82537430            // Object::Find<UIPanel>
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -121,6 +125,8 @@
 #define PORT_THEBANDUSERMGR 0x82e023b8      // address of TheBandUserMgr
 #define PORT_THESONGSORTMGR 0x82dfee5c      // pointer to TheSongSortMgr
 #define PORT_THEMUSICLIBRARY 0x82dfd3a8     // pointer to TheMusicLibrary
+#define PORT_THEGAME 0x82e02128             // pointer to TheGame (you lost)
+#define PORT_OBJECTDIRMAINDIR 0x82e054b8    // ObjectDir::sMainDir
 // import function stubs
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c
@@ -192,6 +198,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_DATAREADFILE 0x80319bdc             // DataReadFile
 #define PORT_GAME_CT 0x80110f20                  // Game::__ct
 #define PORT_GAME_DT 0x80111614                  // Game::__dt
+#define PORT_GAMEGETACTIVEPLAYER 0x8011346c      // Game::GetActivePlayer
 #define PORT_WIINETINIT_DNSLOOKUP 0x8030c3a0     // WiiNetInit::StartDNSLookup
 #define PORT_BUILDINSTRUMENTSELECTION 0x802478a8 // BuildInstrumentSelectionList(?) - actual name not known
 #define PORT_PREPARESOMEVECTORMAYBE 0x80247c58   // Prepares some vector, used by BuildInstrumentSelectionList
@@ -209,6 +216,9 @@ void DbgPrint(const char *s, ...);
 #define PORT_GETMETADATA 0x80515510              // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
 #define PORT_GETSONGID 0x8051513c                // GetSongID, function used when adding songs to BandSongMgr
 #define PORT_GETSONGIDFROMSHORTNAME 0x801d0b44   // BandSongMgr::GetSongIDFromShortname
+#define PORT_RNDPROPANIMSETFRAME 0x80632790      // RndPropAnim::SetFrame
+#define PORT_DYNAMICCAST 0x806f5e78              // dynamic_cast
+#define PORT_OBJECTFINDUIPANEL 0x80101d74        // Object::Find<UIPanel>
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
@@ -220,6 +230,8 @@ void DbgPrint(const char *s, ...);
 #define PORT_THESONGMGR 0x808fbda4          // address of TheSongMgr
 #define PORT_THEMETAPERFORMER 0x808fd6f8    // address of TheMetaPerformer
 #define PORT_THEBANDUSERMGR 0x808f9350      // pointer to TheBandUserMgr
+#define PORT_THEGAME 0x808f9758             // pointer to TheGame (you lost)
+#define PORT_OBJECTDIRMAINDIR 0x8091b1e8    // ObjectDir::sMainDir
 // string pointers
 #define PORT_NASWII_AC_URL 0x808e2310
 #define PORT_NASWII_PR_URL 0x808e2390

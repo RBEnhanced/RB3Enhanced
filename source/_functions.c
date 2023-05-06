@@ -18,8 +18,11 @@
         __asm { li r3, __LINE__ }     \
     }
 #else // other platforms should use GCC notation
-#define RB3E_STUB(x) \
-    void x() { asm("li 0, " LINE_STRING ";"); }
+#define RB3E_STUB(x)                   \
+    void x()                           \
+    {                                  \
+        asm("li 0, " LINE_STRING ";"); \
+    }
 #endif
 
 // function stub definitions
@@ -44,6 +47,10 @@ RB3E_STUB(GetBandUsers)
 RB3E_STUB(GetBandUserFromSlot)
 RB3E_STUB(ChunkStreamConstructor)
 RB3E_STUB(FileStreamConstructor)
+RB3E_STUB(Dynamic_Cast)
+RB3E_STUB(GameGetActivePlayer)
+RB3E_STUB(PropAnimSetFrame)
+RB3E_STUB(ObjectFindUIPanel)
 // hooked function stubs
 RB3E_STUB(Localize)
 RB3E_STUB(SetVenue)
@@ -67,7 +74,7 @@ RB3E_STUB(GameDestruct)
 RB3E_STUB(SetSongNameFromNode)
 RB3E_STUB(PrepareSomeVectorMaybe)
 RB3E_STUB(SomeVectorPushBackMaybe)
-RB3E_STUB(MusicLibrarySelectMaybe)
+RB3E_STUB(MusicLibrarySelect)
 RB3E_STUB(SongSortByRecent)
 RB3E_STUB(GetSymbolByGameOrigin)
 RB3E_STUB(GetGameOriginBySymbol)

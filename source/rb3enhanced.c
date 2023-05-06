@@ -207,7 +207,7 @@ void InitialiseFunctions()
     POKE_B(&FileExists, PORT_FILE_EXISTS);
     POKE_B(&SetAddress, PORT_SETADDRESS);
     POKE_B(&QueueMessage, PORT_QUEUEMESSAGE);
-    POKE_B(&MusicLibrarySelectMaybe, PORT_MUSICLIBRARYSELECTMAYBE);
+    POKE_B(&MusicLibrarySelect, PORT_MUSICLIBRARYSELECTMAYBE);
     POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
@@ -215,6 +215,9 @@ void InitialiseFunctions()
     POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
     POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
+    POKE_B(&Dynamic_Cast, PORT_DYNAMICCAST);
+    POKE_B(&GameGetActivePlayer, PORT_GAMEGETACTIVEPLAYER);
+    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -243,6 +246,7 @@ void ApplyHooks()
     HookFunction(PORT_GAME_DT, &GameDestruct, &GameDestructHook);
     HookFunction(PORT_GETSYMBOLBYGAMEORIGIN, &GetSymbolByGameOrigin, &GetSymbolByGameOriginHook);
     HookFunction(PORT_GETGAMEORIGINBYSYMBOL, &GetGameOriginBySymbol, &GetGameOriginBySymbolHook);
+    HookFunction(PORT_RNDPROPANIMSETFRAME, &PropAnimSetFrame, &PropAnimSetFrameHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);

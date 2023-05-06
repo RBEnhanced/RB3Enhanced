@@ -19,6 +19,7 @@
 #include "ports.h"
 #include "ppcasm.h"
 #include "rb3enhanced.h"
+#include "RndPropAnimHooks.h"
 #include "SetlistHooks.h"
 #include "SongHooks.h"
 #include "SongSort.h"
