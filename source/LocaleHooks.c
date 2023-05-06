@@ -36,6 +36,9 @@ static char *newLocales[][2] = {
     {"mod_force_hopos", "Force HOPOs"},
     {"mod_mirror_mode", "Mirror Mode (Guitar Only)"},
     {"mod_color_shuffle", "Gem Color Shuffle"},
+#ifdef RB3E_WII
+    {"mod_use_crossplay_netcode", "Crossplay (PS3/Wii)"},
+#endif
 };
 static int numNewLocales = sizeof(newLocales) / sizeof(newLocales[0]);
 

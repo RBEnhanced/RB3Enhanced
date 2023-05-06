@@ -20,6 +20,9 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.colorShuffle, "mod_color_shuffle");
     SymbolConstruct(&globalSymbols.forceHopos, "mod_force_hopos");
     SymbolConstruct(&globalSymbols.mirrorMode, "mod_mirror_mode");
+#ifdef RB3E_WII
+    SymbolConstruct(&globalSymbols.useCrossplayNetcode, "mod_use_crossplay_netcode");
+#endif
 
     SymbolConstruct(&globalSymbols.greenGem, "gem_green.wid");
     SymbolConstruct(&globalSymbols.redGem, "gem_red.wid");
