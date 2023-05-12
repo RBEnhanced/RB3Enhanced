@@ -112,6 +112,10 @@
 #define PORT_RNDPROPANIMSETFRAME 0x82426dd0          // RndPropAnim::SetFrame
 #define PORT_DYNAMICCAST 0x8282a0c8                  // dynamic_cast
 #define PORT_OBJECTFINDUIPANEL 0x82537430            // Object::Find<UIPanel>
+#define PORT_JOYPADGETCACHEDXINPUTCAPS 0x82531F08    // JoypadGetCachedXInputCaps
+#define PORT_JOYPADGETPADDATA 0x82524998             // JoypadGetPadData
+#define PORT_MEMFREE 0x827bc430                      // MemFree
+#define PORT_MEMALLOC 0x827bcd38                     // MemAlloc
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -219,6 +223,9 @@ void DbgPrint(const char *s, ...);
 #define PORT_RNDPROPANIMSETFRAME 0x80632790      // RndPropAnim::SetFrame
 #define PORT_DYNAMICCAST 0x806f5e78              // dynamic_cast
 #define PORT_OBJECTFINDUIPANEL 0x80101d74        // Object::Find<UIPanel>
+#define PORT_JOYPADGETPADDATA 0x80302eec         // JoypadGetPadData
+#define PORT_MEMALLOC 0x80353e18                 // MemAlloc
+#define PORT_MEMFREE 0x80354238                  // MemFree
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

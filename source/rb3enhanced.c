@@ -218,6 +218,9 @@ void InitialiseFunctions()
     POKE_B(&Dynamic_Cast, PORT_DYNAMICCAST);
     POKE_B(&GameGetActivePlayer, PORT_GAMEGETACTIVEPLAYER);
     POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
+    POKE_B(&JoypadGetPadData, PORT_JOYPADGETPADDATA);
+    POKE_B(&MemAlloc, PORT_MEMALLOC);
+    POKE_B(&MemFree, PORT_MEMFREE);
     RB3E_MSG("Functions initialized!", NULL);
 }
 

@@ -28,4 +28,5 @@ DWORD XexGetProcedureAddress(HANDLE ModuleHandle, DWORD Ordinal, PVOID OutAddres
 // our own defined functions
 void InitCryptoHooks();
 void InitLivelessHooks();
+void InitInputHooks();
 #endif // RB3E_XBOX
