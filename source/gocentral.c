@@ -14,6 +14,7 @@
 #ifdef RB3E_WII
 int StartDNSLookupHook(void *wiiNetInit, char *domain)
 {
+    RB3E_DEBUG("WiiNetInit::StartDNSLookup %s", domain);
     if ((strcmp(domain + 10, ".hmxservices.com") == 0) && config.EnableGoCentral)
         domain = config.GoCentralAddress;
     return StartDNSLookup(wiiNetInit, domain);

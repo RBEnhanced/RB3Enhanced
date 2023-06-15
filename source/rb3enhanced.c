@@ -154,7 +154,7 @@ void ApplyPatches()
 #elif RB3E_XBOX
     if (RB3E_IsEmulator())
         POKE_32(PORT_SONGMGR_ISDEMO_CHECK, NOP);
-      
+
     // skips check for stagekit to allow for fog commands to be issued without a stagekit plugged in
     POKE_32(PORT_STAGEKIT_EXISTS, NOP);
 #endif
@@ -270,16 +270,25 @@ void ApplyHooks()
 void StartupHook(void *ThisApp, int argc, char **argv)
 {
     RB3E_MSG("Loaded! Version " RB3E_BUILDTAG " (" RB3E_BUILDCOMMIT ")", NULL);
+    // apply code patches and hooks
     InitialiseFunctions();
     ApplyPatches();
     ApplyHooks();
+    // initialise the default config state
+    InitDefaultConfig();
+    // if the launcher's passed a config, try to load it
+    if (HasLauncherConfig())
+        LoadConfig();
+    // mount filesystems, then load a config file
     RB3E_MountFileSystems();
-    InitConfig();
     LoadConfig();
+    // apply any patches that are only added after config loads
     ApplyConfigurablePatches();
 
+    // start the game by calling the proper app constructor
     RB3E_MSG("Starting Rock Band 3...", NULL);
     AppConstructor(ThisApp, argc, argv);
+    // anything after here is post-splash
 
     InitGlobalSymbols(); // this has to be done after init
     return;

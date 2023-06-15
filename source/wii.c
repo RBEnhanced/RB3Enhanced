@@ -92,11 +92,12 @@ static void CTHook(void *ThisApp, int argc, char **argv)
         POKE_32(PORT_NASWII_AC_URL, &ACURL);
         POKE_32(PORT_NASWII_PR_URL, &PRURL);
     }
-    // unmount sd card if legacy sd card mode is enabled
-    if (config.LegacySDMode)
+    // unmount sd card if legacy sd card mode is enabled and the drive is mounted
+    if (config.LegacySDMode && RB3E_Mounted)
     {
         RB3E_DEBUG("Unmounting SD card...", NULL);
         FAT_partition_destructor(&sd_partition);
+        __io_wiisd.shutdown();
         RB3E_Mounted = 0;
     }
 }

@@ -56,7 +56,8 @@ typedef struct _RB3E_Config
 
 extern RB3E_Config config;
 
-void InitConfig();
+void InitDefaultConfig();
+int HasLauncherConfig();
 void LoadConfig();
 
 #endif // _CONFIG_H
