@@ -1,5 +1,6 @@
 if git --version &>/dev/null; then
 # if git is installed, get the current information from the repository
+    [[ ! -z ${GITHUB_ACTIONS} ]] && [[ ${RUNNER_OS} == "Linux" ]] && git config --global --add safe.directory /__w/RB3Enhanced/RB3Enhanced
     cat > source/version.h <<EOF
 // This file will be auto generated during building, and should
 // not be modified manually
