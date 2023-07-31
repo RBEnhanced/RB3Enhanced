@@ -106,8 +106,6 @@ char *LocalizeHook(int thisLocale, Symbol sym, int fail)
         for (i = 0; i < numNewLocales; i++)
             if (strcmp(sym.sym, newLocales[i][0]) == 0)
                 return newLocales[i][1];
-        // otherwise, log the failure so we know for later
-        RB3E_DEBUG("Could not localize %s", sym.sym);
     }
     return original;
 }
