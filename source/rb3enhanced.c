@@ -188,6 +188,12 @@ void ApplyConfigurablePatches()
     }
 }
 
+void SymbolPreInitHook(int stringTableSize, int hashTableSize)
+{
+    SymbolPreInit(stringTableSize, hashTableSize);
+    InitGlobalSymbols();
+}
+
 void InitialiseFunctions()
 {
 #ifndef RB3E_WII
@@ -253,6 +259,7 @@ void ApplyHooks()
     HookFunction(PORT_GETSYMBOLBYGAMEORIGIN, &GetSymbolByGameOrigin, &GetSymbolByGameOriginHook);
     HookFunction(PORT_GETGAMEORIGINBYSYMBOL, &GetGameOriginBySymbol, &GetGameOriginBySymbolHook);
     HookFunction(PORT_RNDPROPANIMSETFRAME, &PropAnimSetFrame, &PropAnimSetFrameHook);
+    HookFunction(PORT_SYMBOLPREINIT, &SymbolPreInit, &SymbolPreInitHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
@@ -265,12 +272,6 @@ void ApplyHooks()
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
-}
-
-void SymbolPreInitHook(int stringTableSize, int hashTableSize)
-{
-    SymbolPreInit(stringTableSize, hashTableSize);
-    InitGlobalSymbols();
 }
 
 void StartupHook(void *ThisApp, int argc, char **argv)
