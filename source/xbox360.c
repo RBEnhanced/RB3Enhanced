@@ -68,6 +68,13 @@ int RB3E_CreateThread(void *address, void *arg, int stack_size)
     return -1;
 }
 
+int RB3E_RelaunchGame()
+{
+    // no idea if this actually works
+    XLaunchNewImage("default.xex", 0);
+    return 0;
+}
+
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
     // initialise hooks for XeCrypt

@@ -267,6 +267,12 @@ void ApplyHooks()
     RB3E_MSG("Hooks applied!", NULL);
 }
 
+void SymbolPreInitHook(int stringTableSize, int hashTableSize)
+{
+    SymbolPreInit(stringTableSize, hashTableSize);
+    InitGlobalSymbols();
+}
+
 void StartupHook(void *ThisApp, int argc, char **argv)
 {
     RB3E_MSG("Loaded! Version " RB3E_BUILDTAG " (" RB3E_BUILDCOMMIT ")", NULL);
@@ -289,7 +295,5 @@ void StartupHook(void *ThisApp, int argc, char **argv)
     RB3E_MSG("Starting Rock Band 3...", NULL);
     AppConstructor(ThisApp, argc, argv);
     // anything after here is post-splash
-
-    InitGlobalSymbols(); // this has to be done after init
     return;
 }

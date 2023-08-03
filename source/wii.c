@@ -72,6 +72,30 @@ int RB3E_CreateThread(void *address, void *arg, int stack_size)
     return -1;
 }
 
+int RB3E_RelaunchGame()
+{
+    /*
+        Adding this *properly* involves adding new BrainSlug function definitions,
+        so I'm gonna hold off until those can be done properly, maybe.
+
+        But the gist of what this function ought to do on Wii is:
+
+        First, make a nice clean buffer, in MEM2 ideally.
+        maybe we can use game allocator for this? i dont know. "pseudo"code follows:
+
+        int file = RB3E_OpenFile("rb3/rb3e/launcher.dol", 0);
+        int filesize = RB3E_FileSize(file);
+        RB3E_ReadFile(file, 0, buffer, filesize);
+        RB3E_CloseFile(file);
+        FAT_partition_destructor(&sd_partition);
+        __io_wiisd.shutdown();
+        OSDisableInterrupts();
+        uint32_t entrypoint = LoadDOL(buffer);
+        ((void)(*)entrypoint)();
+    */
+    return -1;
+}
+
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
     // launch game

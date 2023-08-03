@@ -124,7 +124,14 @@ DataNode *DTAIsEmulator(DataNode *node, int *args)
     return node;
 }
 
-int AddDTAFunctions(int r3_presv)
+DataNode *DTARelaunchGame(DataNode *node, int *args)
+{
+    node->type = INT_VALUE;
+    node->value.intVal = RB3E_RelaunchGame();
+    return node;
+}
+
+void AddDTAFunctions()
 {
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.print_debug) = (int)PrintToDebugger;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_change_music_speed) = (int)ChangeMusicSpeed;
@@ -133,6 +140,6 @@ int AddDTAFunctions(int r3_presv)
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_track_speed) = (int)GetTrackSpeed;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_set_venue) = (int)DTASetVenue;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_is_emulator) = (int)DTAIsEmulator;
+    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_relaunch_game) = (int)DTARelaunchGame;
     RB3E_MSG("Added DTA functions!", NULL);
-    return r3_presv;
 }
