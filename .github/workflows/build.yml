@@ -39,7 +39,7 @@ jobs:
     runs-on: windows-2019
     timeout-minutes: 10
 
-    if: ${{ env.BUILD_TOOLS_FILE != '' }}
+    if: ${{ secrets.BUILD_TOOLS_FILE != '' }}
 
     steps:
       - name: Checkout
