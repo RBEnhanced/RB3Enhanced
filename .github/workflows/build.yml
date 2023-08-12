@@ -24,12 +24,12 @@ jobs:
           make install
           cd ..
 
-      - name: Compile
+      - name: Compile Wii
         run: |
           make clean
           make wii -j2 DEBUG=1
 
-      - name: Upload binaries
+      - name: Upload Wii binaries
         uses: actions/upload-artifact@v2
         with:
           name: RB3Enhanced-Wii-Debug
@@ -39,7 +39,7 @@ jobs:
     runs-on: windows-2019
     timeout-minutes: 10
 
-    if: ${{ secrets.BUILD_TOOLS_FILE != '' }}
+    if: secrets.BUILD_TOOLS_FILE != ''
 
     steps:
       - name: Checkout
@@ -54,14 +54,14 @@ jobs:
           Invoke-WebRequest -OutFile tools.zip $Env:BUILD_TOOLS
           7z x tools.zip -otools
 
-      - name: Compile
+      - name: Compile Xbox
         env:
           XEDK: ${{ github.workspace }}/tools
         run: |
           make clean
           make xbox -j2 DEBUG=1
 
-      - name: Upload binaries
+      - name: Upload Xbox binaries
         uses: actions/upload-artifact@v2
         with:
           name: RB3Enhanced-Xbox-Debug
