@@ -53,7 +53,7 @@ jobs:
         id: download_tools
         if: steps.check_tools.outputs.tools_exist == 'true'
         run: |
-          Invoke-WebRequest -OutFile tools.zip $Env:BUILD_TOOLS_FILE
+          Invoke-WebRequest -OutFile tools.zip $Env:BUILD_TOOLS
           7z x tools.zip -otools
 
       - name: Compile Xbox
