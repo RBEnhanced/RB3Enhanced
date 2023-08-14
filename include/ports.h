@@ -118,6 +118,9 @@
 #define PORT_MEMFREE 0x827bc430                      // MemFree
 #define PORT_MEMALLOC 0x827bcd38                     // MemAlloc
 #define PORT_SYMBOLPREINIT 0x827c04f8                // Symbol::PreInit
+#define PORT_MEMPRINTOVERVIEW 0x827bc838             // MemPrintOverview
+#define PORT_MEMPRINT 0x827bc970                     // MemPrint
+#define PORT_MEMNUMHEAPS 0x827bb628                  // MemNumHeaps
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway

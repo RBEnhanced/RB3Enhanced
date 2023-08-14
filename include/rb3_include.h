@@ -33,6 +33,7 @@
 #include "rb3/SortNode.h"
 #include "rb3/String.h"
 #include "rb3/Symbol.h"
+#include "rb3/TextStream.h"
 #include "rb3/TrackPanelDirBase.h"
 #include "rb3/UsbWii.h"
 

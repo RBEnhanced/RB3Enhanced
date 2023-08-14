@@ -52,6 +52,10 @@ typedef struct _RB3E_Config
     char NASServer[RB3E_MAX_DOMAIN];
     char LegacySDMode;
 #endif
+#ifdef RB3EDEBUG
+    // [Debug]
+    char LogMemoryOverview;
+#endif
 } RB3E_Config;
 
 extern RB3E_Config config;

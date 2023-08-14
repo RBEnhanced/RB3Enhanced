@@ -121,6 +121,13 @@ static int INIHandler(void *user, const char *section, const char *name, const c
         if (strcmp(name, "DisablePostProcessing") == 0)
             config.DisablePostProcessing = RB3E_CONFIG_BOOL(value);
     }
+#ifdef RB3EDEBUG
+    if (strcmp(section, "Debug") == 0)
+    {
+        if (strcmp(name, "LogMemoryOverview") == 0)
+            config.LogMemoryOverview = RB3E_CONFIG_BOOL(value);
+    }
+#endif
     return 1;
 }
 

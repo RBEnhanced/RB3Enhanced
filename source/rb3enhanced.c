@@ -103,6 +103,40 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
     return ModifierManagerConstructor(thisModifierManager, unk);
 }
 
+// a TextStream object that prints straight to RB3E_DEBUG
+void DebugTextStreamDestructor(void *thisTextStream)
+{
+    // not dynamically allocating anything, can't be a destructor
+}
+void DebugTextStreamPrint(void *thisTextStream, char *text)
+{
+#ifdef RB3E_XBOX
+    // HACK(Emma): retail xbdm doesn't like newlines.
+    // so what do we do? split up the string by every newline
+    char *text_ptr = text;
+    char *newline = text;
+    do
+    {
+        newline = strstr(text_ptr, "\n");
+        if (newline != NULL)
+        {
+            newline[0] = 0;
+            RB3E_DEBUG("%s", text_ptr);
+            // skip over the newline character and keep going
+            text_ptr += strlen(text_ptr) + 1;
+        }
+        else if (text_ptr[0] != 0)
+        {
+            RB3E_DEBUG("%s", text_ptr);
+        }
+    } while (newline != NULL);
+#else
+    RB3E_DEBUG("%s", text);
+#endif
+}
+TextStream_vtable DebugTextStream_vt = {DebugTextStreamDestructor, DebugTextStreamPrint};
+TextStream DebugTextStream = {&DebugTextStream_vt};
+
 static unsigned int framecount = 0;
 // This function runs every frame.
 // DO NOT TAKE LONGER THAN A FEW MILLISECONDS, DO **NOT** DO ANYTHING BLOCKING HERE
@@ -113,6 +147,11 @@ void RB3E_RunLoop()
 #ifdef RB3E_XBOX
     if (config.EnableHTTPServer)
         HTTP_Server_RunLoop();
+#endif
+#ifdef RB3E_DEBUG
+    // print out memory every 5 seconds
+    if (config.LogMemoryOverview && framecount % 300 == 0)
+        MemPrintOverview(-3, &DebugTextStream);
 #endif
     framecount++;
 }
@@ -203,6 +242,9 @@ void InitialiseFunctions()
     POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
     POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
     POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
+    POKE_B(&MemPrintOverview, PORT_MEMPRINTOVERVIEW);
+    POKE_B(&MemPrint, PORT_MEMPRINT);
+    POKE_B(&MemNumHeaps, PORT_MEMNUMHEAPS);
 #endif
     POKE_B(&PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
     POKE_B(&SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);
