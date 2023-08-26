@@ -65,6 +65,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.RawfilesDir, value, RB3E_MAX_CONFIG_LEN);
         if (strcmp(name, "DisableRawfiles") == 0)
             config.DisableRawfiles = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "QuazalLogging") == 0)
+            config.QuazalLogging = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "Events") == 0)
     {

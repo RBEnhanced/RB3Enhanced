@@ -26,6 +26,7 @@ typedef struct _RB3E_Config
     char LanguageOverride[RB3E_LANG_LEN + 1];
     char RawfilesDir[RB3E_MAX_CONFIG_LEN];
     char DisableRawfiles;
+    char QuazalLogging;
     // [Graphics]
     int RenderResX;
     int RenderResY;

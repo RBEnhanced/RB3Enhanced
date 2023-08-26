@@ -18,6 +18,7 @@
 #include "OvershellHooks.h"
 #include "ports.h"
 #include "ppcasm.h"
+#include "QuazalHooks.h"
 #include "rb3enhanced.h"
 #include "RndPropAnimHooks.h"
 #include "SetlistHooks.h"

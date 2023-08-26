@@ -225,6 +225,35 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_FACE_PAINT_CHECK, LI(3, 1));
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
     }
+
+#ifdef RB3EDEBUG
+    if (config.QuazalLogging == 1)
+    {
+#ifdef RB3E_WII
+        POKE_B(&OperatorEqualsFmt, 0x800183e4);
+        POKE_BL(0x80018718, &OperatorEqualsFmtHook);
+        POKE_BL(0x8006a6a8, &OperatorEqualsFmtHook);
+        POKE_BL(0x8006cb58, &OperatorEqualsFmtHook);
+        POKE_BL(0x8006a82c, &OperatorEqualsFmtHook);
+
+        // POKE_32(0x804735c4, NOP);
+        POKE_32(0x8006c984, LI(6, 1));
+        POKE_32(0x8006a170, LI(6, 1));
+        POKE_32(0x8006c9d0, LI(6, 1));
+        // POKE_32(0x8007b3d4, LI(6, 0x1b0));
+#else
+        POKE_B(&OperatorEqualsFmt, 0x82a86ff0);
+        POKE_BL(0x82a87550, &OperatorEqualsFmtHook);
+        POKE_BL(0x82a97920, &OperatorEqualsFmtHook);
+        POKE_BL(0x82a94744, &OperatorEqualsFmtHook);
+        POKE_BL(0x82a948e0, &OperatorEqualsFmtHook);
+
+        // POKE_32(0x804735c4, NOP);
+        POKE_32(0x82a976dc, LI(8, 1));
+        POKE_32(0x82a97920, NOP);
+#endif
+    }
+#endif
 }
 
 void SymbolPreInitHook(int stringTableSize, int hashTableSize)
