@@ -8,7 +8,7 @@ typedef struct _DirLoader
     // Loader base stuff
     int *vtable;
     int unk;
-    int unk2;
+    int loaderPos;
     String mFilePath;
     int unk3;
 

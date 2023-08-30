@@ -1,3 +1,9 @@
+/*
+    RB3Enhanced - QuazalHooks.c
+    Hooks for Quazal-related functions.
+    Quazal is the creator of the networking middleware used by RB3.
+*/
+
 #include "rb3e_include.h"
 #include <string.h>
 

@@ -1,3 +1,9 @@
+/*
+    RB3Enhanced - GlobalSymbols.c
+    Symbols that should be initialized at game startup.
+    If you are trying to reference a symbol that would normally be created by the game at some later point, it needs to be added and intiialized here first.
+*/
+
 #include <string.h>
 #include <stdio.h>
 #include "rb3/Symbol.h"
