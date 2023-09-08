@@ -29,6 +29,10 @@ int XeCryptSha(void *input_1, int input_1_size, void *input_2, int input_2_size,
 int XeCryptHmacSha(void *key, int key_size, void *input_1, int input_1_size, void *input_2, int input_2_size, void *input_3, int input_3_size, void *output, int output_size);
 int XeKeysConsolePrivateKeySign(unsigned char hash[0x14], unsigned char output_cert_sig[0x228]);
 
+// dashlaunch function definitions
+typedef int (*dlaunchGetOptValByName_t)(char *opt_name, int *val);
+typedef int (*dlaunchSetOptValByName_t)(char *opt_name, int *val);
+
 // our own defined functions
 void InitCryptoHooks();
 void InitLivelessHooks();
