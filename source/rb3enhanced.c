@@ -160,6 +160,9 @@ void ApplyPatches()
     // change part of Quazal RV short version to 0x1b0 to match PS3
     POKE_32(0x8007b3d4, LI(6, 0x1b0));
 
+    // disable forced video venues when hosting online on wii
+    POKE_32(0x80228390, NOP);
+
     // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
     POKE_32(PORT_MICCHECK, 0x42800140);
 #elif RB3E_XBOX
