@@ -121,6 +121,9 @@
 #define PORT_SYMBOLPREINIT 0x827c04f8                // Symbol::PreInit
 #define PORT_QUEUINGSOCKET_BIND 0x82b397b0           // Quazal::QueuingSocket::Bind
 #define PORT_QUAZALSOCKET_BIND 0x82b1a830            // Quazal::Socket::Bind
+#define PORT_MEMPRINTOVERVIEW 0x827bc838             // MemPrintOverview
+#define PORT_MEMPRINT 0x827bc970                     // MemPrint
+#define PORT_MEMNUMHEAPS 0x827bb628                  // MemNumHeaps
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -178,6 +181,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_OPTIONSTR_DEFINE 0x8030e418        // bl to OptionStr("define", NULL) in PreInitSystem
 #define PORT_RUNLOOP_SPARE 0x8000f740           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
 #define PORT_MICCHECK 0x8024a4e8                // a bne that throws an error on the song select screen if the mic is not connected
+#define PORT_BIGSYMBOLFUNC_TAIL 0x8037a3d4      // blr after a function that initialises a bunch of symbols
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError

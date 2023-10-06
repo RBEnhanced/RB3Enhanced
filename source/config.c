@@ -65,6 +65,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.RawfilesDir, value, RB3E_MAX_CONFIG_LEN);
         if (strcmp(name, "DisableRawfiles") == 0)
             config.DisableRawfiles = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "QuazalLogging") == 0)
+            config.QuazalLogging = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "Events") == 0)
     {
@@ -123,6 +125,13 @@ static int INIHandler(void *user, const char *section, const char *name, const c
         if (strcmp(name, "DisablePostProcessing") == 0)
             config.DisablePostProcessing = RB3E_CONFIG_BOOL(value);
     }
+#ifdef RB3EDEBUG
+    if (strcmp(section, "Debug") == 0)
+    {
+        if (strcmp(name, "LogMemoryOverview") == 0)
+            config.LogMemoryOverview = RB3E_CONFIG_BOOL(value);
+    }
+#endif
     return 1;
 }
 

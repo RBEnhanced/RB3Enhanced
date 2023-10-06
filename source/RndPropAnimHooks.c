@@ -1,6 +1,13 @@
+/*
+    RB3Enhanced - RndPropAnimHooks.c
+    Hooks for the RndPropAnim class.
+*/
+
 #include "rb3e_include.h"
 #include "RndPropAnimHooks.h"
 
+// this hook exists to fix the bug where the pause menu will not appear when playing an instrument not normally supported by your controller type (drums on keys, etc.)
+// see https://github.com/RBEnhanced/RB3Enhanced/issues/2
 void PropAnimSetFrameHook(RndPropAnim *rndPropAnim, float frame, float time)
 {
     if (strcmp(rndPropAnim->object.name, "slot_positions.anim") == 0)

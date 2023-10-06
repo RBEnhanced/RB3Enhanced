@@ -10,7 +10,8 @@
                 "_DEBUG",
                 "_XBOX",
                 "RB3E",
-                "RB3E_XBOX"
+                "RB3E_XBOX",
+                "RB3EDEBUG"
             ],
             "compilerPath": "${XEDK}/bin/win32/cl.exe",
             "cStandard": "c89",
@@ -28,7 +29,8 @@
                 "HW_RVL",
                 "__wii__",
                 "RB3E",
-                "RB3E_WII"
+                "RB3E_WII",
+                "RB3EDEBUG"
             ],
             "compilerPath": "C:/devkitPro/devkitPPC/bin/powerpc-eabi-gcc.exe",
             "cStandard": "c89",

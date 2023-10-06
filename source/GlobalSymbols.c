@@ -1,11 +1,29 @@
+/*
+    RB3Enhanced - GlobalSymbols.c
+    Symbols that should be initialized at game startup.
+    If you are trying to reference a symbol that would normally be created by the game at some later point, it needs to be added and intiialized here first.
+*/
+
 #include <string.h>
+#include <stdio.h>
 #include "rb3/Symbol.h"
+#include "ports.h"
 #include "GlobalSymbols.h"
 
 GlobalSymbols globalSymbols;
+static char globalSymbolsInitialised = 0;
 
 void InitGlobalSymbols()
 {
+    // do a little sanity check
+    if (globalSymbolsInitialised && globalSymbols.print_debug.sym != NULL)
+    {
+        RB3E_DEBUG("Global symbols already initialised", NULL);
+        return;
+    }
+
+    RB3E_DEBUG("Initialising global symbols", NULL);
+
     memset(&globalSymbols, 0, sizeof(globalSymbols));
 
     SymbolConstruct(&globalSymbols.print_debug, "print_debug");
@@ -60,4 +78,6 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.overshell_drums_pro, "overshell_drums_pro");
     SymbolConstruct(&globalSymbols.overshell_vocal_solo, "overshell_vocal_solo");
     SymbolConstruct(&globalSymbols.overshell_vocal_harmony, "overshell_vocal_harmony");
+
+    globalSymbolsInitialised = 1;
 }

@@ -103,6 +103,40 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
     return ModifierManagerConstructor(thisModifierManager, unk);
 }
 
+// a TextStream object that prints straight to RB3E_DEBUG
+void DebugTextStreamDestructor(void *thisTextStream)
+{
+    // not dynamically allocating anything, can't be a destructor
+}
+void DebugTextStreamPrint(void *thisTextStream, char *text)
+{
+#ifdef RB3E_XBOX
+    // HACK(Emma): retail xbdm doesn't like newlines.
+    // so what do we do? split up the string by every newline
+    char *text_ptr = text;
+    char *newline = text;
+    do
+    {
+        newline = strstr(text_ptr, "\n");
+        if (newline != NULL)
+        {
+            newline[0] = 0;
+            RB3E_DEBUG("%s", text_ptr);
+            // skip over the newline character and keep going
+            text_ptr += strlen(text_ptr) + 1;
+        }
+        else if (text_ptr[0] != 0)
+        {
+            RB3E_DEBUG("%s", text_ptr);
+        }
+    } while (newline != NULL);
+#else
+    RB3E_DEBUG("%s", text);
+#endif
+}
+TextStream_vtable DebugTextStream_vt = {DebugTextStreamDestructor, DebugTextStreamPrint};
+TextStream DebugTextStream = {&DebugTextStream_vt};
+
 static unsigned int framecount = 0;
 // This function runs every frame.
 // DO NOT TAKE LONGER THAN A FEW MILLISECONDS, DO **NOT** DO ANYTHING BLOCKING HERE
@@ -116,6 +150,11 @@ void RB3E_RunLoop()
         HTTP_Server_RunLoop();
     if (config.EnableLiveless)
         Liveless_Poll();
+#endif
+#ifdef RB3E_DEBUG
+    // print out memory every 5 seconds
+    if (config.LogMemoryOverview && framecount % 300 == 0)
+        MemPrintOverview(-3, &DebugTextStream);
 #endif
     framecount++;
 }
@@ -189,6 +228,35 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_FACE_PAINT_CHECK, LI(3, 1));
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
     }
+
+#ifdef RB3EDEBUG
+    if (config.QuazalLogging == 1)
+    {
+#ifdef RB3E_WII
+        POKE_B(&OperatorEqualsFmt, 0x800183e4);
+        POKE_BL(0x80018718, &OperatorEqualsFmtHook);
+        POKE_BL(0x8006a6a8, &OperatorEqualsFmtHook);
+        POKE_BL(0x8006cb58, &OperatorEqualsFmtHook);
+        POKE_BL(0x8006a82c, &OperatorEqualsFmtHook);
+
+        // POKE_32(0x804735c4, NOP);
+        POKE_32(0x8006c984, LI(6, 1));
+        POKE_32(0x8006a170, LI(6, 1));
+        POKE_32(0x8006c9d0, LI(6, 1));
+        // POKE_32(0x8007b3d4, LI(6, 0x1b0));
+#else
+        POKE_B(&OperatorEqualsFmt, 0x82a86ff0);
+        POKE_BL(0x82a87550, &OperatorEqualsFmtHook);
+        POKE_BL(0x82a97920, &OperatorEqualsFmtHook);
+        POKE_BL(0x82a94744, &OperatorEqualsFmtHook);
+        POKE_BL(0x82a948e0, &OperatorEqualsFmtHook);
+
+        // POKE_32(0x804735c4, NOP);
+        POKE_32(0x82a976dc, LI(8, 1));
+        POKE_32(0x82a97920, NOP);
+#endif
+    }
+#endif
 }
 
 void SymbolPreInitHook(int stringTableSize, int hashTableSize)
@@ -206,6 +274,9 @@ void InitialiseFunctions()
     POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
     POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
     POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
+    POKE_B(&MemPrintOverview, PORT_MEMPRINTOVERVIEW);
+    POKE_B(&MemPrint, PORT_MEMPRINT);
+    POKE_B(&MemNumHeaps, PORT_MEMNUMHEAPS);
 #endif
     POKE_B(&PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
     POKE_B(&SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);

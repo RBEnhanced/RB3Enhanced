@@ -18,6 +18,7 @@
 #include "ppcasm.h"
 #include "version.h"
 #include "rb3enhanced.h"
+#include "GlobalSymbols.h"
 #include "config.h"
 
 BSLUG_MODULE_GAME("SZB?");
@@ -127,5 +128,18 @@ static void CTHook(void *ThisApp, int argc, char **argv)
 }
 
 BSLUG_MUST_REPLACE(AppConstructor, CTHook);
+
+// HACK(Emma): because, there is a function that runs *before App::__ct() and main()*, we have to apply some hooks here...
+// don't use HookFunction here if it's repeated in rb3enhanced.c
+// TODO(Emma): move this to a platform-agnostic thing, since there *could* be stuff like this in 360
+void _start();
+static void _startHook()
+{
+    POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
+    POKE_B(PORT_BIGSYMBOLFUNC_TAIL, InitGlobalSymbols);
+    _start();
+}
+
+BSLUG_MUST_REPLACE(_start, _startHook);
 
 #endif
