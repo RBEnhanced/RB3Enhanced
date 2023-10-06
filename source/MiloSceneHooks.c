@@ -30,6 +30,9 @@ void LoadObj(Object *object, BinStream *stream)
     int endianResult = 0;
 
     origPath = stream->vtable->name(stream);
+    // length sanity check
+    if (strlen(origPath) + strlen(object->name) - 20 > sizeof(newPath))
+        goto object_pre_load;
     strncpy(newPath, origPath, strlen(origPath) - 10);
     strncat(newPath, "/", 1);
     strncat(newPath, object->name, strlen(object->name));
@@ -60,6 +63,7 @@ void LoadObj(Object *object, BinStream *stream)
         return;
     }
 
+object_pre_load:
     object->table->preLoad(object, stream);
     return;
 }

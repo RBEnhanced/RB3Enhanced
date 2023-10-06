@@ -36,6 +36,7 @@ jobs:
           path: out/RB3Enhanced.mod
 
   Xbox:
+    if: github.repository == 'RBEnhanced/RB3Enhanced'
     runs-on: windows-2019
     timeout-minutes: 10
 

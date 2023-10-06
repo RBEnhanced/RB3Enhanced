@@ -71,8 +71,8 @@ void HTTP_Server_Accept(void *connection)
     char request_path[250] = {0};
     int request_valid = 0;
     char last_byte = '\0';
-    const char ok_response[] = "HTTP/1.1 200 OK\r\nServer: RB3Enhanced " RB3E_BUILDTAG "\r\nContent-Type: text/html\r\nContent-Length: 2\r\n\r\nOK";
-    const char notfound_response[] = "HTTP/1.1 404 Not Found\r\nServer: RB3Enhanced " RB3E_BUILDTAG "\r\nContent-Length: 9\r\n\r\nNot Found";
+    const char ok_response[] = "HTTP/1.1 200 OK\r\nServer: RB3Enhanced " RB3E_BUILDTAG "\r\nContent-Type: text/html\r\nX-Clacks-Overhead: GNU maxton\r\nContent-Length: 2\r\n\r\nOK";
+    const char notfound_response[] = "HTTP/1.1 404 Not Found\r\nServer: RB3Enhanced " RB3E_BUILDTAG "\r\nX-Clacks-Overhead: GNU maxton\r\nContent-Length: 9\r\n\r\nNot Found";
     char response_buffer[2000] = {0};
     int song_id = 0;
     char *shortname = NULL;
@@ -277,13 +277,14 @@ void HTTP_Server_Accept(void *connection)
         strcat(response_buffer, "HTTP/1.1 200 OK\r\n");
         strcat(response_buffer, "Server: RB3Enhanced " RB3E_BUILDTAG "\r\n");
         strcat(response_buffer, "Content-Type: text/html\r\n");
+        strcat(response_buffer, "X-Clacks-Overhead: GNU maxton\r\n");
         if (config.AllowCORS)
             strcat(response_buffer, "Access-Control-Allow-Origin: *\r\n");
         strcat(response_buffer, "\r\n");
         // flush our buffer and send out the file in split chunks
         RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
         memset(response_buffer, 0, sizeof(response_buffer));
-        while ((file_r = RB3E_ReadFile(file_fd, file_pointer, response_buffer, sizeof(response_buffer)) > 0))
+        while ((file_r = RB3E_ReadFile(file_fd, file_pointer, response_buffer, sizeof(response_buffer) - 1) > 0))
         {
             // fix an issue where a bunch of 0xFFs get added by the xbonx fs API
             work_ptr = strstr(response_buffer, "\xFF");

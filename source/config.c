@@ -5,6 +5,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#ifdef RB3E_WII
+#include <bslug.h>
+#endif
 #include "config.h"
 #include "rb3enhanced.h"
 #include "ports.h"
@@ -12,21 +15,31 @@
 
 RB3E_Config config;
 
+// config given to the game by the loader
+#define LAUNCHER_CONFIG_MAGIC 0x53443A44
+int RB3E_Launcher_HasConfig;
+char RB3E_Launcher_Config[0x1000];
+
 #define CONFIG_FILENAME "rb3.ini"
 
-void InitConfig()
+void InitDefaultConfig()
 {
     memset(&config, 0, sizeof(config));
     strcpy(config.RawfilesDir, "rb3");
 #ifdef RB3E_WII
     // uncomment when GoCentral has a default instance that uses naswii auth
-    // strcpy(config.NASServer, "naswii.wiimmfi.de");
+    // strcpy(config.NASServer, "naswii.rbenhanced.rocks");
 #endif
     config.SongSpeedMultiplier = 1.0;
     config.TrackSpeedMultiplier = 1.0;
 #ifdef RB3EDEBUG
     config.LogFileAccess = 1;
 #endif
+}
+
+int HasLauncherConfig()
+{
+    return RB3E_Launcher_HasConfig == LAUNCHER_CONFIG_MAGIC;
 }
 
 static int INIHandler(void *user, const char *section, const char *name, const char *value)
@@ -52,6 +65,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.RawfilesDir, value, RB3E_MAX_CONFIG_LEN);
         if (strcmp(name, "DisableRawfiles") == 0)
             config.DisableRawfiles = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "QuazalLogging") == 0)
+            config.QuazalLogging = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "Events") == 0)
     {
@@ -113,6 +128,13 @@ static int INIHandler(void *user, const char *section, const char *name, const c
         if (strcmp(name, "DisablePostProcessing") == 0)
             config.DisablePostProcessing = RB3E_CONFIG_BOOL(value);
     }
+#ifdef RB3EDEBUG
+    if (strcmp(section, "Debug") == 0)
+    {
+        if (strcmp(name, "LogMemoryOverview") == 0)
+            config.LogMemoryOverview = RB3E_CONFIG_BOOL(value);
+    }
+#endif
     return 1;
 }
 
@@ -122,28 +144,52 @@ void LoadConfig()
     int file = -1;
     int read = 0;
     char *filepath;
-    if (!RB3E_Mounted)
+    // check if the launcher has provided a valid INI to the module
+    if (HasLauncherConfig())
     {
-        RB3E_MSG("No drives mounted, using default config.", NULL);
-        return;
+        RB3E_MSG("Loading config from launcher...", NULL);
+        RB3E_DEBUG("%i byte config provided by launcher at %p, parsing", strlen(RB3E_Launcher_Config), RB3E_Launcher_Config);
+        strncpy(buf, RB3E_Launcher_Config, sizeof(RB3E_Launcher_Config));
     }
-    filepath = RB3E_GetRawfilePath(CONFIG_FILENAME, 1);
-    if (filepath == NULL)
+    // load from mounted drives like usual
+    else
     {
-        RB3E_MSG("No config file found, using default config.", NULL);
-        return;
+        if (!RB3E_Mounted)
+        {
+            RB3E_MSG("No drives mounted, using default config.", NULL);
+            return;
+        }
+        // get the file path of the config file
+        filepath = RB3E_GetRawfilePath(CONFIG_FILENAME, 1);
+        if (filepath == NULL)
+        {
+            RB3E_MSG("No config file found, using default config.", NULL);
+            return;
+        }
+        // open the file, read all the contents, then close
+        RB3E_MSG("Loading config from %s...", filepath);
+        file = RB3E_OpenFile(filepath, 0);
+        read = RB3E_ReadFile(file, 0, buf, sizeof(buf));
+        RB3E_CloseFile(file);
+        RB3E_DEBUG("Read %i bytes from config file, parsing", read);
     }
-    file = RB3E_OpenFile(filepath, 0);
-    read = RB3E_ReadFile(file, 0, buf, sizeof(buf));
-    RB3E_DEBUG("Read %i bytes from config file, parsing", read);
+    // parse the INI file
     if (ini_parse_string(buf, INIHandler, NULL) < 0)
     {
         RB3E_MSG("Failed to load config file, using default config", NULL);
-        InitConfig();
+        // re-initialise default config
+        // because some values might've been parsed previously
+        InitDefaultConfig();
     }
     else
     {
         RB3E_MSG("Successfully loaded config!", NULL);
     }
-    RB3E_CloseFile(file);
 }
+
+#ifdef RB3E_WII
+// export these two functions to the brainslug loader
+// TODO: exporting these on 360?
+BSLUG_EXPORT(RB3E_Launcher_HasConfig);
+BSLUG_EXPORT(RB3E_Launcher_Config);
+#endif

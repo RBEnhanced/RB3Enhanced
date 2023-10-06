@@ -1,3 +1,8 @@
+/*
+    RB3Enhanced - PassiveMessages.c
+    Functions for displaying a passive message.
+*/
+
 #include "ports.h"
 #include "rb3/BandUI.h"
 #include "rb3/PassiveMessagesPanel.h"

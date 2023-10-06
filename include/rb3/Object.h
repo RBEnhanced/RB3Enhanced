@@ -4,8 +4,10 @@
 #include "rb3/BinStream.h"
 #include "rb3/Data.h"
 #include "rb3/Symbol.h"
+#include "rb3/UI/UIPanel.h"
 
 typedef struct _Object Object;
+typedef struct _TypeProps TypeProps;
 
 typedef void (*ObjDestructor_t)(Object *thisObject);
 typedef void (*ObjOnlyReturns_t)();
@@ -23,8 +25,16 @@ typedef int *(*ObjDataDir_t)(Object *thisObject);
 typedef void (*ObjPreLoad_t)(Object *thisObject, BinStream *binStream);
 typedef char *(*ObjFindPathName_t)(Object *thisObject);
 
+extern UIPanel *ObjectFindUIPanel(int *objectDir, char *name, int unk);
+
 typedef struct _Object_vtable
 {
+    // Wii-specific RTTI stuff
+#ifdef RB3E_WII
+    int *pointer;
+    int unk;
+#endif
+
     ObjDestructor_t destructor;
     ObjOnlyReturns_t onlyReturns1;
     ObjOnlyReturns_t onlyReturns2;
@@ -48,11 +58,24 @@ typedef struct _Object_vtable
     ObjFindPathName_t findPathName;
 } Object_vtable;
 
+struct _TypeProps
+{
+    int *vtable;
+    DataArray *array;
+    void *refOwner;
+};
+
 struct _Object
 {
-
     Object_vtable *table; // the object's vtable
-    char unk[0x14];
+
+#ifdef RB3E_XBOX // TypeProps apparently exclusive to 360?
+    TypeProps typeProps;
+#endif
+
+    int unk;
+
+    char *note;
     char *name;
 };
 

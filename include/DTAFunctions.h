@@ -3,4 +3,4 @@
     Custom DTA functions, usable by scripts in-game.
 */
 
-int AddDTAFunctions(int r3_presv);
+void AddDTAFunctions();

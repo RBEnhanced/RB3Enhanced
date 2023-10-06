@@ -26,6 +26,7 @@ typedef struct _RB3E_Config
     char LanguageOverride[RB3E_LANG_LEN + 1];
     char RawfilesDir[RB3E_MAX_CONFIG_LEN];
     char DisableRawfiles;
+    char QuazalLogging;
     // [Graphics]
     int RenderResX;
     int RenderResY;
@@ -54,11 +55,16 @@ typedef struct _RB3E_Config
     char NASServer[RB3E_MAX_DOMAIN];
     char LegacySDMode;
 #endif
+#ifdef RB3EDEBUG
+    // [Debug]
+    char LogMemoryOverview;
+#endif
 } RB3E_Config;
 
 extern RB3E_Config config;
 
-void InitConfig();
+void InitDefaultConfig();
+int HasLauncherConfig();
 void LoadConfig();
 
 #endif // _CONFIG_H

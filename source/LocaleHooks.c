@@ -89,6 +89,9 @@ char *LocalizeHook(int thisLocale, Symbol sym, int fail)
     {
         if (strcmp(sym.sym, overrideLocales[i][0]) == 0)
         {
+            // length sanity check before sprintf
+            if (strlen(sym.sym) > 0x40)
+                return Localize(thisLocale, sym, fail);
             // check if rb3e_localename exists
             sprintf(newLocaleName, "rb3e_%s", sym.sym);
             SymbolConstruct(&newLocale, newLocaleName);
@@ -106,8 +109,6 @@ char *LocalizeHook(int thisLocale, Symbol sym, int fail)
         for (i = 0; i < numNewLocales; i++)
             if (strcmp(sym.sym, newLocales[i][0]) == 0)
                 return newLocales[i][1];
-        // otherwise, log the failure so we know for later
-        RB3E_DEBUG("Could not localize %s", sym.sym);
     }
     return original;
 }

@@ -18,8 +18,13 @@ int RB3E_Mounted = 0;
 
 void RB3E_MountFileSystems()
 {
-    RB3E_Mounted = (SD_Mount() == 0);
+    // if Legacy SD Mode is set, don't mount the SD card
+    if (config.LegacySDMode)
+        RB3E_Mounted = 0;
+    else
+        RB3E_Mounted = (SD_Mount() == 0);
 }
+
 static char path_to_check[300] = {0};
 char *RB3E_GetRawfilePath(char *path, int root_allowed)
 {
@@ -27,7 +32,8 @@ char *RB3E_GetRawfilePath(char *path, int root_allowed)
     int path_length = strlen(path);
     int i = 0;
     // if the drive isn't mounted, don't bother
-    RB3E_Mounted = 0;
+    if (RB3E_Mounted == 0)
+        return NULL;
     // if its bigger than this, we're unsafe, we might buffer overflow
     if (path_length > sizeof(corrected_path))
         return NULL;
@@ -58,6 +64,7 @@ char *RB3E_GetRawfilePath(char *path, int root_allowed)
     // we don't have it, just give up
     return NULL;
 }
+
 int RB3E_FileExists(char *filename)
 {
     static struct stat st;
@@ -66,11 +73,13 @@ int RB3E_FileExists(char *filename)
         return 0;
     return (SD_stat(filename, &st) == 0);
 }
+
 int RB3E_OpenFile(char *filename, char readWrite)
 {
     static FILE_STRUCT st;
     return SD_open(&st, filename, O_RDONLY);
 }
+
 int RB3E_FileSize(int file)
 {
     static struct stat fs;
@@ -78,11 +87,13 @@ int RB3E_FileSize(int file)
         return -1;
     return (int)fs.st_size; // not accurate? but works
 }
+
 int RB3E_ReadFile(int file, int offset, void *buffer, int size)
 {
     SD_seek(file, offset, 0);
     return SD_read(file, buffer, size);
 }
+
 void RB3E_CloseFile(int file)
 {
     SD_close(file);

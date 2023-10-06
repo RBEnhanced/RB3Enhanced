@@ -103,6 +103,40 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
     return ModifierManagerConstructor(thisModifierManager, unk);
 }
 
+// a TextStream object that prints straight to RB3E_DEBUG
+void DebugTextStreamDestructor(void *thisTextStream)
+{
+    // not dynamically allocating anything, can't be a destructor
+}
+void DebugTextStreamPrint(void *thisTextStream, char *text)
+{
+#ifdef RB3E_XBOX
+    // HACK(Emma): retail xbdm doesn't like newlines.
+    // so what do we do? split up the string by every newline
+    char *text_ptr = text;
+    char *newline = text;
+    do
+    {
+        newline = strstr(text_ptr, "\n");
+        if (newline != NULL)
+        {
+            newline[0] = 0;
+            RB3E_DEBUG("%s", text_ptr);
+            // skip over the newline character and keep going
+            text_ptr += strlen(text_ptr) + 1;
+        }
+        else if (text_ptr[0] != 0)
+        {
+            RB3E_DEBUG("%s", text_ptr);
+        }
+    } while (newline != NULL);
+#else
+    RB3E_DEBUG("%s", text);
+#endif
+}
+TextStream_vtable DebugTextStream_vt = {DebugTextStreamDestructor, DebugTextStreamPrint};
+TextStream DebugTextStream = {&DebugTextStream_vt};
+
 static unsigned int framecount = 0;
 // This function runs every frame.
 // DO NOT TAKE LONGER THAN A FEW MILLISECONDS, DO **NOT** DO ANYTHING BLOCKING HERE
@@ -113,6 +147,11 @@ void RB3E_RunLoop()
 #ifdef RB3E_XBOX
     if (config.EnableHTTPServer)
         HTTP_Server_RunLoop();
+#endif
+#ifdef RB3E_DEBUG
+    // print out memory every 5 seconds
+    if (config.LogMemoryOverview && framecount % 300 == 0)
+        MemPrintOverview(-3, &DebugTextStream);
 #endif
     if (config.EnableNATPMP)
         NATPMP_Poll();
@@ -150,9 +189,15 @@ void ApplyPatches()
     POKE_32(PORT_STRAPSCREEN_2, NOP);
     // Patch out erroneous second host header
     POKE_32(PORT_NASWII_HOST, NOP);
+
+    // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
+    POKE_32(PORT_MICCHECK, 0x42800140);
 #elif RB3E_XBOX
     if (RB3E_IsEmulator())
         POKE_32(PORT_SONGMGR_ISDEMO_CHECK, NOP);
+
+    // skips check for stagekit to allow for fog commands to be issued without a stagekit plugged in
+    POKE_32(PORT_STAGEKIT_EXISTS, NOP);
 #endif
     RB3E_MSG("Patches applied!", NULL);
 }
@@ -182,6 +227,41 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_FACE_PAINT_CHECK, LI(3, 1));
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
     }
+
+#ifdef RB3EDEBUG
+    if (config.QuazalLogging == 1)
+    {
+#ifdef RB3E_WII
+        POKE_B(&OperatorEqualsFmt, 0x800183e4);
+        POKE_BL(0x80018718, &OperatorEqualsFmtHook);
+        POKE_BL(0x8006a6a8, &OperatorEqualsFmtHook);
+        POKE_BL(0x8006cb58, &OperatorEqualsFmtHook);
+        POKE_BL(0x8006a82c, &OperatorEqualsFmtHook);
+
+        // POKE_32(0x804735c4, NOP);
+        POKE_32(0x8006c984, LI(6, 1));
+        POKE_32(0x8006a170, LI(6, 1));
+        POKE_32(0x8006c9d0, LI(6, 1));
+        // POKE_32(0x8007b3d4, LI(6, 0x1b0));
+#else
+        POKE_B(&OperatorEqualsFmt, 0x82a86ff0);
+        POKE_BL(0x82a87550, &OperatorEqualsFmtHook);
+        POKE_BL(0x82a97920, &OperatorEqualsFmtHook);
+        POKE_BL(0x82a94744, &OperatorEqualsFmtHook);
+        POKE_BL(0x82a948e0, &OperatorEqualsFmtHook);
+
+        // POKE_32(0x804735c4, NOP);
+        POKE_32(0x82a976dc, LI(8, 1));
+        POKE_32(0x82a97920, NOP);
+#endif
+    }
+#endif
+}
+
+void SymbolPreInitHook(int stringTableSize, int hashTableSize)
+{
+    SymbolPreInit(stringTableSize, hashTableSize);
+    InitGlobalSymbols();
 }
 
 void InitialiseFunctions()
@@ -193,6 +273,9 @@ void InitialiseFunctions()
     POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
     POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
     POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
+    POKE_B(&MemPrintOverview, PORT_MEMPRINTOVERVIEW);
+    POKE_B(&MemPrint, PORT_MEMPRINT);
+    POKE_B(&MemNumHeaps, PORT_MEMNUMHEAPS);
 #endif
     POKE_B(&PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
     POKE_B(&SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);
@@ -206,7 +289,7 @@ void InitialiseFunctions()
     POKE_B(&FileExists, PORT_FILE_EXISTS);
     POKE_B(&SetAddress, PORT_SETADDRESS);
     POKE_B(&QueueMessage, PORT_QUEUEMESSAGE);
-    POKE_B(&MusicLibrarySelectMaybe, PORT_MUSICLIBRARYSELECTMAYBE);
+    POKE_B(&MusicLibrarySelect, PORT_MUSICLIBRARYSELECTMAYBE);
     POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
@@ -214,6 +297,12 @@ void InitialiseFunctions()
     POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
     POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
+    POKE_B(&Dynamic_Cast, PORT_DYNAMICCAST);
+    POKE_B(&GameGetActivePlayer, PORT_GAMEGETACTIVEPLAYER);
+    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
+    POKE_B(&JoypadGetPadData, PORT_JOYPADGETPADDATA);
+    POKE_B(&MemAlloc, PORT_MEMALLOC);
+    POKE_B(&MemFree, PORT_MEMFREE);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -242,6 +331,8 @@ void ApplyHooks()
     HookFunction(PORT_GAME_DT, &GameDestruct, &GameDestructHook);
     HookFunction(PORT_GETSYMBOLBYGAMEORIGIN, &GetSymbolByGameOrigin, &GetSymbolByGameOriginHook);
     HookFunction(PORT_GETGAMEORIGINBYSYMBOL, &GetGameOriginBySymbol, &GetGameOriginBySymbolHook);
+    HookFunction(PORT_RNDPROPANIMSETFRAME, &PropAnimSetFrame, &PropAnimSetFrameHook);
+    HookFunction(PORT_SYMBOLPREINIT, &SymbolPreInit, &SymbolPreInitHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
@@ -259,17 +350,24 @@ void ApplyHooks()
 void StartupHook(void *ThisApp, int argc, char **argv)
 {
     RB3E_MSG("Loaded! Version " RB3E_BUILDTAG " (" RB3E_BUILDCOMMIT ")", NULL);
+    // apply code patches and hooks
     InitialiseFunctions();
     ApplyPatches();
     ApplyHooks();
+    // initialise the default config state
+    InitDefaultConfig();
+    // if the launcher's passed a config, try to load it
+    if (HasLauncherConfig())
+        LoadConfig();
+    // mount filesystems, then load a config file
     RB3E_MountFileSystems();
-    InitConfig();
     LoadConfig();
+    // apply any patches that are only added after config loads
     ApplyConfigurablePatches();
 
+    // start the game by calling the proper app constructor
     RB3E_MSG("Starting Rock Band 3...", NULL);
     AppConstructor(ThisApp, argc, argv);
-
-    InitGlobalSymbols(); // this has to be done after init
+    // anything after here is post-splash
     return;
 }

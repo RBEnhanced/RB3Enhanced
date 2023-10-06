@@ -68,10 +68,19 @@ int RB3E_CreateThread(void *address, void *arg, int stack_size)
     return -1;
 }
 
+int RB3E_RelaunchGame()
+{
+    // no idea if this actually works
+    XLaunchNewImage("default.xex", 0);
+    return 0;
+}
+
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
     // initialise hooks for XeCrypt
     InitCryptoHooks();
+    // initialise hooks for input
+    InitInputHooks();
     // initialise hooks for liveless - this has to be done *after* systeminit
     POKE_BL(PORT_SYSTEMINIT_BLANK, &InitLivelessHooks);
     // launch game

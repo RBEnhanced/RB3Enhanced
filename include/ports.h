@@ -45,6 +45,7 @@
 #define PORT_SONG_ID_EVALUATE 0x827aa7d4        // branch to DataNode::Evaluate in SongMetadata::__ct
 #define PORT_LOADOBJS_BCTRL 0x827562e4          // bctrl to Object::PreLoad insie of DirLoader::LoadObjs
 #define PORT_SONGMGR_ISDEMO_CHECK 0x82575f9c    // "bne" after IsUGC check inside SongMgr::IsDemo
+#define PORT_STAGEKIT_EXISTS 0x8228d03c         // StageKit check. nop over to allow for fog command without a physical StageKit connected.
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
@@ -94,6 +95,7 @@
 #define PORT_GETSONGSHORTNAME 0x8257c498             // MetaPerformer::GetSongShortname(?) - actual name not known
 #define PORT_GAME_CT 0x8267bf30                      // Game::__ct
 #define PORT_GAME_DT 0x8267b1f0                      // Game::__dt
+#define PORT_GAMEGETACTIVEPLAYER 0x82678e88          // Game::GetActivePlayer
 #define PORT_GETBANDUSERS 0x82683b78                 // BandUserMgr::GetBandUsers
 #define PORT_GETBANDUSERFROMSLOT 0x82682b60          // BandUserMgr::GetBandUserFromSlot
 #define PORT_GETSONGID 0x827a87f0                    // GetSongID, function used when adding songs to BandSongMgr
@@ -108,6 +110,17 @@
 #define PORT_SONGSORTBYRECENT 0x8265bde8             // RecentCmp::__ct
 #define PORT_FILESTREAM_CT 0x827c3340                // FileStream::__ct (the one that takes a char * path instead of a File object)
 #define PORT_CHUNKSTREAM_CT 0x827ca488               // ChunkStream::__ct
+#define PORT_RNDPROPANIMSETFRAME 0x82426dd0          // RndPropAnim::SetFrame
+#define PORT_DYNAMICCAST 0x8282a0c8                  // dynamic_cast
+#define PORT_OBJECTFINDUIPANEL 0x82537430            // Object::Find<UIPanel>
+#define PORT_JOYPADGETCACHEDXINPUTCAPS 0x82531F08    // JoypadGetCachedXInputCaps
+#define PORT_JOYPADGETPADDATA 0x82524998             // JoypadGetPadData
+#define PORT_MEMFREE 0x827bc430                      // MemFree
+#define PORT_MEMALLOC 0x827bcd38                     // MemAlloc
+#define PORT_SYMBOLPREINIT 0x827c04f8                // Symbol::PreInit
+#define PORT_MEMPRINTOVERVIEW 0x827bc838             // MemPrintOverview
+#define PORT_MEMPRINT 0x827bc970                     // MemPrint
+#define PORT_MEMNUMHEAPS 0x827bb628                  // MemNumHeaps
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -121,6 +134,8 @@
 #define PORT_THEBANDUSERMGR 0x82e023b8      // address of TheBandUserMgr
 #define PORT_THESONGSORTMGR 0x82dfee5c      // pointer to TheSongSortMgr
 #define PORT_THEMUSICLIBRARY 0x82dfd3a8     // pointer to TheMusicLibrary
+#define PORT_THEGAME 0x82e02128             // pointer to TheGame (you lost)
+#define PORT_OBJECTDIRMAINDIR 0x82e054b8    // ObjectDir::sMainDir
 // import function stubs
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c
@@ -160,6 +175,8 @@ void DbgPrint(const char *s, ...);
 #define PORT_VIDEO_VENUE_CHECK 0x80227e34       // check to see if video venues are unlocked
 #define PORT_OPTIONSTR_DEFINE 0x8030e418        // bl to OptionStr("define", NULL) in PreInitSystem
 #define PORT_RUNLOOP_SPARE 0x8000f740           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
+#define PORT_MICCHECK 0x8024a4e8                // a bne that throws an error on the song select screen if the mic is not connected
+#define PORT_BIGSYMBOLFUNC_TAIL 0x8037a3d4      // blr after a function that initialises a bunch of symbols
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError
@@ -191,6 +208,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_DATAREADFILE 0x80319bdc             // DataReadFile
 #define PORT_GAME_CT 0x80110f20                  // Game::__ct
 #define PORT_GAME_DT 0x80111614                  // Game::__dt
+#define PORT_GAMEGETACTIVEPLAYER 0x8011346c      // Game::GetActivePlayer
 #define PORT_WIINETINIT_DNSLOOKUP 0x8030c3a0     // WiiNetInit::StartDNSLookup
 #define PORT_BUILDINSTRUMENTSELECTION 0x802478a8 // BuildInstrumentSelectionList(?) - actual name not known
 #define PORT_PREPARESOMEVECTORMAYBE 0x80247c58   // Prepares some vector, used by BuildInstrumentSelectionList
@@ -208,6 +226,13 @@ void DbgPrint(const char *s, ...);
 #define PORT_GETMETADATA 0x80515510              // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
 #define PORT_GETSONGID 0x8051513c                // GetSongID, function used when adding songs to BandSongMgr
 #define PORT_GETSONGIDFROMSHORTNAME 0x801d0b44   // BandSongMgr::GetSongIDFromShortname
+#define PORT_RNDPROPANIMSETFRAME 0x80632790      // RndPropAnim::SetFrame
+#define PORT_DYNAMICCAST 0x806f5e78              // dynamic_cast
+#define PORT_OBJECTFINDUIPANEL 0x80101d74        // Object::Find<UIPanel>
+#define PORT_JOYPADGETPADDATA 0x80302eec         // JoypadGetPadData
+#define PORT_MEMALLOC 0x80353e18                 // MemAlloc
+#define PORT_MEMFREE 0x80354238                  // MemFree
+#define PORT_SYMBOLPREINIT 0x80364c74            // Symbol::PreInit
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
@@ -219,6 +244,8 @@ void DbgPrint(const char *s, ...);
 #define PORT_THESONGMGR 0x808fbda4          // address of TheSongMgr
 #define PORT_THEMETAPERFORMER 0x808fd6f8    // address of TheMetaPerformer
 #define PORT_THEBANDUSERMGR 0x808f9350      // pointer to TheBandUserMgr
+#define PORT_THEGAME 0x808f9758             // pointer to TheGame (you lost)
+#define PORT_OBJECTDIRMAINDIR 0x8091b1e8    // ObjectDir::sMainDir
 // string pointers
 #define PORT_NASWII_AC_URL 0x808e2310
 #define PORT_NASWII_PR_URL 0x808e2390
