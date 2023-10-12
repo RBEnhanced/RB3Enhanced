@@ -24,15 +24,26 @@ jobs:
           make install
           cd ..
 
-      - name: Compile
+      - name: Compile (debug)
         run: |
           make clean
           make wii -j2 DEBUG=1
 
-      - name: Upload binaries
+      - name: Upload binaries (debug)
         uses: actions/upload-artifact@v2
         with: 
           name: RB3Enhanced-Wii-Debug
+          path: out/RB3Enhanced.mod
+
+      - name: Compile (no-debug)
+        run: |
+          make clean
+          make wii -j2
+
+      - name: Upload binaries (no-debug)
+        uses: actions/upload-artifact@v2
+        with: 
+          name: RB3Enhanced-Wii-NoDebug
           path: out/RB3Enhanced.mod
 
   Xbox:
@@ -53,15 +64,28 @@ jobs:
           Invoke-WebRequest -OutFile tools.zip $Env:BUILD_TOOLS
           7z x tools.zip -otools
 
-      - name: Compile
+      - name: Compile (debug)
         env:
           XEDK: ${{ github.workspace }}/tools
         run: |
           make clean
           make xbox -j2 DEBUG=1
 
-      - name: Upload binaries
+      - name: Upload binaries (debug)
         uses: actions/upload-artifact@v2
         with: 
           name: RB3Enhanced-Xbox-Debug
+          path: out/RB3Enhanced.dll
+
+      - name: Compile (no-debug)
+        env:
+          XEDK: ${{ github.workspace }}/tools
+        run: |
+          make clean
+          make xbox -j2
+
+      - name: Upload binaries (no-debug)
+        uses: actions/upload-artifact@v2
+        with: 
+          name: RB3Enhanced-Xbox-NoDebug
           path: out/RB3Enhanced.dll

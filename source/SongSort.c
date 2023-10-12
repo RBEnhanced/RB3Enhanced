@@ -13,7 +13,7 @@
 #define RB3E_SONGSORT_START 10
 static const char *defaultOrigins[9] = {"rb1", "rb2", "rb3", "greenday", "pearljam", "lego", "rb1_dlc", "rb3_dlc", "ugc_plus"};
 static const int defaultOriginCount = 9;
-static Symbol origins[256] = {0};
+static Symbol origins[512] = {0};
 static int newOrigins = 0;
 
 Symbol *GetSymbolByGameOriginHook(Symbol *sym, int gameOrigin)
