@@ -148,7 +148,7 @@ void RB3E_RunLoop()
     if (config.EnableHTTPServer)
         HTTP_Server_RunLoop();
 #endif
-#ifdef RB3E_DEBUG
+#ifdef RB3EDEBUG
     // print out memory every 5 seconds
     if (config.LogMemoryOverview && framecount % 300 == 0)
         MemPrintOverview(-3, &DebugTextStream);
