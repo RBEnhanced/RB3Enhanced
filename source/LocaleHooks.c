@@ -13,8 +13,13 @@
 #include "rb3/Locale.h"
 #include "rb3enhanced.h"
 
+#ifdef RB3EDEBUG
+static char *rb3e_version_motd = "RB3Enhanced D-" RB3E_BUILDTAG " is active. Thank you for playing!";
+static char *rb3e_mod_motd_fmt = "RB3Enhanced D-" RB3E_BUILDTAG " (with %s) is active. Thank you for playing!";
+#else
 static char *rb3e_version_motd = "RB3Enhanced " RB3E_BUILDTAG " is active. Thank you for playing!";
 static char *rb3e_mod_motd_fmt = "RB3Enhanced " RB3E_BUILDTAG " (with %s) is active. Thank you for playing!";
+#endif
 
 // Localisation messages to be replaced (that can be replaced in DTA with rb3e_ at the start of the regular name)
 // Left: the translation ID as in locale_keep.dta, Right: the text to replace with
