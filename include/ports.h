@@ -121,6 +121,7 @@
 #define PORT_MEMPRINTOVERVIEW 0x827bc838             // MemPrintOverview
 #define PORT_MEMPRINT 0x827bc970                     // MemPrint
 #define PORT_MEMNUMHEAPS 0x827bb628                  // MemNumHeaps
+#define PORT_INITSONGMETADATA 0x827aa450             // InitSongMetadata
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway

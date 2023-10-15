@@ -131,6 +131,13 @@ DataNode *DTARelaunchGame(DataNode *node, int *args)
     return node;
 }
 
+DataNode *DTAGetSongCount(DataNode *node, int *args)
+{
+    node->type = INT_VALUE;
+    node->value.intVal = RB3E_LoadedSongCount;
+    return node;
+}
+
 void AddDTAFunctions()
 {
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.print_debug) = (int)PrintToDebugger;
@@ -141,5 +148,6 @@ void AddDTAFunctions()
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_set_venue) = (int)DTASetVenue;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_is_emulator) = (int)DTAIsEmulator;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_relaunch_game) = (int)DTARelaunchGame;
+    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_song_count) = (int)DTAGetSongCount;
     RB3E_MSG("Added DTA functions!", NULL);
 }

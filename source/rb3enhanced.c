@@ -338,6 +338,7 @@ void ApplyHooks()
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
     // TODO: port these to Wii
+    HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
