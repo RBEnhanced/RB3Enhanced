@@ -78,6 +78,5 @@ SongMetadata *InitSongMetadataHook(SongMetadata *songMetadata)
 {
     // increment the loaded song count based on how many songmetadata objects there are
     RB3E_LoadedSongCount++;
-    RB3E_DEBUG("Loaded songs: %i", RB3E_LoadedSongCount);
     return InitSongMetadata(songMetadata);
 }
