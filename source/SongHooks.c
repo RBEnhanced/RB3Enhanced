@@ -8,8 +8,11 @@
 #include "ports.h"
 #include "crc32.h"
 #include "rb3/PassiveMessagesPanel.h"
+#include "rb3/SongMetadata.h"
 #include "rb3/Data.h"
 #include "rb3/Random.h"
+
+int RB3E_LoadedSongCount = 0;
 
 static int HasShownCorrectionError = 0;
 static int CorrectSongID(DataNode *id_node, int ct_metadata)
@@ -39,6 +42,7 @@ static int CorrectSongID(DataNode *id_node, int ct_metadata)
 int MetadataSongIDHook(DataNode *song_id)
 {
     DataNode *eval = DataNodeEvaluate(song_id);
+    // if our song id isn't an int, correct it with crc32 over the string
     if (eval->type != INT_VALUE)
         eval->value.intVal = CorrectSongID(eval, 1);
     return eval->value.intVal;
@@ -68,4 +72,11 @@ int GetSongIDHook(DataArray *song, DataArray *missing_data_maybe)
     if (found->type != INT_VALUE)
         return CorrectSongID(found, 0);
     return found->value.intVal;
+}
+
+SongMetadata *InitSongMetadataHook(SongMetadata *songMetadata)
+{
+    // increment the loaded song count based on how many songmetadata objects there are
+    RB3E_LoadedSongCount++;
+    return InitSongMetadata(songMetadata);
 }

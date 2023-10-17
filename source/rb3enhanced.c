@@ -151,7 +151,7 @@ void RB3E_RunLoop()
     if (config.EnableLiveless)
         Liveless_Poll();
 #endif
-#ifdef RB3E_DEBUG
+#ifdef RB3EDEBUG
     // print out memory every 5 seconds
     if (config.LogMemoryOverview && framecount % 300 == 0)
         MemPrintOverview(-3, &DebugTextStream);
@@ -341,6 +341,7 @@ void ApplyHooks()
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
     // TODO: port these to Wii
+    HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);

@@ -7,3 +7,4 @@
 
 int MetadataSongIDHook(DataNode *song_id);
 int GetSongIDHook(DataArray *song, DataArray *missing_data_maybe);
+SongMetadata *InitSongMetadataHook(SongMetadata *data);

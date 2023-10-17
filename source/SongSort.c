@@ -11,9 +11,10 @@
 #include "rb3/SongSortByRecentEntry.h"
 
 #define RB3E_SONGSORT_START 10
+#define NEW_ORIGIN_COUNT 512
 static const char *defaultOrigins[9] = {"rb1", "rb2", "rb3", "greenday", "pearljam", "lego", "rb1_dlc", "rb3_dlc", "ugc_plus"};
 static const int defaultOriginCount = 9;
-static Symbol origins[256] = {0};
+static Symbol origins[NEW_ORIGIN_COUNT] = {0};
 static int newOrigins = 0;
 
 Symbol *GetSymbolByGameOriginHook(Symbol *sym, int gameOrigin)
@@ -46,6 +47,11 @@ int GetGameOriginBySymbolHook(Symbol gameOrigin)
         // if we've seen this origin before, return the existing value
         if (strcmp(origins[i].sym, gameOrigin.sym) == 0)
             return i + RB3E_SONGSORT_START;
+    }
+    if (newOrigins >= NEW_ORIGIN_COUNT)
+    {
+        RB3E_MSG("Over the origin limit trying to add %s..!?", gameOrigin.sym);
+        return 0;
     }
     // we haven't seen this origin before, construct the new origin
     r = newOrigins + RB3E_SONGSORT_START;

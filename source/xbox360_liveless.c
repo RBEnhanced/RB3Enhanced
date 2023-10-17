@@ -286,6 +286,7 @@ void InitLivelessHooks()
 {
     char returnedIP[RB3E_MAX_IP_LEN];
 
+    POKE_B(PORT_XAMUSERCHECKPRIVILEGE, &XamUserCheckPrivilegeHook);
     // if neither are enabled, don't care
     if (config.EnableGoCentral == 0 && config.EnableLiveless == 0)
         return;
@@ -302,7 +303,6 @@ void InitLivelessHooks()
     POKE_B(PORT_SOCKET_STUB, &socketHook);
     POKE_B(PORT_XAMUSERGETSIGNININFO, &XamUserGetSigninInfoHook);
     POKE_B(PORT_XAMUSERGETSIGNINSTATE, &XamUserGetSigninStateHook);
-    POKE_B(PORT_XAMUSERCHECKPRIVILEGE, &XamUserCheckPrivilegeHook);
     RB3E_MSG("Applied socket patches!", NULL);
     if (config.EnableLiveless)
     {
