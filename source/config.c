@@ -102,6 +102,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
     {
         if (strcmp(name, "EnableLiveless") == 0)
             config.EnableLiveless = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "LivelessAddress") == 0)
+            strncpy(config.LivelessAddress, value, RB3E_MAX_DOMAIN);
         if (strcmp(name, "DirectConnectIP") == 0)
             strncpy(config.DirectConnectIP, value, RB3E_MAX_IP_LEN);
         if (strcmp(name, "ExternalIP") == 0)

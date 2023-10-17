@@ -29,7 +29,7 @@ static char *overrideLocales[][2] = {
     {"main_menu_finding", "Finding online players..."},
     {"band_chooser_find", "Find Online Players"},
     {"overshell_online_options", "Online Options"},
-    {"overshell_register_online", "Play Online"},
+    {"overshell_register_online", "Play Online"}
 #endif
 };
 static int numOverrideLocales = sizeof(overrideLocales) / sizeof(overrideLocales[0]);
@@ -44,7 +44,7 @@ static char *newLocales[][2] = {
 };
 static int numNewLocales = sizeof(newLocales) / sizeof(newLocales[0]);
 
-static char ActiveLocale[RB3E_LANG_LEN + 1] = {0};
+char RB3E_ActiveLocale[RB3E_LANG_LEN + 1] = {0};
 
 void SetSystemLanguageHook(Symbol lang, int r4)
 {
@@ -53,8 +53,8 @@ void SetSystemLanguageHook(Symbol lang, int r4)
     if (config.LanguageOverride[0] != '\0')
         SymbolConstruct(&language, config.LanguageOverride);
     // also keep track of our language, as we may need to add our own localisations
-    strncpy(ActiveLocale, language.sym, RB3E_LANG_LEN);
-    RB3E_DEBUG("Setting language '%s'", ActiveLocale);
+    strncpy(RB3E_ActiveLocale, language.sym, RB3E_LANG_LEN);
+    RB3E_DEBUG("Setting language '%s'", RB3E_ActiveLocale);
     SetSystemLanguage(language, r4);
 }
 
@@ -89,6 +89,11 @@ char *LocalizeHook(int thisLocale, Symbol sym, int fail)
         sprintf(mod_locale_string, rb3e_mod_motd_fmt, original);
         return mod_locale_string;
     }
+#ifdef RB3E_XBOX
+    // replace the "invite friends" label with "Manage Liveless"
+    if (config.LivelessAddress[0] != 0 && strcmp(sym.sym, "overshell_invite") == 0)
+        return "Manage Liveless";
+#endif
     // if our string is in the override list, use that string entirely
     for (i = 0; i < numOverrideLocales; i++)
     {

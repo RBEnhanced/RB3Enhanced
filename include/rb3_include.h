@@ -17,7 +17,6 @@
 #include "rb3/FileStream.h"
 #include "rb3/Game.h"
 #include "rb3/GameGem.h"
-#include "rb3/InetAddress.h"
 #include "rb3/Joypad.h"
 #include "rb3/Locale.h"
 #include "rb3/Mem.h"
@@ -36,6 +35,8 @@
 #include "rb3/TextStream.h"
 #include "rb3/TrackPanelDirBase.h"
 #include "rb3/UsbWii.h"
+#include "quazal/InetAddress.h"
+#include "quazal/QuazalSocket.h"
 
 // rnd headers
 #include "rb3/Rnd/RndPropAnim.h"
