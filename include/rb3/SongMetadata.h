@@ -3,6 +3,7 @@
 
 #include "String.h"
 
+// technically BandSongMetadata?
 typedef struct _SongMetadata
 {
     int *vtable;
@@ -29,5 +30,7 @@ typedef struct _SongMetadata
     char *vocalGender;
     int lengthMs;
 } SongMetadata;
+
+extern SongMetadata *InitSongMetadata(SongMetadata *data);
 
 #endif // _SONGMETADATA_H

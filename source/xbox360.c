@@ -87,6 +87,46 @@ static void CTHook(void *ThisApp, int argc, char **argv)
     StartupHook(ThisApp, argc, argv);
 }
 
+// dashlaunch function exports
+dlaunchGetOptValByName_t dlaunchGetOptValByName = NULL;
+dlaunchSetOptValByName_t dlaunchSetOptValByName = NULL;
+static void EnableSockpatch()
+{
+    HANDLE launch_handle = NULL;
+    int opt_value = 0;
+    // get a handle to launch.xex
+    XexGetModuleHandle("launch.xex", &launch_handle);
+    if (launch_handle == (HANDLE)-1)
+    {
+        RB3E_DEBUG("Dashlaunch not found, not enabling sockpatch.", NULL);
+        return;
+    }
+    // get the function addresses from dashlaunch
+    XexGetProcedureAddress(launch_handle, 9, &dlaunchGetOptValByName);
+    XexGetProcedureAddress(launch_handle, 10, &dlaunchSetOptValByName);
+    CloseHandle(launch_handle);
+    // sanity check, make sure we actually got functions
+    if (dlaunchGetOptValByName == NULL || dlaunchSetOptValByName == NULL)
+    {
+        RB3E_MSG("Dashlaunch was detected, but no getopt/setopt!?", NULL);
+        return;
+    }
+    // check our sockpatch status
+    dlaunchGetOptValByName("sockpatch", &opt_value);
+    RB3E_DEBUG("Dashlaunch says sockpatch: %i", opt_value);
+    if (opt_value == 0)
+    {
+        opt_value = 1;
+        dlaunchSetOptValByName("sockpatch", &opt_value);
+        RB3E_MSG("Enabled sockpatch!", NULL);
+        // if we're on a debug build, double check the resulting value
+#ifdef RB3EDEBUG
+        dlaunchGetOptValByName("sockpatch", &opt_value);
+        RB3E_DEBUG("Dashlaunch says sockpatch: %i", opt_value);
+#endif
+    }
+}
+
 BOOL APIENTRY DllMain(HANDLE hInstDLL, DWORD reason, LPVOID lpReserved)
 {
     if (reason == DLL_PROCESS_ATTACH)
@@ -96,6 +136,8 @@ BOOL APIENTRY DllMain(HANDLE hInstDLL, DWORD reason, LPVOID lpReserved)
         POKE_BL(PORT_APP_RUN, PORT_APP_RUNNODEBUG);
         // Apply our hook
         POKE_BL(PORT_APP_CALL, &CTHook);
+        // Enable sockpatch
+        EnableSockpatch();
     }
     return TRUE;
 }

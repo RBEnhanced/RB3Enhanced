@@ -10,7 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "rb3/InetAddress.h"
+#include "net_liveless_online.h"
+#include "quazal/InetAddress.h"
+#include "quazal/QuazalSocket.h"
 #include "net.h"
 #include "net_natpmp.h"
 #include "gocentral.h"
@@ -46,6 +48,26 @@ int ReturnsOne()
     return 1;
 }
 
+// try to capture the native socket the game uses
+QuazalSocket *game_socket = NULL;
+char QueuingSocketBindHook(QuazalSocket *socket, InetAddress *address, unsigned short *bind_port)
+{
+    char r = 0;
+    RB3E_DEBUG("Binding socket %p to address %08x:%i", socket, address->address, address->port);
+    r = QueuingSocketBind(socket, address, bind_port);
+    if (bind_port != NULL)
+    {
+        RB3E_DEBUG("Bound %p to port %i", socket, *bind_port);
+        if (*bind_port == 9103)
+        { // might need to change this once we get dynamic ports working
+            RB3E_DEBUG("Native socket obtained!");
+            game_socket = socket;
+        }
+    }
+
+    return r;
+}
+
 // Socket creation hook to allow insecure networking
 BOOL optEnable = TRUE;
 SOCKET socketHook(int af, int type, int protocol)
@@ -55,6 +77,12 @@ SOCKET socketHook(int af, int type, int protocol)
     if (type == SOCK_STREAM)
         setsockopt(newSock, SOL_SOCKET, 0x5802, (PCSTR)&optEnable, sizeof(BOOL));
     return newSock;
+}
+
+void XNetStartupHook(XNetStartupParams *params)
+{
+    params->cfgFlags = XNET_STARTUP_BYPASS_SECURITY;
+    XNetStartup(params);
 }
 
 // XSession hook
@@ -141,6 +169,18 @@ int XNetXnAddrToInAddrHook(XNADDR *pxna, XNKID *pxnkid, IN_ADDR *pina)
         pina->S_un.S_addr = REDIRECT_IP_ADDRESS_INT;
         return ERROR_SUCCESS;
     }
+    else if (Liveless_PendingJoin)
+    {
+        RB3E_DEBUG("Pending liveless join - using invite info", NULL);
+        XNetXnAddrToInAddr(pxna, pxnkid, pina);
+        if (Liveless_MyExternalIPv4 == Liveless_PendingExternalIPv4)
+            pina->S_un.S_addr = Liveless_PendingInternalIPv4;
+        else
+            pina->S_un.S_addr = Liveless_PendingExternalIPv4;
+        // TODO(Emma): it seems it tries reverting back to direct connect if this connection fails once
+        Liveless_PendingJoin = 0;
+        return ERROR_SUCCESS;
+    }
     else
     {
         RB3E_DEBUG("Non-null XnAddr, converting properly", NULL);
@@ -155,16 +195,24 @@ int XNetGetTitleXnAddrHook(XNADDR *pxna)
     int i = 0;
 
     // load external IP
-    sscanf(config.ExternalIP, "%hu.%hu.%hu.%hu", &ExternalIPShort[0], &ExternalIPShort[1], &ExternalIPShort[2], &ExternalIPShort[3]);
-    ExternalIP.S_un.S_un_b.s_b1 = (BYTE)ExternalIPShort[0];
-    ExternalIP.S_un.S_un_b.s_b2 = (BYTE)ExternalIPShort[1];
-    ExternalIP.S_un.S_un_b.s_b3 = (BYTE)ExternalIPShort[2];
-    ExternalIP.S_un.S_un_b.s_b4 = (BYTE)ExternalIPShort[3];
-
-    if (NATPMP_Success && NATPMP_ExternalIP != 0)
-        pxna->inaOnline.S_un.S_addr = NATPMP_ExternalIP;
+    if (Liveless_Connected && Liveless_MyExternalIPv4 != 0)
+    {
+        // the liveless server gives us an ipv4
+        pxna->inaOnline.S_un.S_addr = Liveless_MyExternalIPv4;
+    }
     else
-        pxna->inaOnline.S_un.S_addr = ExternalIP.S_un.S_addr;
+    {
+        sscanf(config.ExternalIP, "%hu.%hu.%hu.%hu", &ExternalIPShort[0], &ExternalIPShort[1], &ExternalIPShort[2], &ExternalIPShort[3]);
+        ExternalIP.S_un.S_un_b.s_b1 = (BYTE)ExternalIPShort[0];
+        ExternalIP.S_un.S_un_b.s_b2 = (BYTE)ExternalIPShort[1];
+        ExternalIP.S_un.S_un_b.s_b3 = (BYTE)ExternalIPShort[2];
+        ExternalIP.S_un.S_un_b.s_b4 = (BYTE)ExternalIPShort[3];
+
+        if (NATPMP_Success && NATPMP_ExternalIP != 0)
+            pxna->inaOnline.S_un.S_addr = NATPMP_ExternalIP;
+        else
+            pxna->inaOnline.S_un.S_addr = ExternalIP.S_un.S_addr;
+    }
 
     pxna->wPortOnline = 9103;
     for (i = 0; i < 20; i++)
@@ -205,22 +253,52 @@ int XNetQosLookupHook(UINT cxna, const XNADDR *apxna[], const XNKID *apxnkid[], 
     return ERROR_SUCCESS;
 }
 
+// shim to show our own UI rather than the friends UI
+int XamShowFriendsUIShim(int player_num)
+{
+    if (CanUseGoCentral() && config.LivelessAddress[0] != 0)
+        return Liveless_ShowUI(player_num);
+    else
+        return XShowFriendsUI(player_num);
+}
+
+// liveless joining stuff - doesn't seem to work?
+int XInviteGetAcceptedInfoHook(int player_num, XINVITE_INFO *info)
+{
+    if (Liveless_PendingJoin)
+    {
+        RB3E_DEBUG("Invite accepted from Liveless server", NULL);
+        info->dwTitleID = 0x45410914;
+        info->fFromGameInvite = TRUE;
+        info->xuidInvitee = 0; // ig the player_num
+        info->xuidInviter = 0; // maybe we need these?
+        info->hostInfo.hostAddress.ina.S_un.S_addr = Liveless_PendingInternalIPv4;
+        info->hostInfo.hostAddress.inaOnline.S_un.S_addr = Liveless_PendingExternalIPv4;
+        info->hostInfo.hostAddress.wPortOnline = 9103;
+        Liveless_PendingJoin = 0;
+        return 0;
+    }
+    return XInviteGetAcceptedInfo(player_num, info);
+}
+
 // defined in net_stun.c, not worth its own header
 int STUN_GetExternalIP(char *stunServerIP, short stunPort, char *returnedIP, int socket_type);
+
+static MESSAGEBOX_RESULT result;
+static XOVERLAPPED overlapped;
 
 void InitLivelessHooks()
 {
     char returnedIP[RB3E_MAX_IP_LEN];
 
+    POKE_B(PORT_XAMUSERCHECKPRIVILEGE, &XamUserCheckPrivilegeHook);
     // if neither are enabled, don't care
     if (config.EnableGoCentral == 0 && config.EnableLiveless == 0)
         return;
     // check that we can actually use it
     if (!CanUseGoCentral())
     {
-        MESSAGEBOX_RESULT result;
         LPWSTR buttons[1] = {L"OK"};
-        XOVERLAPPED overlapped;
         XShowMessageBoxUI(0, L"RB3Enhanced Warning", L"Your console is currently connected to Xbox Live. You are not able to play on GoCentral or through Liveless. Please enable 'liveblock' in your Dashlaunch settings.", 1, buttons, 0, XMB_ALERTICON, &result, &overlapped);
         return;
     }
@@ -230,7 +308,6 @@ void InitLivelessHooks()
     POKE_B(PORT_SOCKET_STUB, &socketHook);
     POKE_B(PORT_XAMUSERGETSIGNININFO, &XamUserGetSigninInfoHook);
     POKE_B(PORT_XAMUSERGETSIGNINSTATE, &XamUserGetSigninStateHook);
-    POKE_B(PORT_XAMUSERCHECKPRIVILEGE, &XamUserCheckPrivilegeHook);
     RB3E_MSG("Applied socket patches!", NULL);
     if (config.EnableLiveless)
     {
@@ -243,6 +320,7 @@ void InitLivelessHooks()
         POKE_B(PORT_XNETREGISTERKEY, &ReturnsZero);
         POKE_B(PORT_XNETUNREGISTERKEY, &ReturnsZero);
         POKE_B(PORT_XNETUNREGISTERINADDR, &ReturnsZero);
+        POKE_B(PORT_XNETSTARTUP, &XNetStartupHook);
         // XNet patches for XnAddr handling
         POKE_B(PORT_XNETGETTITLEXNADDR, &XNetGetTitleXnAddrHook);
         POKE_B(PORT_XNETXNADDRTOINADDR, &XNetXnAddrToInAddrHook);
@@ -265,6 +343,12 @@ void InitLivelessHooks()
             POKE_32(PORT_XNQOS_PROBE2, NOP);
             POKE_32(PORT_XNQOS_PROBE3, NOP);
         }
+        // hook the show friends UI button
+        POKE_B(PORT_XAMSHOWFRIENDSUI, &XamShowFriendsUIShim);
+        // hook invite accepted notification
+        POKE_B(PORT_XL_XINVITEGETACCEPTEDINFO, &XInviteGetAcceptedInfoHook);
+        // hook the queueing socket bind function
+        HookFunction(PORT_QUEUINGSOCKET_BIND, &QueuingSocketBind, &QueuingSocketBindHook);
         RB3E_MSG("Applied liveless patches!", NULL);
     }
     if (config.EnableGoCentral)

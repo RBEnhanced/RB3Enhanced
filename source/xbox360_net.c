@@ -34,8 +34,8 @@ int RB3E_CreateSocket(int protocol)
         return -1;
     // mark the socket as insecure
     setsockopt(sock, SOL_SOCKET, 0x5801, (PCSTR)&opt_true, sizeof(BOOL));
-    if (protocol == RB3E_TYPE_TCP) // tcp sockets need this as well
-        setsockopt(sock, SOL_SOCKET, 0x5802, (PCSTR)&opt_true, sizeof(BOOL));
+    // if (protocol == RB3E_TYPE_TCP) // tcp sockets need this as well - or do they...?
+    //     setsockopt(sock, SOL_SOCKET, 0x5802, (PCSTR)&opt_true, sizeof(BOOL));
     if (protocol == RB3E_TYPE_UDP) // allow broadcasting
         setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (PCSTR)&opt_true, sizeof(BOOL));
     return (int)sock;
@@ -43,6 +43,7 @@ int RB3E_CreateSocket(int protocol)
 
 void RB3E_DisposeSocket(int socket)
 {
+    shutdown((SOCKET)socket, SD_SEND);
     closesocket((SOCKET)socket);
 }
 

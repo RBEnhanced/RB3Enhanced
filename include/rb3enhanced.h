@@ -28,5 +28,8 @@ int RB3E_CreateThread(void *address, void *arg, int stack_size);
 void RB3E_Sleep(int ms);
 int RB3E_RelaunchGame();
 
+// loaded song count - done in SongHooks.c
+extern int RB3E_LoadedSongCount;
+
 // Emulator detection
 int RB3E_IsEmulator();

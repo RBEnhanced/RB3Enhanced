@@ -142,13 +142,16 @@ static unsigned int framecount = 0;
 // DO NOT TAKE LONGER THAN A FEW MILLISECONDS, DO **NOT** DO ANYTHING BLOCKING HERE
 // STUFF YOU DO HERE WILL **DIRECTLY** IMPACT THE GAME'S FRAMERATE!
 void HTTP_Server_RunLoop();
+void Liveless_Poll();
 void RB3E_RunLoop()
 {
 #ifdef RB3E_XBOX
     if (config.EnableHTTPServer)
         HTTP_Server_RunLoop();
+    if (config.EnableLiveless)
+        Liveless_Poll();
 #endif
-#ifdef RB3E_DEBUG
+#ifdef RB3EDEBUG
     // print out memory every 5 seconds
     if (config.LogMemoryOverview && framecount % 300 == 0)
         MemPrintOverview(-3, &DebugTextStream);
@@ -340,6 +343,7 @@ void ApplyHooks()
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
     // TODO: port these to Wii
+    HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);

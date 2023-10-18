@@ -18,6 +18,7 @@ typedef struct _GlobalSymbols
     Symbol rb3e_set_venue;
     Symbol rb3e_is_emulator;
     Symbol rb3e_relaunch_game;
+    Symbol rb3e_get_song_count;
 
     // modifiers
     Symbol forceHopos;

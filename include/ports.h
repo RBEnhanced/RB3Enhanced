@@ -77,6 +77,7 @@
 #define PORT_XL_XSESSIONJOINREMOTE 0x82a69fb0        // XSessionJoinRemote
 #define PORT_XL_XSESSIONMODIFY 0x82a69e40            // XSessionModify
 #define PORT_XL_XSESSIONSEARCHEX 0x82a6a490          // XSessionSearchEx
+#define PORT_XL_XINVITEGETACCEPTEDINFO 0x82a6a7c8    // XInviteGetAcceptedInfo
 #define PORT_RANDOMINT 0x824f2f90                    // RandomInt(min, max)
 #define PORT_GETWIDGETBYNAME 0x82b9b880              // GemManager::GetWidgetByName
 #define PORT_GETSLOTCOLOR 0x82baa308                 // TrackConfig::GetSlotColor
@@ -118,9 +119,12 @@
 #define PORT_MEMFREE 0x827bc430                      // MemFree
 #define PORT_MEMALLOC 0x827bcd38                     // MemAlloc
 #define PORT_SYMBOLPREINIT 0x827c04f8                // Symbol::PreInit
+#define PORT_QUEUINGSOCKET_BIND 0x82b397b0           // Quazal::QueuingSocket::Bind
+#define PORT_QUAZALSOCKET_BIND 0x82b1a830            // Quazal::Socket::Bind
 #define PORT_MEMPRINTOVERVIEW 0x827bc838             // MemPrintOverview
 #define PORT_MEMPRINT 0x827bc970                     // MemPrint
 #define PORT_MEMNUMHEAPS 0x827bb628                  // MemNumHeaps
+#define PORT_INITSONGMETADATA 0x827aa450             // InitSongMetadata
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -140,6 +144,7 @@
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c
 #define PORT_SOCKET_STUB 0x8284da48
+#define PORT_XNETSTARTUP 0x8284d7e8
 #define PORT_XNETXNADDRTOINADDR 0x8284d840
 #define PORT_XNETCONNECT 0x8284d890
 #define PORT_XNETUNREGISTERKEY 0x8284d830
@@ -150,6 +155,7 @@
 #define PORT_XAMUSERGETSIGNININFO 0x82c4be1c
 #define PORT_XAMUSERGETSIGNINSTATE 0x82c4bcfc
 #define PORT_XAMUSERCHECKPRIVILEGE 0x82c4bd1c
+#define PORT_XAMSHOWFRIENDSUI 0x8283d710
 
 // define logging functions
 void DbgPrint(const char *s, ...);
