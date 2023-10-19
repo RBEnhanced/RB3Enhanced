@@ -93,6 +93,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
     {
         if (strcmp(name, "EnableNATPMP") == 0)
             config.EnableNATPMP = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "EnableUPnP") == 0)
+            config.EnableUPnP = RB3E_CONFIG_BOOL(value);
     }
 #ifdef RB3E_WII
     if (strcmp(section, "Wii") == 0)
