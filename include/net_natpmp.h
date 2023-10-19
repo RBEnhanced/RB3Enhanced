@@ -127,3 +127,4 @@ void NATPMP_RequestOpenPort(unsigned short port);
 void PCP_RequestOpenPort(unsigned short port);
 void NATPMP_Init();
 void NATPMP_Poll();
+void UPNP_Poll();

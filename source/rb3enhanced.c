@@ -145,19 +145,21 @@ void HTTP_Server_RunLoop();
 void Liveless_Poll();
 void RB3E_RunLoop()
 {
+    if (config.EnableNATPMP)
+        NATPMP_Poll();
 #ifdef RB3E_XBOX
     if (config.EnableHTTPServer)
         HTTP_Server_RunLoop();
     if (config.EnableLiveless)
         Liveless_Poll();
+    if (config.EnableUPnP)
+        UPNP_Poll();
 #endif
 #ifdef RB3EDEBUG
     // print out memory every 5 seconds
     if (config.LogMemoryOverview && framecount % 300 == 0)
         MemPrintOverview(-3, &DebugTextStream);
 #endif
-    if (config.EnableNATPMP)
-        NATPMP_Poll();
     framecount++;
 }
 

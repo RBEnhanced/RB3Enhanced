@@ -40,6 +40,7 @@ typedef struct _RB3E_Config
     char GoCentralAddress[RB3E_MAX_DOMAIN];
     // [Network]
     char EnableNATPMP;
+    char EnableUPnP;
     // [HTTP]
     char EnableHTTPServer;
     char AllowCORS;

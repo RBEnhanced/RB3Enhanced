@@ -60,7 +60,7 @@ char QueuingSocketBindHook(QuazalSocket *socket, InetAddress *address, unsigned 
         RB3E_DEBUG("Bound %p to port %i", socket, *bind_port);
         if (*bind_port == 9103)
         { // might need to change this once we get dynamic ports working
-            RB3E_DEBUG("Native socket obtained!");
+            RB3E_DEBUG("Native socket obtained!", NULL);
             game_socket = socket;
         }
     }

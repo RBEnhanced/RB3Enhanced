@@ -7,6 +7,8 @@
 
 #include <xtl.h>
 #include "net.h"
+#include "ports.h"
+#include "xbox360.h"
 
 BOOL opt_true = TRUE;
 int RB3E_CreateSocket(int protocol)
@@ -62,11 +64,19 @@ unsigned int RB3E_GetInternalIP()
 
 unsigned int RB3E_GetGatewayIP()
 {
-    // TODO(Emma): THIS IS A HACK LOL - replaces last octet of IP with .1
-    unsigned int int_ip = RB3E_GetInternalIP();
-    int_ip &= 0xFFFFFF00;
-    int_ip |= 0x00000001;
-    return int_ip;
+    XnpRouteEntry routes[2] = {0};
+    int size = sizeof(routes);
+    // XNET_OPTID_ROUTE_ENTRY
+    int ret = XNetGetOpt(0x1392, routes, &size);
+    if (ret == 0)
+    {
+        return routes[1].interface_addr;
+    }
+    else
+    {
+        RB3E_MSG("Getting gateway IP failed with %i", ret);
+        return 0;
+    }
 }
 
 int RB3E_BindPort(int socket, unsigned short port)
