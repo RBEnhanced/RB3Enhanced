@@ -51,9 +51,11 @@ void UpdatePresenceHook(void *thisPresenceMgr)
 {
     // when the game updates presence, fire off the current screen name to the events socket
     BandUI *bandUI = (BandUI *)PORT_THEUI;
+#ifdef RB3E_XBOX
     if (bandUI->currentScreen != NULL && bandUI->currentScreen->screen_name.sym != NULL)
         RB3E_SendEvent(RB3E_EVENT_SCREEN_NAME, bandUI->currentScreen->screen_name.sym, strlen(bandUI->currentScreen->screen_name.sym));
-    UpdatePresence(thisPresenceMgr)
+#endif
+    UpdatePresence(thisPresenceMgr);
 }
 
 // New file hook, for ARKless file loading
