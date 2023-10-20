@@ -42,6 +42,8 @@ void SetVenueHook(int *thisMetaPerformer, Symbol venue)
 
     RB3E_MSG("Setting venue: %s", venue.sym);
 
+    RB3E_SendEvent(RB3E_EVENT_VENUE_NAME, venue.sym, strlen(venue.sym));
+
     SetVenue(thisMetaPerformer, venue);
 }
 

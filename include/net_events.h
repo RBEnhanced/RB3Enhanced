@@ -33,7 +33,8 @@ typedef enum _RB3E_Events_PacketTypes
     RB3E_EVENT_SONG_SHORTNAME, // content is a string of the current shortname
     RB3E_EVENT_SCORE,          // content is a RB3E_EventScore struct with score info
     RB3E_EVENT_STAGEKIT,       // content is a RB3E_EventStagekit struct with stagekit info
-    RB3E_EVENT_BAND_INFO       // content is a RB3E_EventBandInfo struct with band info
+    RB3E_EVENT_BAND_INFO,      // content is a RB3E_EventBandInfo struct with band info
+    RB3E_EVENT_VENUE_NAME      // content is a string of the current venue name
 } RB3E_Events_EventTypes;
 // identifiers for each platform RB3E can or will run on
 typedef enum _RB3E_Events_PlatformIDs
