@@ -33,6 +33,9 @@ int XeKeysConsolePrivateKeySign(unsigned char hash[0x14], unsigned char output_c
 typedef int (*dlaunchGetOptValByName_t)(char *opt_name, int *val);
 typedef int (*dlaunchSetOptValByName_t)(char *opt_name, int *val);
 
+// missing import from xam
+void XNetLogonGetExtendedStatus(unsigned int *login_status, unsigned int *login_error);
+
 // our own defined functions
 void InitCryptoHooks();
 void InitLivelessHooks();

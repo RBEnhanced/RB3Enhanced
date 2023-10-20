@@ -47,6 +47,15 @@ void SetVenueHook(int *thisMetaPerformer, Symbol venue)
     SetVenue(thisMetaPerformer, venue);
 }
 
+void UpdatePresenceHook(void *thisPresenceMgr)
+{
+    // when the game updates presence, fire off the current screen name to the events socket
+    BandUI *bandUI = (BandUI *)PORT_THEUI;
+    if (bandUI->currentScreen != NULL && bandUI->currentScreen->screen_name.sym != NULL)
+        RB3E_SendEvent(RB3E_EVENT_SCREEN_NAME, bandUI->currentScreen->screen_name.sym, strlen(bandUI->currentScreen->screen_name.sym));
+    UpdatePresence(thisPresenceMgr)
+}
+
 // New file hook, for ARKless file loading
 void *NewFileHook(char *fileName, int flags)
 {
@@ -344,6 +353,7 @@ void ApplyHooks()
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
     // TODO: port these to Wii
     HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
+    HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);

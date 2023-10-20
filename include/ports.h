@@ -125,12 +125,13 @@
 #define PORT_MEMPRINT 0x827bc970                     // MemPrint
 #define PORT_MEMNUMHEAPS 0x827bb628                  // MemNumHeaps
 #define PORT_INITSONGMETADATA 0x827aa450             // InitSongMetadata
+#define PORT_UPDATEPRESENCE 0x82680430               // PresenceMgr::UpdatePresence
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
 #define PORT_GDATAFUNCS 0x82e05d30          // address of gDataFuncs
 #define PORT_THEARCHIVE 0x82cc9c60          // address of TheArchive (main ARK)
-#define PORT_THEUI 0x82dfd2b0               // address of TheUI
+#define PORT_THEUI 0x82dfd2b0               // address of TheBandUI
 #define PORT_NULLSYMBOL 0x82c71838          // address of gNullSymbol
 #define PORT_THESONGDB 0x82e023f8           // address of TheSongDB
 #define PORT_THESONGMGR 0x82dfe7b4          // address of TheSongMgr

@@ -1,15 +1,21 @@
 #ifndef _BANDUI_H
 #define _BANDUI_H
 
+#include "UI/UIScreen.h"
+
 // the main UI class for the engine
 typedef struct _BandUI
 {
-    char unk[0x8];
+    int *vtable;
+    char unk[0x4];
     int field_0x8;
 
     // wii has one 4 less bytes here but otherwise the same
+    // todo: check currentScreen on Wii
 #ifdef RB3E_XBOX
-    char unk2[0x94];
+    char unk2[0x20];
+    UIScreen *currentScreen;
+    char unk3[0x70];
 #elif RB3E_WII
     char unk2[0x90];
 #endif
@@ -19,7 +25,7 @@ typedef struct _BandUI
     int *contentLoadingPanel;
     int *passiveMessagesPanel;
     int *saveloadStatusPanel;
-    char unk3[0xc];
+    char unk4[0xc];
     int *abstractWipePanel;
 } BandUI;
 

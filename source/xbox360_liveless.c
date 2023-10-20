@@ -20,6 +20,7 @@
 #include "ppcasm.h"
 #include "rb3enhanced.h"
 #include "ports.h"
+#include "xbox360.h"
 
 // user's external IP.
 IN_ADDR ExternalIP = {0};
@@ -29,13 +30,18 @@ BOOL CanUseGoCentral()
 {
     XNQOS *xnqos;
     int res;
+    unsigned int login_status;
+    unsigned int login_error;
     // If we're under Xenia, we can always use GoCentral/Liveless.
     if (RB3E_IsEmulator())
         return TRUE;
     // Detect a connection to Xbox Live. If this is successful, we can't safely use GoCentral or Liveless features.
     res = XNetQosServiceLookup(0, NULL, &xnqos);
     RB3E_DEBUG("XNetQosServiceLookup: %i", res);
-    return (res != 0);
+    // Try to detect a failure to connect to Xbox Live.
+    XNetLogonGetExtendedStatus(&login_status, &login_error);
+    RB3E_DEBUG("Login status/error: %08x/%08x", login_status, login_error);
+    return (res != 0 && login_error != 0);
 }
 
 int ReturnsZero()
