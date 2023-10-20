@@ -36,6 +36,7 @@ typedef enum _RB3E_Events_PacketTypes
     RB3E_EVENT_BAND_INFO,      // content is a RB3E_EventBandInfo struct with band info
     RB3E_EVENT_VENUE_NAME,     // content is a string of the current venue name
     RB3E_EVENT_SCREEN_NAME,    // content is a string of the current screen name
+    RB3E_EVENT_DX_DATA,        // content is a RB3E_EventModData struct with info given by DTA
 } RB3E_Events_EventTypes;
 // identifiers for each platform RB3E can or will run on
 typedef enum _RB3E_Events_PlatformIDs
@@ -85,6 +86,12 @@ typedef struct _RB3E_EventBandInfo
     char Difficulty[4];
     char TrackType[4];
 } PACKED RB3E_EventBandInfo;
+// packet meant for mods (rb3dx) to send out arbitrary information
+typedef struct _RB3E_EventModData
+{
+    char IdentifyValue[50];
+    char String[200];
+} PACKED RB3E_EventModData;
 PACKEND
 
 // start up the events socket

@@ -30,8 +30,8 @@ BOOL CanUseGoCentral()
 {
     XNQOS *xnqos;
     int res;
-    unsigned int login_status;
-    unsigned int login_error;
+    unsigned int login_status = 0;
+    unsigned int login_error = 0;
     // If we're under Xenia, we can always use GoCentral/Liveless.
     if (RB3E_IsEmulator())
         return TRUE;

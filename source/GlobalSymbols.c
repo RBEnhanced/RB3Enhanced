@@ -35,6 +35,7 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.rb3e_is_emulator, "rb3e_is_emulator");
     SymbolConstruct(&globalSymbols.rb3e_relaunch_game, "rb3e_relaunch_game");
     SymbolConstruct(&globalSymbols.rb3e_get_song_count, "rb3e_get_song_count");
+    SymbolConstruct(&globalSymbols.rb3e_send_event_string, "rb3e_send_event_string");
 
     SymbolConstruct(&globalSymbols.blackBackground, "mod_black_background");
     SymbolConstruct(&globalSymbols.colorShuffle, "mod_color_shuffle");

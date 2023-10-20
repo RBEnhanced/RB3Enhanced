@@ -9,6 +9,7 @@
 #include "ports.h"
 #include "GlobalSymbols.h"
 #include "config.h"
+#include "net_events.h"
 #include "rb3/Data.h"
 #include "rb3enhanced.h"
 
@@ -138,6 +139,35 @@ DataNode *DTAGetSongCount(DataNode *node, int *args)
     return node;
 }
 
+DataNode *DTASendModData(DataNode *node, DataArray *args)
+{
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
+    DataNode *secondArg = DataNodeEvaluate(&args->mNodes->n[2]);
+    node->type = INT_VALUE;
+    node->value.intVal = 0;
+    // TODO(Emma): allow sending integer/float/etc second arguments? other things as pointers?
+    if (firstArg->type != STRING_VALUE || secondArg->type != STRING_VALUE)
+        RB3E_MSG("Invalid types for arguments to rb3e_send_mod_data! 1st: %i, 2nd: %i", firstArg->type, secondArg->type);
+    else
+    {
+        RB3E_EventModData mod_event = {0};
+        char *id_tag = (char *)*firstArg->value.object;
+        char *data = (char *)*secondArg->value.object;
+        if (id_tag == NULL || strlen(id_tag) > sizeof(mod_event.IdentifyValue))
+            RB3E_MSG("Invalid identify string value for rb3e_send_mod_data! %p", id_tag);
+        else if (data == NULL || strlen(data) > sizeof(mod_event.String))
+            RB3E_MSG("Invalid data string value for rb3e_send_mod_data! %p", data);
+        else // assume it's fine
+        {
+            strncpy(mod_event.IdentifyValue, id_tag, sizeof(mod_event.IdentifyValue));
+            strncpy(mod_event.String, data, sizeof(mod_event.String));
+            RB3E_SendEvent(RB3E_EVENT_DX_DATA, &mod_event, sizeof(mod_event));
+            node->value.intVal = 1;
+        }
+    }
+    return node;
+}
+
 void AddDTAFunctions()
 {
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.print_debug) = (int)PrintToDebugger;
@@ -149,5 +179,6 @@ void AddDTAFunctions()
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_is_emulator) = (int)DTAIsEmulator;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_relaunch_game) = (int)DTARelaunchGame;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_song_count) = (int)DTAGetSongCount;
+    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_send_event_string) = (int)DTASendModData;
     RB3E_MSG("Added DTA functions!", NULL);
 }
