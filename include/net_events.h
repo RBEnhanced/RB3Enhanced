@@ -89,8 +89,8 @@ typedef struct _RB3E_EventBandInfo
 // packet meant for mods (rb3dx) to send out arbitrary information
 typedef struct _RB3E_EventModData
 {
-    char IdentifyValue[50];
-    char String[200];
+    char IdentifyValue[10];
+    char String[240];
 } PACKED RB3E_EventModData;
 PACKEND
 
