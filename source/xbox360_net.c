@@ -7,6 +7,8 @@
 
 #include <xtl.h>
 #include "net.h"
+#include "ports.h"
+#include "xbox360.h"
 
 BOOL opt_true = TRUE;
 int RB3E_CreateSocket(int protocol)
@@ -51,6 +53,30 @@ int RB3E_LastError()
 {
     // TODO: convert the last WSA error into generic type
     return WSAGetLastError();
+}
+
+unsigned int RB3E_GetInternalIP()
+{
+    XNADDR xna = {0};
+    XNetGetTitleXnAddr(&xna);
+    return xna.ina.S_un.S_addr;
+}
+
+unsigned int RB3E_GetGatewayIP()
+{
+    XnpRouteEntry routes[2] = {0};
+    int size = sizeof(routes);
+    // XNET_OPTID_ROUTE_ENTRY
+    int ret = XNetGetOpt(0x1392, routes, &size);
+    if (ret == 0)
+    {
+        return routes[1].interface_addr;
+    }
+    else
+    {
+        RB3E_MSG("Getting gateway IP failed with %i", ret);
+        return 0;
+    }
 }
 
 int RB3E_BindPort(int socket, unsigned short port)

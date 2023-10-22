@@ -48,6 +48,22 @@ int RB3E_LastError()
     return errno;
 }
 
+unsigned int RB3E_GetInternalIP()
+{
+    return SOGetHostID();
+}
+
+unsigned int RB3E_GetGatewayIP()
+{
+    // TODO(Emma): THIS IS A HACK LOL - replaces last octet of IP with .1
+    // should try to use NCDGetCurrentIpConfig(ncd_ip_config *config);
+    // but that involves finding a bslug symbol for NCDGetCurrentIpConfig and documenting ncd_ip_config
+    unsigned int int_ip = RB3E_GetInternalIP();
+    int_ip &= 0xFFFFFF00;
+    int_ip |= 0x00000001;
+    return int_ip;
+}
+
 int RB3E_BindPort(int socket, unsigned short port)
 {
     so_fd_t sock = (so_fd_t)socket;

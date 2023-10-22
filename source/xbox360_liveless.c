@@ -14,6 +14,7 @@
 #include "quazal/InetAddress.h"
 #include "quazal/QuazalSocket.h"
 #include "net.h"
+#include "net_natpmp.h"
 #include "gocentral.h"
 #include "config.h"
 #include "utilities.h"
@@ -65,7 +66,7 @@ char QueuingSocketBindHook(QuazalSocket *socket, InetAddress *address, unsigned 
         RB3E_DEBUG("Bound %p to port %i", socket, *bind_port);
         if (*bind_port == 9103)
         { // might need to change this once we get dynamic ports working
-            RB3E_DEBUG("Native socket obtained!");
+            RB3E_DEBUG("Native socket obtained!", NULL);
             game_socket = socket;
         }
     }
@@ -213,8 +214,12 @@ int XNetGetTitleXnAddrHook(XNADDR *pxna)
         ExternalIP.S_un.S_un_b.s_b3 = (BYTE)ExternalIPShort[2];
         ExternalIP.S_un.S_un_b.s_b4 = (BYTE)ExternalIPShort[3];
 
-        pxna->inaOnline.S_un.S_addr = ExternalIP.S_un.S_addr;
+        if (NATPMP_Success && NATPMP_ExternalIP != 0)
+            pxna->inaOnline.S_un.S_addr = NATPMP_ExternalIP;
+        else
+            pxna->inaOnline.S_un.S_addr = ExternalIP.S_un.S_addr;
     }
+
     pxna->wPortOnline = 9103;
     for (i = 0; i < 20; i++)
     {
