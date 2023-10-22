@@ -78,10 +78,11 @@ int RB3E_SetNonBlocking(int socket, int enable)
 {
     so_fd_t sock = (so_fd_t)socket;
     int fcntl = SOFcntl(sock, F_GETFL, 0);
+    // WiiNetworkSocket::__ct uses 4 instead of what bslug describes as O_NONBLOCK
     if (enable)
-        fcntl |= O_NONBLOCK;
+        fcntl |= 4; // O_NONBLOCK;
     else
-        fcntl &= ~O_NONBLOCK;
+        fcntl &= ~(4); //~O_NONBLOCK;
     return SOFcntl(sock, F_SETFL, fcntl);
 }
 

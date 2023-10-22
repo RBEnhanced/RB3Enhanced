@@ -39,6 +39,9 @@ static unsigned char mapping_nonce[12];
 
 static char has_tried_init = 0;
 
+static char sending_init_packet = 0;
+static int init_packet_ticker = 0;
+
 // silly helper function
 static void fill_ipv4_mapped_ipv6(IPv4MappedIPv6 *map, unsigned int ipv4)
 {
@@ -111,6 +114,9 @@ void NATPMP_Init()
 
 void NATPMP_Poll()
 {
+    // if we've failed, don't waste cycles
+    if (failed_natpmp && failed_pcp)
+        return;
     // tick up
     ticker++;
     if (ticker > 60)
@@ -119,12 +125,24 @@ void NATPMP_Poll()
         if (time_until_expiry > 0)
             time_until_expiry--;
         ticker = 0;
+        init_packet_ticker++;
     }
     if (natpmp_socket == -1 && !has_tried_init)
     {
         // TODO(Emma): only initialise this when the game actually tries setting up a socket
         NATPMP_Init();
+        sending_init_packet = 1;
         PCP_RequestOpenPort(9103);
+    }
+    if (sending_init_packet && init_packet_ticker > 5)
+    {
+        RB3E_DEBUG("NATPMP request didn't respond within 5 seconds :/", NULL);
+        RB3E_DisposeSocket(natpmp_socket);
+        natpmp_socket = -1;
+        sending_init_packet = 0;
+        init_packet_ticker = 0;
+        failed_pcp = 1;
+        failed_natpmp = 1;
     }
     // we can't do anything else without a socket
     if (natpmp_socket != -1)
@@ -141,6 +159,7 @@ void NATPMP_Poll()
                 RB3E_DEBUG("Recieved packet from %08x, but that isn't gateway %08x, ignoring.", recv_ip, gateway_ipv4);
                 return;
             }
+            sending_init_packet = 0;
             // handle falling back upon an unsupported version
             // initially i expected the version in the header to correspond with the request packet
             // but certain routers (tp-link is one of them) doesn't and IDK correct behaviour
@@ -156,6 +175,8 @@ void NATPMP_Poll()
                 {
                     failed_natpmp = 1;
                     RB3E_DEBUG("Gateway told us it doesn't understand NATPMP, give up.", NULL);
+                    RB3E_DisposeSocket(natpmp_socket);
+                    natpmp_socket = -1;
                 }
                 return;
             }
@@ -212,7 +233,7 @@ void NATPMP_Poll()
                 RB3E_DEBUG("Gateway replied with unknown version %02x, opcode %02x, response code %i", header->version, header->opcode, header->response_code);
             }
         }
-        else if (r < 0 && RB3E_LastError() != 10035)
+        else if (r < 0 && !AWAIT_SOCKET(r))
         {
             RB3E_DEBUG("NATPMP socket error %i %i", r, RB3E_LastError());
             RB3E_DisposeSocket(natpmp_socket);

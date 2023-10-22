@@ -26,3 +26,9 @@ int RB3E_TCP_Listen(int socket);
 int RB3E_TCP_Accept(int socket, unsigned int *ipv4, unsigned short *port);
 unsigned int RB3E_GetInternalIP();
 unsigned int RB3E_GetGatewayIP();
+
+#ifdef RB3E_XBOX
+#define AWAIT_SOCKET(...) (RB3E_LastError() == 10035)
+#elif RB3E_WII
+#define AWAIT_SOCKET(r) (r == -6)
+#endif
