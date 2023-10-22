@@ -131,7 +131,7 @@
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
 #define PORT_GDATAFUNCS 0x82e05d30          // address of gDataFuncs
 #define PORT_THEARCHIVE 0x82cc9c60          // address of TheArchive (main ARK)
-#define PORT_THEUI 0x82dfd2b0               // address of TheBandUI
+#define PORT_THEBANDUI 0x82dfd2b0           // address of TheBandUI
 #define PORT_NULLSYMBOL 0x82c71838          // address of gNullSymbol
 #define PORT_THESONGDB 0x82e023f8           // address of TheSongDB
 #define PORT_THESONGMGR 0x82dfe7b4          // address of TheSongMgr
@@ -184,6 +184,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_RUNLOOP_SPARE 0x8000f740           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
 #define PORT_MICCHECK 0x8024a4e8                // a bne that throws an error on the song select screen if the mic is not connected
 #define PORT_BIGSYMBOLFUNC_TAIL 0x8037a3d4      // blr after a function that initialises a bunch of symbols
+#define PORT_UPDATEPRESENCEBLOCK_B 0x80188194   // branch after the failure case in a function that calls UpdatePresence
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError
@@ -232,6 +233,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_GETSONGSHORTNAME 0x80224edc         // MetaPerformer::GetSongShortname(?) - actual name not known
 #define PORT_GETMETADATA 0x80515510              // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
 #define PORT_GETSONGID 0x8051513c                // GetSongID, function used when adding songs to BandSongMgr
+#define PORT_SONGMGRGETRANKEDSONGS 0x801d1590    // BandSongMgr::GetRankedSongs(?) - not sure on the real name of the function
 #define PORT_GETSONGIDFROMSHORTNAME 0x801d0b44   // BandSongMgr::GetSongIDFromShortname
 #define PORT_RNDPROPANIMSETFRAME 0x80632790      // RndPropAnim::SetFrame
 #define PORT_DYNAMICCAST 0x806f5e78              // dynamic_cast
@@ -240,12 +242,18 @@ void DbgPrint(const char *s, ...);
 #define PORT_MEMALLOC 0x80353e18                 // MemAlloc
 #define PORT_MEMFREE 0x80354238                  // MemFree
 #define PORT_SYMBOLPREINIT 0x80364c74            // Symbol::PreInit
+#define PORT_QUEUINGSOCKET_BIND 0x800478d4       // Quazal::QueuingSocket::Bind
+#define PORT_QUAZALSOCKET_BIND 0x8001cd10        // Quazal::Socket::Bind
+#define PORT_INITSONGMETADATA 0x805147a4         // InitSongMetadata
+#define PORT_UPDATEPRESENCE 0x801879d4           // PresenceMgr::UpdatePresence
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
 #define PORT_GDATAFUNCS 0x8091a528          // address of gDataFuncs
-#define PORT_THEUI 0x808fc398               // address of TheUI
+#define PORT_THEARCHIVE 0x80902234          // address of TheArchive (main ARK)
+#define PORT_THEBANDUI 0x808fc2b0           // address of TheBandUI
 #define PORT_NULLSYMBOL 0x808540e0          // address of gNullSymbol
+#define PORT_THESONGDB 0x808fb170           // address of TheSongDB - TODO: check
 #define PORT_THEMUSICLIBRARY 0x808fda84     // pointer to TheMusicLibrary
 #define PORT_THESONGSORTMGR 0x808ff988      // pointer to TheSongSortMgr
 #define PORT_THESONGMGR 0x808fbda4          // address of TheSongMgr

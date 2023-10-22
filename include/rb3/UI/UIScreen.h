@@ -3,11 +3,16 @@
 
 #include "../Symbol.h"
 
+// Hmx::Object?
 typedef struct _UIScreen
 {
-    int *vtable;        // 0x0
-    char unk[0x14];     // 0x4 - prboably different on Wii
-    Symbol screen_name; // 0x18
+    int *vtable;
+#ifdef RB3E_XBOX
+    char unk[0x14];
+#elif RB3E_WII
+    char unk[0x8];
+#endif
+    Symbol screen_name; // referenced at the start of Hmx::Object::FindPathName?
 } UIScreen;
 
 #endif // _UISCREEN_H

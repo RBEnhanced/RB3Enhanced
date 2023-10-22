@@ -5,7 +5,7 @@
 #include <xtl.h>
 #elif RB3E_WII
 #include <rvl/so.h>
-typedef so_fd_t SOCKET;
+#include "../rb3/WiiNetworkSocket.h"
 #endif
 #include "quazal/InetAddress.h"
 
@@ -15,8 +15,15 @@ typedef struct _QuazalSocket
     int unknown;
     InetAddress *inetAddress;
     char padding[0x88];
+#ifdef RB3E_XBOX
     SOCKET native_socket;
     char isVDP;
+    char unk[0x3];
+    int *network_socket; // maybe?
+#elif RB3E_WII
+    int *unk;
+    WiiNetworkSocket *network_socket;
+#endif
 } QuazalSocket;
 
 extern int QuazalSocketBind(QuazalSocket *socket, InetAddress *address);

@@ -11,13 +11,14 @@ typedef struct _BandUI
     int field_0x8;
 
     // wii has one 4 less bytes here but otherwise the same
-    // todo: check currentScreen on Wii
 #ifdef RB3E_XBOX
     char unk2[0x20];
     UIScreen *currentScreen;
     char unk3[0x70];
 #elif RB3E_WII
-    char unk2[0x90];
+    char unk2[0x14];
+    UIScreen *currentScreen;
+    char unk3[0x78];
 #endif
 
     int *overshellPanel;

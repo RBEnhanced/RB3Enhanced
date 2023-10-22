@@ -50,11 +50,9 @@ void SetVenueHook(int *thisMetaPerformer, Symbol venue)
 void UpdatePresenceHook(void *thisPresenceMgr)
 {
     // when the game updates presence, fire off the current screen name to the events socket
-    BandUI *bandUI = (BandUI *)PORT_THEUI;
-#ifdef RB3E_XBOX
+    BandUI *bandUI = (BandUI *)PORT_THEBANDUI;
     if (bandUI->currentScreen != NULL && bandUI->currentScreen->screen_name.sym != NULL)
         RB3E_SendEvent(RB3E_EVENT_SCREEN_NAME, bandUI->currentScreen->screen_name.sym, strlen(bandUI->currentScreen->screen_name.sym));
-#endif
     UpdatePresence(thisPresenceMgr);
 }
 
@@ -203,9 +201,10 @@ void ApplyPatches()
     POKE_32(PORT_STRAPSCREEN_2, NOP);
     // Patch out erroneous second host header
     POKE_32(PORT_NASWII_HOST, NOP);
-
     // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
     POKE_32(PORT_MICCHECK, 0x42800140);
+    // always fire the UpdatePresence function. TODO(Emma): look into it, still not firing when screen is changed :/
+    POKE_32(PORT_UPDATEPRESENCEBLOCK_B, NOP);
 #elif RB3E_XBOX
     if (RB3E_IsEmulator())
         POKE_32(PORT_SONGMGR_ISDEMO_CHECK, NOP);
@@ -283,14 +282,15 @@ void InitialiseFunctions()
 #ifndef RB3E_WII
     // AppConstructor is handled by the BrainSlug engine
     POKE_B(&AppConstructor, PORT_APP_CT);
-    // TODO: port these to Wii
-    POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
-    POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
-    POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
+    // the Wii has a different memory manager, these funcs don't exist
     POKE_B(&MemPrintOverview, PORT_MEMPRINTOVERVIEW);
     POKE_B(&MemPrint, PORT_MEMPRINT);
     POKE_B(&MemNumHeaps, PORT_MEMNUMHEAPS);
+    // TODO: port these to Wii
+    POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
+    POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
 #endif
+    POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
     POKE_B(&PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
     POKE_B(&SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);
     POKE_B(&ExecuteDTA, PORT_EXECUTEDTA);
@@ -347,6 +347,8 @@ void ApplyHooks()
     HookFunction(PORT_GETGAMEORIGINBYSYMBOL, &GetGameOriginBySymbol, &GetGameOriginBySymbolHook);
     HookFunction(PORT_RNDPROPANIMSETFRAME, &PropAnimSetFrame, &PropAnimSetFrameHook);
     HookFunction(PORT_SYMBOLPREINIT, &SymbolPreInit, &SymbolPreInitHook);
+    HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
+    HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
@@ -354,10 +356,8 @@ void ApplyHooks()
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
     // TODO: port these to Wii
-    HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
-    HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
-    POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
+    POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
