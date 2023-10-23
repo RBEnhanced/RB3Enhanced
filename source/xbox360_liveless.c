@@ -42,7 +42,7 @@ BOOL CanUseGoCentral()
     // Try to detect a failure to connect to Xbox Live.
     XNetLogonGetExtendedStatus(&login_status, &login_error);
     RB3E_DEBUG("Login status/error: %08x/%08x", login_status, login_error);
-    return (res != 0 && login_error != 0);
+    return (res != 0) //  && (login_error != 0); - TODO(Emma): figure out why this isn't proper
 }
 
 int ReturnsZero()
