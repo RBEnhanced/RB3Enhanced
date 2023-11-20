@@ -14,3 +14,13 @@ void OperatorEqualsFmtHook(char *r3, char *r4)
     RB3E_DEBUG("Quazal: %s", r4);
     return;
 }
+
+int StepSequenceJobSetStepHook(int *unk, StepSequenceJobStep *step)
+{
+    // steps can have no name it seems; make sure we are not trying to print a null pointer
+    if (step != NULL && step->jobName != NULL)
+    {
+        RB3E_DEBUG("Quazal Job: %s", step->jobName);
+    }
+    return StepSequenceJobSetStep(unk, step);
+}

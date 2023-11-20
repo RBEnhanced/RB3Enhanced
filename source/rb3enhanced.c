@@ -271,6 +271,8 @@ void ApplyConfigurablePatches()
         POKE_32(0x82a976dc, LI(8, 1));
         POKE_32(0x82a97920, NOP);
 #endif
+
+        HookFunction(PORT_STEPSEQUENCEJOBSETSTEP, &StepSequenceJobSetStep, &StepSequenceJobSetStepHook);
     }
 #endif
 }
@@ -353,6 +355,7 @@ void ApplyHooks()
     HookFunction(PORT_SYMBOLPREINIT, &SymbolPreInit, &SymbolPreInitHook);
     HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
     HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
+
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);

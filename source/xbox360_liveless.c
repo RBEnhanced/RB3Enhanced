@@ -167,7 +167,6 @@ XUSER_SIGNIN_STATE XamUserGetSigninStateHook(DWORD dwUserIndex)
 // Stub XNet functions
 int XNetXnAddrToInAddrHook(XNADDR *pxna, XNKID *pxnkid, IN_ADDR *pina)
 {
-    RB3E_DEBUG("XNetXnAddrToInAddr called offline %u.%u.%u.%u online %u.%u.%u.%u", pxna->ina.S_un.S_un_b.s_b1, pxna->ina.S_un.S_un_b.s_b2, pxna->ina.S_un.S_un_b.s_b3, pxna->ina.S_un.S_un_b.s_b4, pxna->inaOnline.S_un.S_un_b.s_b1, pxna->inaOnline.S_un.S_un_b.s_b2, pxna->inaOnline.S_un.S_un_b.s_b3, pxna->inaOnline.S_un.S_un_b.s_b4);
     if (pxna->ina.S_un.S_addr == 0)
     {
         RB3E_DEBUG("XnAddr was null - doing direct connect", NULL);
@@ -225,7 +224,6 @@ int XNetGetTitleXnAddrHook(XNADDR *pxna)
     {
         pxna->abOnline[i] = i;
     }
-    RB3E_DEBUG("XNetGetTitleXnAddr called offline %u.%u.%u.%u online %u.%u.%u.%u", pxna->ina.S_un.S_un_b.s_b1, pxna->ina.S_un.S_un_b.s_b2, pxna->ina.S_un.S_un_b.s_b3, pxna->ina.S_un.S_un_b.s_b4, pxna->inaOnline.S_un.S_un_b.s_b1, pxna->inaOnline.S_un.S_un_b.s_b2, pxna->inaOnline.S_un.S_un_b.s_b3, pxna->inaOnline.S_un.S_un_b.s_b4);
     return ret;
 }
 
@@ -233,7 +231,7 @@ XNQOS xnqos = {0};
 int XNetQosLookupHook(UINT cxna, const XNADDR *apxna[], const XNKID *apxnkid[], const XNKEY *apxnkey[], UINT cina, const IN_ADDR aina[], const DWORD adwServiceId[], UINT cProbes, DWORD dwBitsPerSec, DWORD dwFlags, WSAEVENT hEvent, XNQOS **ppxnqos)
 {
     unsigned int i = 0;
-    RB3E_DEBUG("XNetQoSLookup called for XnAddr offline %u.%u.%u.%u online %u.%u.%u.%u", apxna[0]->ina.S_un.S_un_b.s_b1, apxna[0]->ina.S_un.S_un_b.s_b2, apxna[0]->ina.S_un.S_un_b.s_b3, apxna[0]->ina.S_un.S_un_b.s_b4, apxna[0]->inaOnline.S_un.S_un_b.s_b1, apxna[0]->inaOnline.S_un.S_un_b.s_b2, apxna[0]->inaOnline.S_un.S_un_b.s_b3, apxna[0]->inaOnline.S_un.S_un_b.s_b4);
+    RB3E_DEBUG("XNetQoSLookup called, spoofing positive result", NULL);
     XNetQosLookup(cxna, apxna, apxnkid, apxnkey, cina, aina, adwServiceId, cProbes, dwBitsPerSec, dwFlags, hEvent, ppxnqos);
     if (ppxnqos != NULL)
     {

@@ -126,6 +126,7 @@
 #define PORT_MEMNUMHEAPS 0x827bb628                  // MemNumHeaps
 #define PORT_INITSONGMETADATA 0x827aa450             // InitSongMetadata
 #define PORT_UPDATEPRESENCE 0x82680430               // PresenceMgr::UpdatePresence
+#define PORT_STEPSEQUENCEJOBSETSTEP 0x82af92b8       // Quazal::StepSequenceJob::SetStep
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -246,6 +247,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_QUAZALSOCKET_BIND 0x8001cd10        // Quazal::Socket::Bind
 #define PORT_INITSONGMETADATA 0x805147a4         // InitSongMetadata
 #define PORT_UPDATEPRESENCE 0x801879d4           // PresenceMgr::UpdatePresence
+#define PORT_STEPSEQUENCEJOBSETSTEP 0x80025364   // Quazal::StepSequenceJob::SetStep
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
