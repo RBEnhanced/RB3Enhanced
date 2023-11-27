@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Rockband3Enhanced", "Rockband3Enhanced\Rockband3Enhanced.vcxproj", "{8F48C651-91B3-49EF-A0FE-6050201C3136}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|PS3 = Debug|PS3
+		Release|PS3 = Release|PS3
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F48C651-91B3-49EF-A0FE-6050201C3136}.Debug|PS3.ActiveCfg = Debug|PS3
+		{8F48C651-91B3-49EF-A0FE-6050201C3136}.Debug|PS3.Build.0 = Debug|PS3
+		{8F48C651-91B3-49EF-A0FE-6050201C3136}.Release|PS3.ActiveCfg = Release|PS3
+		{8F48C651-91B3-49EF-A0FE-6050201C3136}.Release|PS3.Build.0 = Release|PS3
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

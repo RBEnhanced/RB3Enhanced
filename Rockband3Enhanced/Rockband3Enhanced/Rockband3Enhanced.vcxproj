@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|PS3">
+      <Configuration>Debug</Configuration>
+      <Platform>PS3</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|PS3">
+      <Configuration>Release</Configuration>
+      <Platform>PS3</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\config.c" />
+    <ClCompile Include="source\crc32.c" />
+    <ClCompile Include="source\DTAFunctions.c" />
+    <ClCompile Include="source\GameHooks.c" />
+    <ClCompile Include="source\GemHooks.c" />
+    <ClCompile Include="source\GlobalSymbols.c" />
+    <ClCompile Include="source\gocentral.c" />
+    <ClCompile Include="source\inih.c" />
+    <ClCompile Include="source\LocaleHooks.c" />
+    <ClCompile Include="source\MusicLibrary.c" />
+    <ClCompile Include="source\net_events.c" />
+    <ClCompile Include="source\net_stun.c" />
+    <ClCompile Include="source\OvershellHooks.c" />
+    <ClCompile Include="source\PassiveMessages.c" />
+    <ClCompile Include="source\rb3enhanced.c" />
+    <ClCompile Include="source\SetlistHooks.c" />
+    <ClCompile Include="source\SongHooks.c" />
+    <ClCompile Include="source\SongSort.c" />
+    <ClCompile Include="source\SpeedHooks.c" />
+    <ClCompile Include="source\utilities.c" />
+    <ClCompile Include="source\wii.c" />
+    <ClCompile Include="source\wii_emvolution.c" />
+    <ClCompile Include="source\wii_files.c" />
+    <ClCompile Include="source\wii_net.c" />
+    <ClCompile Include="source\wii_usbhid.c" />
+    <ClCompile Include="source\xbox360.c" />
+    <ClCompile Include="source\xbox360_crypto.c" />
+    <ClCompile Include="source\xbox360_files.c" />
+    <ClCompile Include="source\xbox360_liveless.c" />
+    <ClCompile Include="source\xbox360_net.c" />
+    <ClCompile Include="source\_functions.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\config.h" />
+    <ClInclude Include="include\crc32.h" />
+    <ClInclude Include="include\DTAFunctions.h" />
+    <ClInclude Include="include\emvolution\dvd.h" />
+    <ClInclude Include="include\GameHooks.h" />
+    <ClInclude Include="include\GemHooks.h" />
+    <ClInclude Include="include\GlobalSymbols.h" />
+    <ClInclude Include="include\gocentral.h" />
+    <ClInclude Include="include\inih.h" />
+    <ClInclude Include="include\LocaleHooks.h" />
+    <ClInclude Include="include\MusicLibrary.h" />
+    <ClInclude Include="include\net.h" />
+    <ClInclude Include="include\net_events.h" />
+    <ClInclude Include="include\OvershellHooks.h" />
+    <ClInclude Include="include\ports.h" />
+    <ClInclude Include="include\ppcasm.h" />
+    <ClInclude Include="include\rb3enhanced.h" />
+    <ClInclude Include="include\rb3e_include.h" />
+    <ClInclude Include="include\rb3\App.h" />
+    <ClInclude Include="include\rb3\Archive.h" />
+    <ClInclude Include="include\rb3\BandLabel.h" />
+    <ClInclude Include="include\rb3\BandSongMgr.h" />
+    <ClInclude Include="include\rb3\BandUI.h" />
+    <ClInclude Include="include\rb3\BandUser.h" />
+    <ClInclude Include="include\rb3\BandUserMgr.h" />
+    <ClInclude Include="include\rb3\Data.h" />
+    <ClInclude Include="include\rb3\File.h" />
+    <ClInclude Include="include\rb3\Game.h" />
+    <ClInclude Include="include\rb3\GameGem.h" />
+    <ClInclude Include="include\rb3\InetAddress.h" />
+    <ClInclude Include="include\rb3\Locale.h" />
+    <ClInclude Include="include\rb3\MetaPerformer.h" />
+    <ClInclude Include="include\rb3\ModifierManager.h" />
+    <ClInclude Include="include\rb3\MusicLibrary.h" />
+    <ClInclude Include="include\rb3\PassiveMessagesPanel.h" />
+    <ClInclude Include="include\rb3\Random.h" />
+    <ClInclude Include="include\rb3\RockCentralGateway.h" />
+    <ClInclude Include="include\rb3\SongMetadata.h" />
+    <ClInclude Include="include\rb3\SongSortByRecentEntry.h" />
+    <ClInclude Include="include\rb3\SortNode.h" />
+    <ClInclude Include="include\rb3\String.h" />
+    <ClInclude Include="include\rb3\Symbol.h" />
+    <ClInclude Include="include\rb3\TrackPanelDirBase.h" />
+    <ClInclude Include="include\rb3\UsbWii.h" />
+    <ClInclude Include="include\rb3_include.h" />
+    <ClInclude Include="include\SetlistHooks.h" />
+    <ClInclude Include="include\SongHooks.h" />
+    <ClInclude Include="include\SongSort.h" />
+    <ClInclude Include="include\SpeedHooks.h" />
+    <ClInclude Include="include\utilities.h" />
+    <ClInclude Include="include\wii_usbhid.h" />
+    <ClInclude Include="include\xbox360.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCTargetsPath Condition="'$(VCTargetsPath12)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath12)</VCTargetsPath>
+    <ProjectGuid>{8F48C651-91B3-49EF-A0FE-6050201C3136}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>GCC</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>GCC</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup Condition="'$(DebuggerFlavor)'=='PS3Debugger'" Label="OverrideDebuggerDefaults">
+    <!--LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand-->
+    <!--LocalDebuggerCommandArguments></LocalDebuggerCommandArguments-->
+    <!--LocalDebuggerCommandLine>-r -e -m</LocalDebuggerCommandLine-->
+    <!--LocalRunCommandLine>-r</LocalRunCommandLine-->
+    <!--LocalTunerCommandLine></LocalTunerCommandLine-->
+    <!--LocalDebuggerFileServingDirectory>$(ProjectDir)</LocalDebuggerFileServingDirectory-->
+    <!--LocalDebuggerHomeDirectory>$(ProjectDir)</LocalDebuggerHomeDirectory-->
+    <!--LocalDebuggerProjectFile></LocalDebuggerProjectFile-->
+    <!--LocalDebuggerResetType>Soft</LocalDebuggerResetType-->
+    <!--LocalDebuggerClearTty>False</LocalDebuggerClearTty-->
+  </PropertyGroup>
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <OptimizationLevel>Level2</OptimizationLevel>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
