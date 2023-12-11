@@ -216,7 +216,9 @@ void DbgPrint(const char *s, ...);
 #include <string.h>
 
 // instruction patch addresses
-#define PORT_SONGLIMIT 0x4141414141               // call to "max_song_count" DataNode::_value
+#define PORT_SONGLIMIT 0x00e53500                 /* call to "max_song_count" DataNode::_value
+                                                    its either this or 0x271314 or 0x281544
+                                                  */
 #define PORT_SONGBLACKLIST 0x4141414141           // call to a function that checks song blacklist
 #define PORT_DATAINITFUNCS_TAIL 0x4141414141      // blr of DataInitFuncs
 #define PORT_FASTSTART_CHECK 0x4141414141         // beq after OptionBool("fast",0) in App::_ct
