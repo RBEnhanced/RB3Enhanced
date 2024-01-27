@@ -77,6 +77,9 @@ struct _Object
 
     char *note;
     char *name;
+    int *objectDir;
+    int *objRefHead;
+    int *objRefTail;
 };
 
 #endif // _OBJECT_H

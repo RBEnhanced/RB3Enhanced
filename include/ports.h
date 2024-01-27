@@ -127,6 +127,13 @@
 #define PORT_INITSONGMETADATA 0x827aa450             // InitSongMetadata
 #define PORT_UPDATEPRESENCE 0x82680430               // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x82af92b8       // Quazal::StepSequenceJob::SetStep
+#define PORT_RNDTEXNEWOBJECT 0x82273de0              // RndTex::NewObject
+#define PORT_RNDMATNEWOBJECT 0x8240f5d0              // RndMat::NewObject
+#define PORT_RNDTEXSETBITMAP 0x823ff678              // RndTex::SetBitmap
+#define PORT_RNDTEXSETBITMAP2 0x823ff240             // RndTex::SetBitmap2
+#define PORT_FILEPATHCONSTRUCTOR 0x82270210          // FilePath::__ct
+#define PORT_MUSICLIBRARYSETUILISTLABELS 0x8253cd90  // MusicLibrary::SetUIListLabels
+#define PORT_MUSICLIBRARY_CT 0x825451c8              // MusicLibrary::__ct
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway

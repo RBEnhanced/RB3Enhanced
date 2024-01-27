@@ -8,4 +8,6 @@ typedef struct _String
     char *buf;
 } String;
 
+int StringConstructor(int *thisFactory, String *str);
+
 #endif // _STRING_H

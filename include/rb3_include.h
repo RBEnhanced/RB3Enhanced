@@ -14,6 +14,7 @@
 #include "rb3/Data.h"
 #include "rb3/DirLoader.h"
 #include "rb3/File.h"
+#include "rb3/FilePath.h"
 #include "rb3/FileStream.h"
 #include "rb3/Game.h"
 #include "rb3/GameGem.h"
@@ -41,6 +42,8 @@
 
 // rnd headers
 #include "rb3/Rnd/RndPropAnim.h"
+#include "rb3/Rnd/RndMat.h"
+#include "rb3/Rnd/RndTex.h"
 
 // UI headers
 #include "rb3/UI/UIPanel.h"

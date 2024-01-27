@@ -323,6 +323,12 @@ void InitialiseFunctions()
     POKE_B(&JoypadGetPadData, PORT_JOYPADGETPADDATA);
     POKE_B(&MemAlloc, PORT_MEMALLOC);
     POKE_B(&MemFree, PORT_MEMFREE);
+    POKE_B(&RndTexNewObject, PORT_RNDTEXNEWOBJECT);
+    POKE_B(&RndMatNewObject, PORT_RNDMATNEWOBJECT);
+    POKE_B(&RndTexSetBitmap, PORT_RNDTEXSETBITMAP);
+    POKE_B(&RndTexSetBitmap2, PORT_RNDTEXSETBITMAP2);
+    POKE_B(&FilePathConstructor, PORT_FILEPATHCONSTRUCTOR);
+    POKE_B(&MusicLibraryUnk1, 0x825bf708);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -356,13 +362,16 @@ void ApplyHooks()
     HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
     HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
 
+    HookFunction(PORT_MUSICLIBRARY_CT, &MusicLibraryConstructor, &MusicLibraryConstructorHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
-    // TODO: port these to Wii
+    HookFunction(0x8253b440, &MusicLibraryMat, &MusicLibraryMatHook);
+
+    //  TODO: port these to Wii
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
