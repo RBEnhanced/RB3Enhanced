@@ -1,7 +1,8 @@
 #ifndef _GAMEGEM_H
 #define _GAMEGEM_H
 
-#include "Symbol.h"
+#include "rb3/Symbol.h"
+#include "rb3/Vector.h"
 
 typedef struct _GameGem
 {
@@ -49,9 +50,7 @@ typedef enum _NoStrumState
 typedef struct _GameGemList
 {
     int mHopoThreshold;
-    GameGem *mGems_start;
-    GameGem *mGems_end;
-    GameGem *mGems_capacity;
+    vector mGems;
 } GameGemList;
 
 extern int WillBeNoStrum(GameGemList *thisGameGemList, int *multiGemInfoPtr);

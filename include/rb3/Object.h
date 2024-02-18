@@ -6,6 +6,13 @@
 #include "rb3/Symbol.h"
 #include "rb3/UI/UIPanel.h"
 
+typedef enum _CopyType
+{
+    kCopyDeep = 0,
+    kCopyShallow = 1,
+    kCopyFromMax = 2
+} CopyType;
+
 typedef struct _Object Object;
 typedef struct _TypeProps TypeProps;
 
@@ -17,15 +24,15 @@ typedef void (*ObjSetType_t)(Object *thisObject, Symbol type);
 typedef DataNode *(*ObjHandle_t)(DataNode *retNode, Object *thisObject, DataArray *msg, char warn);
 typedef void (*ObjSyncProperty_t)(Object *thisObject);
 typedef void (*ObjSave_t)(Object *thisObject, BinStream *binStream);
-typedef void (*ObjCopy_t)(Object *to, Object *from, int copyType);
+typedef void (*ObjCopy_t)(Object *to, Object *from, CopyType copyType);
 typedef void (*ObjLoad_t)(Object *thisObject, BinStream *binStream);
 typedef void (*ObjSetTypeDef_t)(Object *thisObject, DataArray *typeDef);
-typedef void (*ObjSetName_t)(Object *thisObject, Symbol name, int *parentDir);
+typedef void (*ObjSetName_t)(Object *thisObject, char *name, int *dir);
 typedef int *(*ObjDataDir_t)(Object *thisObject);
 typedef void (*ObjPreLoad_t)(Object *thisObject, BinStream *binStream);
 typedef char *(*ObjFindPathName_t)(Object *thisObject);
 
-extern UIPanel *ObjectFindUIPanel(int *objectDir, char *name, int unk);
+extern UIPanel *ObjectFindUIPanel(int *objectDir, char *name, char fail);
 
 typedef struct _Object_vtable
 {

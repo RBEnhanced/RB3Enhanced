@@ -9,7 +9,7 @@ void CheckForPanelAndJump(Symbol entryName, int sortType)
 {
     // check if the song select panel is "up" (displayed on screen) before attempting a jump
     UIPanel *songSelectPanel = ObjectFindUIPanel(*(int *)PORT_OBJECTDIRMAINDIR, "song_select_panel", 1);
-    if (songSelectPanel != NULL && songSelectPanel->is_up == 1)
+    if (songSelectPanel != NULL && songSelectPanel->mState == kPanelUp)
     {
         MusicLibrarySelect(*(int *)PORT_THEMUSICLIBRARY, entryName, sortType, 1);
     }

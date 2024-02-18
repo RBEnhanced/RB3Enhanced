@@ -8,5 +8,5 @@
 
 int WillBeNoStrumHook(int *gameGemListPtr, int *multiGemInfoPtr);
 int *GetWidgetByNameHook(int *gemManager, Symbol name);
-int AddGameGemHook(int *gameGemList, GameGem *gem, NoStrumState gemType);
+int AddGameGemHook(int *gameGemList, GameGem *gem, NoStrumState noStrumState);
 Symbol GetSlotColorHook(int *bandUser);

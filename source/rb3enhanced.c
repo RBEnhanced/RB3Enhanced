@@ -33,7 +33,7 @@ void SetVenueHook(int *thisMetaPerformer, Symbol venue)
     Modifier *blackBackgroundModifier;
 
     SymbolConstruct(&blackBackground, "mod_black_background");
-    blackBackgroundModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, blackBackground, 0);
+    blackBackgroundModifier = ModifierIsActive(*(int *)PORT_MODIFIERMGR_POINTER, blackBackground, 0);
     if (blackBackgroundModifier->enabled)
         venue.sym = "none";
 
@@ -302,7 +302,7 @@ void InitialiseFunctions()
     POKE_B(&ExecuteDTA, PORT_EXECUTEDTA);
     POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
     POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
-    POKE_B(&ModifierActive, PORT_MODIFIERMGR_ACTIVE);
+    POKE_B(&ModifierIsActive, PORT_MODIFIERMGR_ACTIVE);
     POKE_B(&HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
     POKE_B(&RandomInt, PORT_RANDOMINT);
     POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);

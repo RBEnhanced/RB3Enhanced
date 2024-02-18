@@ -94,7 +94,7 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
     {
         if (mat != NULL && tex != NULL)
         {
-            if (strcmp(listSlot->name, "game_origin_picture_slot") == 0)
+            if (strcmp(listSlot->mMatchName.buf, "game_origin_picture_slot") == 0)
             {
                 int *ret = 0;
                 SortNode *node = 0;

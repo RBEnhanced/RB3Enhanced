@@ -4,9 +4,9 @@
     Quazal is the creator of the networking middleware used by RB3.
 */
 
-#include "rb3/Quazal/StepSequenceJobStep.h"
+#include "rb3/Quazal/Step.h"
 
-extern void OperatorEqualsFmt(char *r3, char *r4);
-void OperatorEqualsFmtHook(char *r3, char *r4);
-extern int StepSequenceJobSetStep(int *unk, StepSequenceJobStep *step);
-int StepSequenceJobSetStepHook(int *unk, StepSequenceJobStep *step);
+extern void OperatorEqualsFmt(char *thisString, char *szString);
+void OperatorEqualsFmtHook(char *thisString, char *szString);
+extern int StepSequenceJobSetStep(int *thisStepSequenceJob, Step *oStep);
+int StepSequenceJobSetStepHook(int *thisStepSequenceJob, Step *oStep);

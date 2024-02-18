@@ -15,12 +15,12 @@ void OperatorEqualsFmtHook(char *r3, char *r4)
     return;
 }
 
-int StepSequenceJobSetStepHook(int *unk, StepSequenceJobStep *step)
+int StepSequenceJobSetStepHook(int *unk, Step *step)
 {
     // steps can have no name it seems; make sure we are not trying to print a null pointer
-    if (step != NULL && step->jobName != NULL)
+    if (step != NULL && step->m_szStepDescription != NULL)
     {
-        RB3E_DEBUG("Quazal Job: %s", step->jobName);
+        RB3E_DEBUG("Quazal Job: %s", step->m_szStepDescription);
     }
     return StepSequenceJobSetStep(unk, step);
 }
