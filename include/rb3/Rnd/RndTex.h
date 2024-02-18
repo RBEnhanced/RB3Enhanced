@@ -30,7 +30,7 @@ typedef struct _RndTex
     int bpp;
     String name;
     int mipLevels;
-    int unk;
+    int *fileLoader;
     int unk2;
 } RndTex;
 
@@ -43,7 +43,7 @@ typedef struct _ObjPtr_RndTex
 
 RndTex *RndTexNewObject();
 void RndTexSetBitmap(RndTex *thisRndTex, FilePath *path);
-void RndTexSetBitmap2(RndTex *thisRndTex, int width, int height, int bpp, int type, int mips, int unk);
+void RndTexSetBitmap2(RndTex *thisRndTex, int width, int height, int bpp, int type, int useMips, char *path);
 
 void RndBitmapGenerateMips(RndBitmap *thisBitmap);
 int RndBitmapNumMips(RndBitmap *thisBitmap);

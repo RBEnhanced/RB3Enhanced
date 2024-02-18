@@ -14,7 +14,7 @@ typedef void (*ObjOnlyReturns_t)();
 typedef int (*ObjReturnsZero_t)();
 typedef Symbol (*ObjClassName_t)(Symbol retSym);
 typedef void (*ObjSetType_t)(Object *thisObject, Symbol type);
-typedef DataNode *(*ObjHandle_t)(DataNode *retNode, Object *thisObject, DataArray *msg, char unk);
+typedef DataNode *(*ObjHandle_t)(DataNode *retNode, Object *thisObject, DataArray *msg, char warn);
 typedef void (*ObjSyncProperty_t)(Object *thisObject);
 typedef void (*ObjSave_t)(Object *thisObject, BinStream *binStream);
 typedef void (*ObjCopy_t)(Object *to, Object *from, int copyType);

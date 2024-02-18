@@ -8,7 +8,7 @@ typedef struct _Archive
 } Archive;
 
 extern void ArchiveInit(void);
-extern void ArchiveConstructor(Archive *thisArchive, char *path, int unknown);
+extern void ArchiveConstructor(Archive *thisArchive, char *path, int heap_headroom);
 extern void ArchiveDestructor(Archive *thisArchive);
 extern void ArchiveMerge(Archive *thisArchive, Archive *otherArchive);
 extern void ArchiveSetLocationHardDrive(Archive *thisArchive);

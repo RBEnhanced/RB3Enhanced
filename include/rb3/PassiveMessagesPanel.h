@@ -6,6 +6,6 @@
 // RB3E function, not a game function, doesn't exactly belong here
 extern void DisplayMessage(char *message);
 
-void QueueMessage(int *thisPassiveMessagesPanel, DataArray *ptr, int type, char *symText, int unk3);
+void QueueMessage(int *thisPassiveMessagesPanel, DataArray *ptr, int type, char *symText, int priority);
 
 #endif // _PASSIVEMESSAGESPANEL_H

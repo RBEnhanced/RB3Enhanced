@@ -57,22 +57,22 @@ void UpdatePresenceHook(void *thisPresenceMgr)
 }
 
 // New file hook, for ARKless file loading
-void *NewFileHook(char *fileName, int flags)
+void *NewFileHook(char *iFilename, int iMode)
 {
     char *new_path = NULL;
     if (config.DisableRawfiles)
         goto LOAD_ORIGINAL;
     // checks the platform-specific APIs for the file
-    new_path = RB3E_GetRawfilePath(fileName, 0);
+    new_path = RB3E_GetRawfilePath(iFilename, 0);
     if (new_path != NULL)
     {
-        fileName = new_path;
-        flags = 0x10002; // tell the game to load this file raw
+        iFilename = new_path;
+        iMode = 0x10002; // tell the game to load this file raw
     }
 LOAD_ORIGINAL:
     if (config.LogFileAccess)
-        RB3E_MSG("File: %s (%s)", fileName, (flags & 0x10000) ? "Raw" : "ARK");
-    return NewFile(fileName, flags);
+        RB3E_MSG("File: %s (%s)", iFilename, (iMode & 0x10000) ? "Raw" : "ARK");
+    return NewFile(iFilename, iMode);
 }
 
 DataArray *DataReadFileHook(char *path, int dtb)
@@ -328,7 +328,7 @@ void InitialiseFunctions()
     POKE_B(&RndTexSetBitmap, PORT_RNDTEXSETBITMAP);
     POKE_B(&RndTexSetBitmap2, PORT_RNDTEXSETBITMAP2);
     POKE_B(&FilePathConstructor, PORT_FILEPATHCONSTRUCTOR);
-    POKE_B(&MusicLibraryUnk1, 0x825bf708);
+    POKE_B(&MusicLibraryGetNodeByIndex, PORT_MUSICLIBRARYGETNODEBYINDEX);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -361,15 +361,14 @@ void ApplyHooks()
     HookFunction(PORT_SYMBOLPREINIT, &SymbolPreInit, &SymbolPreInitHook);
     HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
     HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
-
     HookFunction(PORT_MUSICLIBRARY_CT, &MusicLibraryConstructor, &MusicLibraryConstructorHook);
+    HookFunction(PORT_MUSICLIBRARYMAT, &MusicLibraryMat, &MusicLibraryMatHook);
+    HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
-    HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
-    HookFunction(0x8253b440, &MusicLibraryMat, &MusicLibraryMatHook);
 
     //  TODO: port these to Wii
     POKE_B(PORT_GETSONGID, &GetSongIDHook);

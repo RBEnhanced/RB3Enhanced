@@ -39,7 +39,7 @@ void CreateMaterials()
 
         // allow the material to become transparent so alpha channel does not appear black
         // not sure if all of this is really necessary
-        mat->blend = BlendSrcAlpha;
+        mat->blend = kSrcAlpha;
         mat->preLit = 1;
         mat->useEnviron = 0;
         mat->alphaCut = 0;
@@ -82,13 +82,13 @@ void SetSongNameFromNodeHook(BandLabel *label, SortNode *sortNode)
     return;
 }
 
-int *MusicLibraryConstructorHook(int *thisMusicLibrary, int unk)
+int *MusicLibraryConstructorHook(MusicLibrary *thisMusicLibrary, int *songPreview)
 {
     CreateMaterials();
-    return MusicLibraryConstructor(thisMusicLibrary, unk);
+    return MusicLibraryConstructor(thisMusicLibrary, songPreview);
 }
 
-RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int unk, int unk2, UIListSlot *listSlot)
+RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, UIListSlot *listSlot)
 {
     if (listSlot != NULL)
     {
@@ -98,18 +98,17 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int unk, int unk2, U
             {
                 int *ret = 0;
                 SortNode *node = 0;
-                int nodeType = 0;
+                SongNodeType nodeType = kNodeNone;
 
-                ret = ((int *)(*(void **)0x82dfee5c))[thisMusicLibrary->unk2 + 0x13];
+                ret = ((int *)(*(void **)PORT_THESONGSORTMGR))[thisMusicLibrary->unk2 + 0x13];
                 if (ret != NULL)
                 {
-                    node = MusicLibraryUnk1(ret, unk2);
+                    node = MusicLibraryGetNodeByIndex(ret, idx);
                     if (node != NULL)
                     {
                         nodeType = node->vtable->getNodeType();
-                        if (nodeType == 4)
+                        if (nodeType == kNodeSong)
                         {
-                            RB3E_DEBUG("vtable: %i", node->record->vtable);
                             return mat;
                         }
                     }
@@ -118,5 +117,5 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int unk, int unk2, U
         }
     }
 
-    return MusicLibraryMat(thisMusicLibrary, unk, unk2, listSlot);
+    return MusicLibraryMat(thisMusicLibrary, data, idx, listSlot);
 }

@@ -11,10 +11,10 @@ typedef struct _MusicLibrary
 
 // Jumps to a given entry in the music library
 void MusicLibrarySelect(int theMusicLibrary, Symbol entryName, int sortType, int unk_r6);
-int *MusicLibraryConstructor(int *thisMusicLibrary, int unk);
-int *MusicLibraryConstructorHook(MusicLibrary *thisMusicLibrary, int unk); //
+int *MusicLibraryConstructor(int *thisMusicLibrary, int *songPreview);
+int *MusicLibraryConstructorHook(MusicLibrary *thisMusicLibrary, int *songPreview);
 
-//// i dont know what these are really called so i just put something lol
-int MusicLibraryUnk1(int *unk, int unk2);
+// in the RB3 debug this function is inlined
+SortNode *MusicLibraryGetNodeByIndex(int *ret, int idx);
 
 #endif // _MUSICLIBRARY_H_

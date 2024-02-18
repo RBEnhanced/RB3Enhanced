@@ -5,30 +5,43 @@
 #include "Symbol.h"
 #include "SongMetadata.h"
 
+typedef enum _SongNodeType
+{
+    kNodeNone = 0,
+    kNodeShortcut = 1,
+    kNodeHeader = 2,
+    kNodeSubheader = 3,
+    kNodeSong = 4,
+    kNodeFunction = 5,
+    kNodeSetlist = 6,
+    kNodeStoreSong = 7
+} SongNodeType;
+
 typedef struct _SortNode SortNode;
 
 typedef int (*ReturnsZero_t)();
 typedef void (*OnlyReturns_t)();
-typedef int (*GetNodeType_t)();
+typedef SongNodeType (*GetNodeType_t)();
 typedef Symbol (*GetToken_t)();
-typedef int (*GetSongCount_t)(SortNode *thisSortNode);
+typedef int (*LocalizeToken_t)(SortNode *thisSortNode);
 typedef Symbol (*OnSelect_t)(SortNode *thisSortNode);
 typedef Symbol (*Select_t)(SortNode *thisSortNode);
+typedef int *(*GetDateTime_t)(SortNode *thisSortNode);
 
-typedef struct _SortNodeVtable
+typedef struct _ShortcutNodeVtable
 {
     Object_vtable objectVtable;
     GetNodeType_t getNodeType;
     GetToken_t getToken;
-    GetSongCount_t getSongCount;
-    ReturnsZero_t returnsZero1;
-    OnlyReturns_t onlyReturns1;
+    LocalizeToken_t localizeToken;
+    GetDateTime_t getDateTime;
+    OnlyReturns_t deleteAll;
     OnSelect_t onSelect;
     Select_t select;
     OnlyReturns_t onlyReturns2;
     // there is more here but not really relevant atm
 
-} SortNodeVtable;
+} ShortcutNodeVtable;
 
 typedef struct _SongRecord
 {
@@ -43,7 +56,7 @@ typedef struct _SongRecord
 
 struct _SortNode
 {
-    SortNodeVtable *vtable;
+    ShortcutNodeVtable *vtable;
 #ifdef RB3E_WII
     char something[0x30];
 #else

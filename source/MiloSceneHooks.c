@@ -42,8 +42,8 @@ void LoadObj(Object *object, BinStream *stream)
     {
         RB3E_DEBUG("Replacing Milo scene asset %s with file at %s", object->name, replacementPath);
 
-        // create FileStream with filetype 2 so it looks outside of the ARK for the file
-        fileStream = *FileStreamConstructor(&fileStream, replacementPath, 2, 0);
+        // create FileStream with kReadNoArk so it looks outside of the ARK for the file
+        fileStream = *FileStreamConstructor(&fileStream, replacementPath, kReadNoArk, 0);
 
         // attempt to detect endianness of replacement asset
         // this allows assets from GH2 and earlier to work

@@ -1,6 +1,13 @@
 #ifndef _BINSTREAM_H
 #define _BINSTREAM_H
 
+typedef enum _SeekType
+{
+    kSeekBegin = 0,
+    kSeekCur = 1,
+    kSeekEnd = 2,
+} SeekType;
+
 typedef struct _BinStream BinStream;
 
 typedef void (*BinStreamDestructor_t)(BinStream *thisBinStream, int unk);
