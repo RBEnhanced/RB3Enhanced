@@ -49,10 +49,10 @@ void *GameConstructHook(void *theGame) // You just lost
         bandUser = GetBandUserFromSlot(*(int *)PORT_THEBANDUSERMGR, i);
         if (bandUser != NULL)
         {
-            RB3E_DEBUG("BandUser %i: %p - Track: %i, Controller: %i, Difficulty: %i", i, bandUser, bandUser->trackType, bandUser->controllerType, bandUser->difficulty);
+            RB3E_DEBUG("BandUser %i: %p - Track: %i, Controller: %i, Difficulty: %i", i, bandUser, bandUser->mTrackType, bandUser->mControllerType, bandUser->mDifficulty);
             bandevent.MemberExists[i] = 1;
-            bandevent.Difficulty[i] = bandUser->difficulty;
-            bandevent.TrackType[i] = bandUser->trackType;
+            bandevent.Difficulty[i] = bandUser->mDifficulty;
+            bandevent.TrackType[i] = bandUser->mTrackType;
         }
         else
         {

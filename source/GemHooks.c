@@ -99,7 +99,7 @@ Symbol GetSlotColorHook(int *bandUser, int slot)
     return slotColor;
 }
 
-int AddGameGemHook(int *gameGemList, GameGem *gem, NoStrumState gemType)
+int AddGameGemHook(GameGemList *gameGemList, GameGem *gem, NoStrumState gemType)
 {
     Modifier *mirrorModeModifier;
     char origGreen = gem->green;

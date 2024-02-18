@@ -55,7 +55,7 @@ typedef struct _DataArray
     short mNodeCount;
     short mRefCount;
     short mLine;
-    short mUnknown;
+    short mDeprecated; // assuming this is for them to mark scripts or functions as being deprecated and etc.?
 } DataArray;
 
 // gets a pointer to the addr of a DTA function

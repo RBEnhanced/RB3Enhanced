@@ -1,6 +1,10 @@
 #ifndef _BANDUSER_H
 #define _BANDUSER_H
 
+#include "rb3/String.h"
+#include "rb3/Symbol.h"
+#include "rb3/Track.h"
+
 typedef enum _Difficulty
 {
     kDifficultyEasy = 0,
@@ -36,18 +40,64 @@ typedef enum _ControllerType
     kControllerNone = 5
 } ControllerType;
 
+typedef enum _PreferredScoreType
+{
+    kScoreDrum = 0,
+    kScoreBass = 1,
+    kScoreGuitar = 2,
+    kScoreVocals = 3,
+    kScoreHarmony = 4,
+    kScoreKeys = 5,
+    kScoreRealDrum = 6,
+    kScoreRealGuitar = 7,
+    kScoreRealBass = 8,
+    kScoreRealKeys = 9,
+    kScoreBand = 10
+} PreferredScoreType;
+
 typedef struct _BandUser
 {
+    // BandUser members
     int unknown_0x0;
     int unknown_0x4;
-    Difficulty difficulty;
-    int unknown_0xc;
-    TrackType trackType;
-    ControllerType controllerType;
-    int unknown_0x14;
-    int unknown_0x18;
-    int unknown_0x1c;
-    int unknown_0x20;
+    Difficulty mDifficulty;
+    char mUnknown;
+    char pad[3];
+    TrackType mTrackType;
+    ControllerType mControllerType;
+    char mTrackSelected;
+    char mUnknown2;
+    char pad2[2];
+    PreferredScoreType mPreferredScoreType;
+    int mOvershellState;
+    String mOvershellFocus;
+    void *mChar;
+#ifdef RB3E_XBOX
+    char mGameplayOptions[0x48];
+#else
+    char mGameplayOptions[0x38];
+#endif
+    char mAutoplay;
+    char pad3[3];
+#ifdef RB3E_WII
+    int mUnknownBool;
+#endif
+    Symbol mPreviousAward;
+    float mLastHitFraction;
+    Track *mTrack;
+    void *mPlayer;
+    char mParticipating;
+#ifdef RB3E_XBOX
+    char pad4[3];
+    int mUnknown3;
+#else
+    char mIsWiiRemoteController;
+    char mJustDisconnected;
+    char pad4;
+#endif
+
+    // User members
+    // TODO
 } BandUser;
 
 #endif // _BANDUSER_H
