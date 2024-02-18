@@ -10,7 +10,7 @@
 #include "ports.h"
 
 // MSVC inlined this function in the original game so redefine it
-void AddInstrumentToList(OvershellSlot *thisOvershellSlot, Symbol *instrumentToAdd, TrackType trackType, char *icon)
+void OvershellPartSelectProviderAddPart(OvershellSlot *thisOvershellSlot, Symbol *instrumentToAdd, TrackType trackType, char *icon)
 {
     OvershellListEntry entry;
     entry.icon = icon[0];
@@ -21,7 +21,7 @@ void AddInstrumentToList(OvershellSlot *thisOvershellSlot, Symbol *instrumentToA
 }
 
 // Monkey patching the function will be hard, so make a realistic, dark and gritty reboot.
-void BuildInstrumentSelectionList(OvershellSlot *thisOvershellSlot, ControllerType controllerType, BandUser *bandUser)
+void OvershellPartSelectProviderReload(OvershellSlot *thisOvershellSlot, ControllerType controllerType, BandUser *bandUser)
 {
     PrepareSomeVectorMaybe(&thisOvershellSlot->list_vector_maybe, thisOvershellSlot->list_vector_maybe, thisOvershellSlot->unk_var_2);
     thisOvershellSlot->controllerType = controllerType;
@@ -29,36 +29,36 @@ void BuildInstrumentSelectionList(OvershellSlot *thisOvershellSlot, ControllerTy
     // RB3E_DEBUG("Building overshell selection for controller type %i.", controllerType);
     switch (controllerType)
     {
-    case VOX_CONT:
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_vocal_solo, VOCALS, "V");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_vocal_harmony, HARMONIES, "2");
+    case kControllerVocals:
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_vocal_solo, kTrackVocals, "V");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_vocal_harmony, kTrackVocals, "2");
         // allow pad to play as guitar, bass, keys and drums :D
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_guitar, GUITAR, "G");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_bass, BASS, "B");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_keys, KEYS, "K");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_drums, DRUMS, "D");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_guitar, kTrackGuitar, "G");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_bass, kTrackBass, "B");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_keys, kTrackKeys, "K");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_drums, kTrackDrum, "D");
         break;
-    case GUITAR_CONT:
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_guitar, GUITAR, "G");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_bass, BASS, "B");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_keys, KEYS, "K");
+    case kControllerGuitar:
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_guitar, kTrackGuitar, "G");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_bass, kTrackBass, "B");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_keys, kTrackKeys, "K");
         break;
-    case DRUM_CONT:
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_drums, DRUMS, "D");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_drums_pro, DRUMS, "d");
+    case kControllerDrum:
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_drums, kTrackDrum, "D");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_drums_pro, kTrackDrum, "d");
         break;
-    case KEYBOARD_CONT:
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_keys, KEYS, "K");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_real_keys, PRO_KEYS, "k");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_guitar, GUITAR, "G");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_bass, BASS, "B");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_drums, DRUMS, "D");
+    case kControllerKeys:
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_keys, kTrackKeys, "K");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_real_keys, kTrackRealKeys, "k");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_guitar, kTrackGuitar, "G");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_bass, kTrackBass, "B");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_drums, kTrackDrum, "D");
         break;
-    case PRO_GUITAR_CONT:
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_real_guitar, PRO_GUITAR, "g");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_real_bass, PRO_BASS, "b");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_guitar, GUITAR, "G");
-        AddInstrumentToList(thisOvershellSlot, &globalSymbols.overshell_bass, BASS, "B");
+    case kControllerRealGuitar:
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_real_guitar, kTrackRealGuitar, "g");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_real_bass, kTrackRealBass, "b");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_guitar, kTrackGuitar, "G");
+        OvershellPartSelectProviderAddPart(thisOvershellSlot, &globalSymbols.overshell_bass, kTrackBass, "B");
         break;
     }
 }

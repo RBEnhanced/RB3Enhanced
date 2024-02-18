@@ -26,9 +26,9 @@ void *GameConstructHook(void *theGame) // You just lost
     RB3E_EventBandInfo bandevent = {0};
 #ifdef RB3E_XBOX
     Symbol song;
-    GetSongShortname(&song, *(int *)PORT_THEMETAPERFORMER);
+    GetSongSymbol(&song, *(int *)PORT_THEMETAPERFORMER);
 #else
-    Symbol song = GetSongShortname(*(int *)PORT_THEMETAPERFORMER);
+    Symbol song = GetSongSymbol(*(int *)PORT_THEMETAPERFORMER);
 #endif
     if (song.sym != NULL)
     {

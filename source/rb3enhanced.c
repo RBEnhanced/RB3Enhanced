@@ -310,7 +310,7 @@ void InitialiseFunctions()
     POKE_B(&SetAddress, PORT_SETADDRESS);
     POKE_B(&QueueMessage, PORT_QUEUEMESSAGE);
     POKE_B(&MusicLibrarySelect, PORT_MUSICLIBRARYSELECTMAYBE);
-    POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
+    POKE_B(&GetSongSymbol, PORT_GETSONGSYMBOL);
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
     POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
@@ -336,7 +336,7 @@ void ApplyHooks()
 {
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
     POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
-    POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
+    POKE_B(PORT_OVERSHELLPARTSELECTPROVIDERRELOAD, &OvershellPartSelectProviderReload);
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
