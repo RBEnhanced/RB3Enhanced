@@ -1,7 +1,9 @@
 #ifndef _RNDTEX_H
 #define _RNDTEX_H
 
+#include "rb3/FilePath.h"
 #include "rb3/Object.h"
+#include "rb3/String.h"
 
 typedef enum _BitmapType
 {

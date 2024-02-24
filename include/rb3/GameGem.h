@@ -53,9 +53,33 @@ typedef struct _GameGemList
     vector mGems;
 } GameGemList;
 
+typedef struct _GameGemDB
+{
+    vector mGems;
+    int mHopoThreshold;
+} GameGemDB;
+
+typedef struct _MultiGemInfo
+{
+    int track;
+    int slots;
+    float ms;
+    float duration_ms;
+    int tick;
+    int duration_ticks;
+    char ignore_duration;
+    char is_cymbal;
+    char pad[2];
+    int players;
+    NoStrumState no_strum;
+} MultiGemInfo;
+
 extern int WillBeNoStrum(GameGemList *thisGameGemList, int *multiGemInfoPtr);
 extern int AddGameGem(GameGemList *gameGemList, GameGem *gem, NoStrumState gemType);
+extern char AddMultiGem(GameGemDB *this, int diff, MultiGemInfo *info);
 extern int *GetWidgetByName(int *gemManager, Symbol sym);
 extern Symbol GetSlotColor(int *bandUser, int slot);
+extern GameGemDB *GameGemDBConstructor(GameGemDB *thisGameGemDB, int num_difficulties, int hopo_threshold);
+extern GameGemList *GetGameGemList(void *songData, int unk);
 
 #endif // _GAMEGEM_H

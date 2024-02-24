@@ -46,6 +46,8 @@
 #define PORT_LOADOBJS_BCTRL 0x827562e4          // bctrl to Object::PreLoad insie of DirLoader::LoadObjs
 #define PORT_SONGMGR_ISDEMO_CHECK 0x82575f9c    // "bne" after IsUGC check inside SongMgr::IsDemo
 #define PORT_STAGEKIT_EXISTS 0x8228d03c         // StageKit check. nop over to allow for fog command without a physical StageKit connected.
+#define PORT_ADDTRACKVECTOR_BL 0x82777b70       // bl to vector_push_back inside of SongData::AddTrack
+#define PORT_GETGAMELIST 0x82770730             // SongData::GetGameList
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                      // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                           // App::Run
@@ -81,6 +83,7 @@
 #define PORT_RANDOMINT 0x824f2f90                         // RandomInt(min, max)
 #define PORT_GETWIDGETBYNAME 0x82b9b880                   // GemManager::GetWidgetByName
 #define PORT_GETSLOTCOLOR 0x82baa308                      // TrackConfig::GetSlotColor
+#define PORT_ADDSMASHERPLATETOVECTOR 0x82356980           // AddSmasherPlateToVector
 #define PORT_ARCHIVE_CT 0x82514408                        // Archive::_ct
 #define PORT_ARCHIVE_SETLOCATIONHARDDRIVE 0x82512b00      // Archive::SetLocationHardDrive
 #define PORT_ARCHIVE_MERGE 0x82513ee8                     // Archive::Merge
@@ -104,6 +107,7 @@
 #define PORT_OVERSHELLPARTSELECTPROVIDERRELOAD 0x82668c70 // OvershellPartSelectProvider::Reload
 #define PORT_PREPARESOMEVECTORMAYBE 0x82796d90            // Prepares some vector, used by OvershellPartSelectProvider::Reload
 #define PORT_SOMEVECTORPUSHBACKMAYBE 0x82b6aa10           // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
+#define PORT_VECTORPUSHBACK 0x82b5f808                    // vector_push_back
 #define PORT_POSTPROC_DOPOST 0x82b89a08                   // NgPostProc::DoPost
 #define PORT_MUSICLIBRARYSELECTMAYBE 0x8253EB00           // Selects an entry in the Music Library screen - actual name not known
 #define PORT_GETSYMBOLBYGAMEORIGIN 0x8265bb78             // SongSortByRecent::GetSymbolByGameOrigin
@@ -125,6 +129,8 @@
 #define PORT_MEMPRINT 0x827bc970                          // MemPrint
 #define PORT_MEMNUMHEAPS 0x827bb628                       // MemNumHeaps
 #define PORT_INITSONGMETADATA 0x827aa450                  // InitSongMetadata
+#define PORT_SONGMETADATACONSTRUCTOR 0x827aa6e8           // SongMetadata::__ct
+#define PORT_SONGMETADATALOAD 0x825a3f58                  // SongMetadata::Load
 #define PORT_UPDATEPRESENCE 0x82680430                    // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x82af92b8            // Quazal::StepSequenceJob::SetStep
 #define PORT_RNDTEXNEWOBJECT 0x82273de0                   // RndTex::NewObject
@@ -135,6 +141,8 @@
 #define PORT_MUSICLIBRARY_CT 0x825451c8                   // MusicLibrary::__ct
 #define PORT_MUSICLIBRARYMAT 0x8253b440                   // MusicLibrary::Mat
 #define PORT_MUSICLIBRARYGETNODEBYINDEX 0x825bf708        // MusicLibrary::GetNodeByIndex
+#define PORT_GAMEGEMDB_CT 0x827931e0                      // GameGemDB::__ct
+#define PORT_ADDMULTIGEM 0x827930d8                       // GameGemDB::AddMultiGem
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -194,6 +202,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_MICCHECK 0x8024a4e8                // a bne that throws an error on the song select screen if the mic is not connected
 #define PORT_BIGSYMBOLFUNC_TAIL 0x8037a3d4      // blr after a function that initialises a bunch of symbols
 #define PORT_UPDATEPRESENCEBLOCK_B 0x80188194   // branch after the failure case in a function that calls UpdatePresence
+#define PORT_ADDTRACKVECTOR_BL 0x80480a88       // bl to vector_push_back inside of SongData::AddTrack
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c                      // PlatformMgr::SetDiskError
@@ -218,6 +227,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_GETWIDGETBYNAME 0x800d59b0                   // GemManager::GetWidgetByName
 #define PORT_DATANODEEVALUATE 0x80322e9c                  // DataNode::Evaluate
 #define PORT_GETSLOTCOLOR 0x800e42a4                      // TrackConfig::GetSlotColor
+#define PORT_ADDSMASHERPLATETOVECTOR 0x804316d4           // AddSmasherPlateToVector
 #define PORT_USBWIIGETTYPE 0x806c1a3c                     // UsbWii::GetType
 #define PORT_FILE_EXISTS 0x802fa134                       // FileExists
 #define PORT_QUEUEMESSAGE 0x80253c50                      // PassiveMessagesPanel::QueueMessage
@@ -231,6 +241,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_OVERSHELLPARTSELECTPROVIDERRELOAD 0x802478a8 // OvershellPartSelectProvider::Reload
 #define PORT_PREPARESOMEVECTORMAYBE 0x80247c58            // Prepares some vector, used by BuildInstrumentSelectionList
 #define PORT_SOMEVECTORPUSHBACKMAYBE 0x802484a8           // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
+#define PORT_VECTORPUSHBACK 0x800a6ef4                    // vector_push_back
 #define PORT_POSTPROC_DOPOST 0x806b52b4                   // WiiPostProc::DoPost
 #define PORT_MUSICLIBRARYSELECTMAYBE 0x80230d64           // Selects an entry in the Music Library screen - actual name not known
 #define PORT_GETSYMBOLBYGAMEORIGIN 0x8027dd3c             // SongSortByRecent::GetSymbolByGameOrigin
@@ -255,6 +266,8 @@ void DbgPrint(const char *s, ...);
 #define PORT_QUEUINGSOCKET_BIND 0x800478d4                // Quazal::QueuingSocket::Bind
 #define PORT_QUAZALSOCKET_BIND 0x8001cd10                 // Quazal::Socket::Bind
 #define PORT_INITSONGMETADATA 0x805147a4                  // InitSongMetadata
+#define PORT_SONGMETADATACONSTRUCTOR 0x80514880           // SongMetadata::__ct
+#define PORT_SONGMETADATALOAD 0x801d2090                  // SongMetadata::Load
 #define PORT_UPDATEPRESENCE 0x801879d4                    // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x80025364            // Quazal::StepSequenceJob::SetStep
 #define PORT_RNDTEXNEWOBJECT 0x80639904                   // RndTex::NewObject
@@ -265,6 +278,9 @@ void DbgPrint(const char *s, ...);
 #define PORT_MUSICLIBRARY_CT 0x8022d978                   // MusicLibrary::__ct
 #define PORT_MUSICLIBRARYMAT 0x80231c5c                   // MusicLibrary::Mat
 #define PORT_MUSICLIBRARYGETNODEBYINDEX 0x80279314        // MusicLibrary::GetNodeByIndex
+#define PORT_GAMEGEMDB_CT 0x80460f64                      // GameGemDB::__ct
+#define PORT_ADDMULTIGEM 0x80461160                       // GameGemDB::AddMultiGem
+#define PORT_GETGAMELIST 0x8048553c                       // SongData::GetGameList
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

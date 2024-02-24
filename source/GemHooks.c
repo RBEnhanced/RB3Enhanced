@@ -1,9 +1,11 @@
 #include "GlobalSymbols.h"
 #include "ports.h"
+#include "rb3/Mem.h"
 #include "rb3/ModifierManager.h"
 #include "rb3/GameGem.h"
 #include "rb3/Random.h"
 #include "rb3/Symbol.h"
+#include "rb3/Vector.h"
 
 int WillBeNoStrumHook(GameGemList *thisGameGemList, int *gem)
 {
@@ -99,27 +101,50 @@ Symbol GetSlotColorHook(int *bandUser, int slot)
     return slotColor;
 }
 
+void shuffleColors(GameGem *gem)
+{
+    char colors[5] = {gem->green, gem->red, gem->yellow, gem->blue, gem->orange};
+    int i;
+
+    for (i = 4; i > 0; i--)
+    {
+        int j = RandomInt(0, 0x7FFFFFFF) % (i + 1);
+        char temp = colors[i];
+        colors[i] = colors[j];
+        colors[j] = temp;
+    }
+
+    // Assign the shuffled colors back
+    gem->green = colors[0];
+    gem->red = colors[1];
+    gem->yellow = colors[2];
+    gem->blue = colors[3];
+    gem->orange = colors[4];
+}
+
 int AddGameGemHook(GameGemList *gameGemList, GameGem *gem, NoStrumState gemType)
 {
     Modifier *mirrorModeModifier;
+    Modifier *gemShuffleModifier;
     char origGreen = gem->green;
     char origRed = gem->red;
-    // char origYellow = gem->yellow;
     char origBlue = gem->blue;
     char origOrange = gem->orange;
 
     mirrorModeModifier = ModifierIsActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.mirrorMode, 0);
+    gemShuffleModifier = ModifierIsActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.gemShuffle, 0);
 
+    if (gemShuffleModifier->enabled)
+    {
+        shuffleColors(gem);
+    }
     if (mirrorModeModifier->enabled)
     {
-        if (gemType == kStrumDefault)
-        {
-            gem->green = origOrange;
-            gem->red = origBlue;
-            // yellow doesn't need to be swapped
-            gem->blue = origRed;
-            gem->orange = origGreen;
-        }
+        gem->green = origOrange;
+        gem->red = origBlue;
+        // yellow doesn't need to be swapped
+        gem->blue = origRed;
+        gem->orange = origGreen;
         return AddGameGem(gameGemList, gem, gemType);
     }
     else

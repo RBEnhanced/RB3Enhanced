@@ -18,6 +18,7 @@
 #include "rb3/FileStream.h"
 #include "rb3/Game.h"
 #include "rb3/GameGem.h"
+#include "rb3/GemTrackResrcManager.h"
 #include "rb3/Joypad.h"
 #include "rb3/Locale.h"
 #include "rb3/Mem.h"

@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include "ports.h"
 #include "crc32.h"
+#include "GameOriginInfo.h"
+#include "rb3/File.h"
 #include "rb3/PassiveMessagesPanel.h"
 #include "rb3/SongMetadata.h"
 #include "rb3/Data.h"

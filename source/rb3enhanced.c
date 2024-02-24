@@ -111,6 +111,7 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_force_hopos)}}");
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_mirror_mode)}}");
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_color_shuffle)}}");
+    ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_gem_shuffle)}}");
     return ModifierManagerConstructor(thisModifierManager, unk);
 }
 
@@ -329,6 +330,8 @@ void InitialiseFunctions()
     POKE_B(&RndTexSetBitmap2, PORT_RNDTEXSETBITMAP2);
     POKE_B(&FilePathConstructor, PORT_FILEPATHCONSTRUCTOR);
     POKE_B(&MusicLibraryGetNodeByIndex, PORT_MUSICLIBRARYGETNODEBYINDEX);
+    POKE_B(&vector_push_back, PORT_VECTORPUSHBACK);
+    POKE_B(&GameGemDBConstructor, PORT_GAMEGEMDB_CT);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -360,6 +363,8 @@ void ApplyHooks()
     HookFunction(PORT_RNDPROPANIMSETFRAME, &PropAnimSetFrame, &PropAnimSetFrameHook);
     HookFunction(PORT_SYMBOLPREINIT, &SymbolPreInit, &SymbolPreInitHook);
     HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
+    HookFunction(PORT_SONGMETADATACONSTRUCTOR, &SongMetadataConstructor, &SongMetadataConstructorHook);
+    HookFunction(PORT_SONGMETADATALOAD, &SongMetadataLoad, &SongMetadataLoadHook);
     HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
     HookFunction(PORT_MUSICLIBRARY_CT, &MusicLibraryConstructor, &MusicLibraryConstructorHook);
     HookFunction(PORT_MUSICLIBRARYMAT, &MusicLibraryMat, &MusicLibraryMatHook);

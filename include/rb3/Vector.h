@@ -18,4 +18,6 @@ typedef struct _vector
 #endif
 } vector;
 
+void vector_push_back(vector *v, void *item);
+
 #endif // _VECTOR_H

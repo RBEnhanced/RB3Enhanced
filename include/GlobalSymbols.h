@@ -26,6 +26,7 @@ typedef struct _GlobalSymbols
     Symbol colorShuffle;
     Symbol mirrorMode;
     Symbol blackBackground;
+    Symbol gemShuffle;
 
     // gem widgets
     Symbol greenGem;

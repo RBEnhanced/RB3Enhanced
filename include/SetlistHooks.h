@@ -11,3 +11,5 @@
 void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode);
 void SetSongNameFromNodeHook(BandLabel *label, SortNode *sortNode);
 RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int unk, int unk2, int *listSlot);
+SongMetadata *SongMetadataConstructorHook(SongMetadata *thisSongMetadata, DataArray *data, DataArray *backupData, char isOnDisc);
+char SongMetadataLoadHook(SongMetadata *thisSongMetadata, BinStream *stream);

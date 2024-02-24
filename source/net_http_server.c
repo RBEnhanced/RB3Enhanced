@@ -179,7 +179,7 @@ void HTTP_Server_Accept(void *connection)
             strcat(response_buffer, "Content-Type: text/plain\r\n");
             strcat(response_buffer, "\r\n");
             strcat(response_buffer, "shortname=");
-            strcat(response_buffer, song_metadata->shortname);
+            strcat(response_buffer, song_metadata->mShortName);
             strcat(response_buffer, "\r\n");
             strcat(response_buffer, "title=");
             strcat(response_buffer, song_metadata->title.buf);
@@ -191,7 +191,7 @@ void HTTP_Server_Accept(void *connection)
             strcat(response_buffer, song_metadata->album.buf);
             strcat(response_buffer, "\r\n");
             strcat(response_buffer, "origin=");
-            strcat(response_buffer, song_metadata->gameOrigin);
+            strcat(response_buffer, song_metadata->mGameOrigin);
             strcat(response_buffer, "\r\n");
             strcat(response_buffer, "\r\n");
             RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
@@ -232,10 +232,10 @@ void HTTP_Server_Accept(void *connection)
             if (song_metadata != NULL)
             {
                 strcat(response_buffer, "[");
-                strcat(response_buffer, song_metadata->shortname);
+                strcat(response_buffer, song_metadata->mShortName);
                 strcat(response_buffer, "]\r\n");
                 strcat(response_buffer, "shortname=");
-                strcat(response_buffer, song_metadata->shortname);
+                strcat(response_buffer, song_metadata->mShortName);
                 strcat(response_buffer, "\r\n");
                 strcat(response_buffer, "title=");
                 strcat(response_buffer, song_metadata->title.buf);
@@ -247,7 +247,7 @@ void HTTP_Server_Accept(void *connection)
                 strcat(response_buffer, song_metadata->album.buf);
                 strcat(response_buffer, "\r\n");
                 strcat(response_buffer, "origin=");
-                strcat(response_buffer, song_metadata->gameOrigin);
+                strcat(response_buffer, song_metadata->mGameOrigin);
                 strcat(response_buffer, "\r\n");
                 strcat(response_buffer, "\r\n");
                 if (strlen(response_buffer) > 1500)

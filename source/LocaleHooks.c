@@ -41,6 +41,7 @@ static char *newLocales[][2] = {
     {"mod_force_hopos", "Force HOPOs"},
     {"mod_mirror_mode", "Mirror Mode (Guitar Only)"},
     {"mod_color_shuffle", "Gem Color Shuffle"},
+    {"mod_gem_shuffle", "Gem Shuffle"},
 };
 static int numNewLocales = sizeof(newLocales) / sizeof(newLocales[0]);
 
