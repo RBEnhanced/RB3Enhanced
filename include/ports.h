@@ -140,9 +140,10 @@
 #define PORT_FILEPATHCONSTRUCTOR 0x82270210               // FilePath::__ct
 #define PORT_MUSICLIBRARY_CT 0x825451c8                   // MusicLibrary::__ct
 #define PORT_MUSICLIBRARYMAT 0x8253b440                   // MusicLibrary::Mat
-#define PORT_MUSICLIBRARYGETNODEBYINDEX 0x825bf708        // MusicLibrary::GetNodeByIndex
+#define PORT_NODESORTGETNODE 0x825bf708                   // MusicLibrary::GetNodeByIndex
 #define PORT_GAMEGEMDB_CT 0x827931e0                      // GameGemDB::__ct
 #define PORT_ADDMULTIGEM 0x827930d8                       // GameGemDB::AddMultiGem
+#define PORT_SONGSORTMGRGETSORT 0x82595ff8                // SongSortMgr::GetSort
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -277,10 +278,11 @@ void DbgPrint(const char *s, ...);
 #define PORT_FILEPATHCONSTRUCTOR 0x8000ec5c               // FilePath::__ct
 #define PORT_MUSICLIBRARY_CT 0x8022d978                   // MusicLibrary::__ct
 #define PORT_MUSICLIBRARYMAT 0x80231c5c                   // MusicLibrary::Mat
-#define PORT_MUSICLIBRARYGETNODEBYINDEX 0x80279314        // MusicLibrary::GetNodeByIndex
+#define PORT_NODESORTGETNODE 0x80279314                   // MusicLibrary::GetNodeByIndex
 #define PORT_GAMEGEMDB_CT 0x80460f64                      // GameGemDB::__ct
 #define PORT_ADDMULTIGEM 0x80461160                       // GameGemDB::AddMultiGem
 #define PORT_GETGAMELIST 0x8048553c                       // SongData::GetGameList
+#define PORT_SONGSORTMGRGETSORT 0x802310b8                // SongSortMgr::GetSort
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

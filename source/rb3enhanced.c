@@ -329,9 +329,10 @@ void InitialiseFunctions()
     POKE_B(&RndTexSetBitmap, PORT_RNDTEXSETBITMAP);
     POKE_B(&RndTexSetBitmap2, PORT_RNDTEXSETBITMAP2);
     POKE_B(&FilePathConstructor, PORT_FILEPATHCONSTRUCTOR);
-    POKE_B(&MusicLibraryGetNodeByIndex, PORT_MUSICLIBRARYGETNODEBYINDEX);
+    POKE_B(&NodeSortGetNode, PORT_NODESORTGETNODE);
     POKE_B(&vector_push_back, PORT_VECTORPUSHBACK);
     POKE_B(&GameGemDBConstructor, PORT_GAMEGEMDB_CT);
+    POKE_B(&SongSortMgrGetSort, PORT_SONGSORTMGRGETSORT);
     RB3E_MSG("Functions initialized!", NULL);
 }
 

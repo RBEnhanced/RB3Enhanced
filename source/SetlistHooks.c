@@ -13,10 +13,12 @@
 #include "rb3/File.h"
 #include "rb3/FilePath.h"
 #include "rb3/MusicLibrary.h"
+#include "rb3/NodeSort.h"
 #include "rb3/UI/UIListSlot.h"
 #include "rb3/UI/UIPanel.h"
 #include "SongSort.h"
 #include "rb3/SortNode.h"
+#include "rb3/SongSortMgr.h"
 #include "rb3/Rnd/RndMat.h"
 #include "rb3/Rnd/RndTex.h"
 
@@ -108,10 +110,10 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
             SongNodeType nodeType = kNodeNone;
             int curInfo = 0;
 
-            ret = ((int *)(*(void **)PORT_THESONGSORTMGR))[thisMusicLibrary->unk2 + 0x13];
+            ret = SongSortMgrGetSort(*(SongSortMgr **)PORT_THESONGSORTMGR, thisMusicLibrary->mSortType);
             if (ret != NULL)
             {
-                node = MusicLibraryGetNodeByIndex(ret, idx);
+                node = NodeSortGetNode(ret, idx);
                 if (node != NULL)
                 {
                     nodeType = node->vtable->getNodeType();
@@ -181,7 +183,7 @@ SongMetadata *SongMetadataConstructorHook(SongMetadata *thisSongMetadata, DataAr
     if (thisSongMetadata->mGameOrigin != 0)
     {
         char gameOrigin[0x200];
-        strcpy(gameOrigin, "/ui/resource/game_origins/gen/");
+        strcpy(gameOrigin, "ui/resource/game_origins/gen/");
         strcat(gameOrigin, thisSongMetadata->mGameOrigin);
 #ifdef RB3E_XBOX
         strcat(gameOrigin, ".png_xbox");
@@ -214,7 +216,7 @@ char SongMetadataLoadHook(SongMetadata *thisSongMetadata, BinStream *stream)
     if (thisSongMetadata->mGameOrigin != 0)
     {
         char gameOrigin[0x200];
-        strcpy(gameOrigin, "/ui/resource/game_origins/gen/");
+        strcpy(gameOrigin, "ui/resource/game_origins/gen/");
         strcat(gameOrigin, thisSongMetadata->mGameOrigin);
 #ifdef RB3E_XBOX
         strcat(gameOrigin, ".png_xbox");
