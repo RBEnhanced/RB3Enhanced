@@ -116,22 +116,27 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
                 node = NodeSortGetNode(ret, idx);
                 if (node != NULL)
                 {
-                    nodeType = node->vtable->getNodeType();
-                    if (nodeType == kNodeSong)
+                    // do a basic null check here, sometimes it can be null
+                    if (node->record->metaData != NULL &&
+                        node->record->metaData->mGameOrigin != NULL)
                     {
-                        // this shit fucking sucks lol
-                        for (curInfo = 0; curInfo < numGameOrigins; curInfo++)
+                        nodeType = node->vtable->getNodeType();
+                        if (nodeType == kNodeSong)
                         {
-                            if (strcmp(node->record->metaData->mGameOrigin, originInfo[curInfo].gameOrigin) == 0)
+                            // this shit fucking sucks lol
+                            for (curInfo = 0; curInfo < numGameOrigins; curInfo++)
                             {
-                                if (materials[originInfo[curInfo].num] != NULL)
+                                if (strcmp(node->record->metaData->mGameOrigin, originInfo[curInfo].gameOrigin) == 0)
                                 {
-                                    RB3E_DEBUG("Returning material for game origin '%s'", originInfo[curInfo].gameOrigin);
-                                    return materials[originInfo[curInfo].num];
-                                }
-                                else
-                                {
-                                    RB3E_DEBUG("Material for game origin '%s' is NULL, creation seemingly failed", originInfo[curInfo].gameOrigin);
+                                    if (materials[originInfo[curInfo].num] != NULL)
+                                    {
+                                        RB3E_DEBUG("Returning material for game origin '%s'", originInfo[curInfo].gameOrigin);
+                                        return materials[originInfo[curInfo].num];
+                                    }
+                                    else
+                                    {
+                                        RB3E_DEBUG("Material for game origin '%s' is NULL, creation seemingly failed", originInfo[curInfo].gameOrigin);
+                                    }
                                 }
                             }
                         }
