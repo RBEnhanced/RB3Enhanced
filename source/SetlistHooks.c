@@ -116,12 +116,15 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
                 node = NodeSortGetNode(ret, idx);
                 if (node != NULL)
                 {
-                    // do a basic null check here, sometimes it can be null
-                    if (node->record->metaData != NULL &&
-                        node->record->metaData->mGameOrigin != NULL)
+                    nodeType = node->vtable->getNodeType();
+
+                    // ensure this is actually a song node and not like a function node or etc.
+                    if (nodeType == kNodeSong)
                     {
-                        nodeType = node->vtable->getNodeType();
-                        if (nodeType == kNodeSong)
+                        // do a basic null check here, sometimes it can be null
+                        if (node->record != NULL &&
+                            node->record->metaData != NULL &&
+                            node->record->metaData->mGameOrigin != NULL)
                         {
                             // this shit fucking sucks lol
                             for (curInfo = 0; curInfo < numGameOrigins; curInfo++)
