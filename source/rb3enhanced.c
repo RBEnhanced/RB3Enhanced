@@ -368,7 +368,6 @@ void ApplyHooks()
     HookFunction(PORT_SETTRACKSPEED, PLUGIN_PTR(UpdateTrackSpeed), PLUGIN_PTR(UpdateTrackSpeedHook));
     HookFunction(PORT_SETADDRESS, PLUGIN_PTR(SetAddress), PLUGIN_PTR(SetAddressHook));
     HookFunction(PORT_GETWIDGETBYNAME, PLUGIN_PTR(GetWidgetByName), PLUGIN_PTR(GetWidgetByNameHook));
-    HookFunction(PORT_GETSLOTCOLOR, PLUGIN_PTR(GetSlotColor), PLUGIN_PTR(GetSlotColorHook));
     HookFunction(PORT_SETSYSTEMLANGUAGE, PLUGIN_PTR(SetSystemLanguage), PLUGIN_PTR(SetSystemLanguageHook));
     HookFunction(PORT_GAME_CT, PLUGIN_PTR(GameConstruct), PLUGIN_PTR(GameConstructHook));
     HookFunction(PORT_GAME_DT, PLUGIN_PTR(GameDestruct), PLUGIN_PTR(GameDestructHook));
@@ -379,6 +378,7 @@ void ApplyHooks()
 #ifndef RB3E_PS3
     // TODO: port these to PS3
     POKE_PLUGIN_B(PORT_BUILDINSTRUMENTSELECTION, PLUGIN_PTR(BuildInstrumentSelectionList));
+    HookFunction(PORT_GETSLOTCOLOR, PLUGIN_PTR(GetSlotColor), PLUGIN_PTR(GetSlotColorHook));
     HookFunction(PORT_DATAREADFILE, PLUGIN_PTR(DataReadFile), PLUGIN_PTR(DataReadFileHook));
     HookFunction(PORT_WILLBENOSTRUM, PLUGIN_PTR(WillBeNoStrum), PLUGIN_PTR(WillBeNoStrumHook));
     HookFunction(PORT_ADDGAMEGEM, PLUGIN_PTR(AddGameGem), PLUGIN_PTR(AddGameGemHook));

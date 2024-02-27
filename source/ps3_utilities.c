@@ -66,7 +66,7 @@ static int sys_dbg_read_process_memory(uint64_t address, void *data, size_t size
 // sets process memory using DEX, works on Evilnat CFW
 static int sys_dbg_write_process_memory(uint64_t address, void *data, size_t size)
 {
-    system_call_4(905, sys_process_getpid(), address, size, (uint64_t)data);
+    system_call_4(905, pid, address, size, (uint64_t)data);
     return_to_user_prog(int);
 }
 
