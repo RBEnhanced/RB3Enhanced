@@ -8,6 +8,7 @@ void UnhookFunction(unsigned int *OriginalAddress, unsigned int *StubFunction);
 
 #ifdef RB3E_PS3
 // utilities for working with PS3
+char PS3_MemoryWriteCheck();
 void PS3_Write32(uint32_t address, uint32_t value);
 void PS3_WriteMemory(uint32_t address, void *data, size_t size);
 void PS3_SetGameTOCBase(uint32_t toc);

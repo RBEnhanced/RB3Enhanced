@@ -96,9 +96,24 @@ static void CTHook(void *app, int argc, char **argv)
     StartupHook(app, argc, argv);
 }
 
+typedef enum _debugcheck_result
+{
+    can_use_dbg,
+    can_use_ps3mapi,
+    cant_use_either
+} debugcheck_result;
+
 int _prx_start(unsigned int args, unsigned int *argp)
 {
-    RB3E_MSG("RB3Enhanced.prx entered!\n", NULL);
+    RB3E_MSG("RB3Enhanced.prx entered!", NULL);
+
+    char write_strategy = PS3_MemoryWriteCheck();
+    if (write_strategy == can_use_dbg)
+        RB3E_DEBUG("Using DEX syscalls to write memory", NULL);
+    else if (write_strategy == can_use_ps3mapi)
+        RB3E_DEBUG("Using PS3MAPI to write memory", NULL);
+    else
+        RB3E_DEBUG("Couldn't read memory either way? Oops", NULL);
 
     // write out a function for us to get the plugin's TOC base at any point
     // there are better ways to do this. but this functions

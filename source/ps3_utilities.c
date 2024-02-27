@@ -6,6 +6,7 @@
 #ifdef RB3E_PS3
 
 #include <stdint.h>
+#include <string.h>
 #include <sys/process.h>
 #include <sys/syscall.h>
 
@@ -40,13 +41,28 @@ static void BigAssStubFunction()
 // TODO(Emma): detect if dbg syscall fails and use hen syscall after the fact
 // TODO(Emma): rpcs3 patch generation for llvm
 
+// gets process memory using PS3MAPI, for HEN
+
+static sys_pid_t pid = 0;
+
+static int ps3mapi_get_process_mem(uint64_t address, void *data, size_t size)
+{
+    system_call_6(8, 0x7777, 0x31, pid, address, (uint64_t)data, size);
+    return_to_user_prog(int);
+}
 // sets process memory using PS3MAPI, for HEN
 static int ps3mapi_set_process_mem(uint64_t address, void *data, size_t size)
 {
-    system_call_6(8, 0x7777, 0x32, sys_process_getpid(), address, (uint64_t)data, size);
+    system_call_6(8, 0x7777, 0x32, pid, address, (uint64_t)data, size);
     return_to_user_prog(int);
 }
 
+// gets process memory using DEX, works on Evilnat CFW
+static int sys_dbg_read_process_memory(uint64_t address, void *data, size_t size)
+{
+    system_call_4(904, pid, address, size, (uint64_t)data);
+    return_to_user_prog(int);
+}
 // sets process memory using DEX, works on Evilnat CFW
 static int sys_dbg_write_process_memory(uint64_t address, void *data, size_t size)
 {
@@ -54,16 +70,62 @@ static int sys_dbg_write_process_memory(uint64_t address, void *data, size_t siz
     return_to_user_prog(int);
 }
 
+// uncomment this line to disable using dbg syscalls for testing purposes
+// #define RB3E_DISABLE_PS3DEX
+
+static char should_use_mapi = 0;
+typedef enum _debugcheck_result
+{
+    can_use_dbg,
+    can_use_ps3mapi,
+    cant_use_either
+} debugcheck_result;
+
+// checks to see which set of syscalls to use for memory read/writes
+// DEX/PEX consoles and RPCS3 will use sys_dbg_write_process_memory
+// CEX/HEN consoles will use ps3mapi_set_process_mem
+char PS3_MemoryWriteCheck()
+{
+    uint8_t elf_header[4];
+    static uint8_t expected[4] = {0x7F, 'E', 'L', 'F'};
+
+    pid = sys_process_getpid();
+    RB3E_DEBUG("pid=0x%08x", pid);
+
+#ifndef RB3E_DISABLE_PS3DEX
+    int dbg_r = sys_dbg_read_process_memory(0x10000, elf_header, 4);
+    RB3E_DEBUG("sys_dbg_read_process_memory()=%i", dbg_r);
+    if (dbg_r == CELL_OK && memcmp(elf_header, expected, 4) == 0)
+        return can_use_dbg;
+#endif
+
+    int mapi_r = ps3mapi_get_process_mem(0x10000, elf_header, 4);
+    RB3E_DEBUG("ps3mapi_get_process_mem()=%i", mapi_r);
+    if (mapi_r == CELL_OK && memcmp(elf_header, expected, 4) == 0)
+    {
+        should_use_mapi = 1;
+        return can_use_ps3mapi;
+    }
+
+    return cant_use_either;
+}
+
 void PS3_Write32(uint32_t address, uint32_t value)
 {
     uint32_t value_stack = value;
     RB3E_DEBUG("Write: %08x = %08x", address, value);
-    sys_dbg_write_process_memory(address, &value_stack, 4);
+    if (!should_use_mapi)
+        sys_dbg_write_process_memory(address, &value_stack, 4);
+    else
+        ps3mapi_set_process_mem(address, &value_stack, 4);
 }
 
 void PS3_WriteMemory(uint32_t address, void *data, size_t size)
 {
-    sys_dbg_write_process_memory(address, data, size);
+    if (!should_use_mapi)
+        sys_dbg_write_process_memory(address, data, size);
+    else
+        ps3mapi_set_process_mem(address, data, size);
 }
 
 static uint32_t plugin_toc_base = 0;

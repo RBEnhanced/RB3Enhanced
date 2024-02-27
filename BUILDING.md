@@ -16,7 +16,7 @@ The environment variable `XEDK` must be set to the install directory for the Xbo
 
 If compiling the Xbox 360 version under macOS or Linux, set the environment variable `WINDOWS_SHIM` to the path to your Wine executable. Note that some Wine versions may not work correctly with MSVC. You will also have to ensure `XEDK` is set to a path accessible under Wine, e.g. `Z:\Users\emma\xedk\`.
 
-For PS3 compilation
+For PS3 compilation, two environment variables must be set - `PS3SDKHOST` must be set to the path of the host-win32 or host-linux folder of the SDK, and `PS3SDKTARGET` must be set to the path of the target folder.
 
 *\* There is a build script provided as `make_xbox.bat` that will compile using only the Xbox 360 SDK. This is not recommended and will be removed soon.*
 
