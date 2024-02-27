@@ -1,10 +1,10 @@
 #ifndef _TEXTSTREAM_H
 #define _TEXTSTREAM_H
 
-typedef struct _TextStream TextStream;
+typedef struct _TextStream _TextStream;
 
-typedef void (*TextStreamDestructor_t)(TextStream *thisTextStream);
-typedef void (*TextStreamPrint_t)(TextStream *thisTextStream, char *string);
+typedef void (*TextStreamDestructor_t)(_TextStream *thisTextStream);
+typedef void (*TextStreamPrint_t)(_TextStream *thisTextStream, char *string);
 
 typedef struct _TextStream_vtable
 {

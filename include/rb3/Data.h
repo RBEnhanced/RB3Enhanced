@@ -63,6 +63,12 @@ typedef struct _DataArray
 // return a pointer to a new entry that you overwrite with your own function ptr
 extern int *HmxFactoryFuncAt(int *gDataFuncs, Symbol *sym);
 
+#ifdef RB3E_PS3
+// ps3 only - directly sets a function pointer as a DTA function
+typedef int (*DTAFunction_t)(DataNode *node, DataArray *args);
+extern void AddDTAFunctionPS3(Symbol *sym, DTAFunction_t func);
+#endif
+
 extern DataNode *DataNodeEvaluate(DataNode *ret);
 
 extern DataArray *DataReadFile(char *file, int dtb);

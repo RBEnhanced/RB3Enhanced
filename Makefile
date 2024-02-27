@@ -85,8 +85,40 @@ LFLAGS_X := -ERRORREPORT:PROMPT -INCREMENTAL:NO -NOLOGO $(LIBS_X) \
 XEXFLAGS := -nologo -config:"xex.xml"
 # =================
 
+# PS3 variables
+# =================
+# build directory for PS3 compilation
+BUILD_P := build_ps3
+# executable tool path
+TOOLPATH_P := $(PS3SDKHOST)/bin
+PPUHOSTPATH_P := $(PS3SDKHOST)/ppu
+PPUTARGETPATH_P := $(PS3SDKTARGET)/ppu
+COMPILER_P := $(PPUHOSTPATH_P)/bin/ppu-lv2-gcc
+MAKESELF_P := $(TOOLPATH_P)/make_fself
+# .o object files for PS3 compilation
+OBJECTS_P := $(subst $(SRC_DIR),$(BUILD_P),$(patsubst %.c,%.c.o,$(SOURCES)))
+# include directories
+GCC_VER_P := 4.1.1
+ifneq ($(strip $(PS3SDKHOST)),) 
+    GCC_VER_P := $(shell $(COMPILER_P) -dumpversion)
+endif
+INCLUDES_P := $(PPUHOSTPATH_P)/lib/gcc/ppu-lv2/$(GCC_VER_P)/include \
+				$(PPUTARGETPATH_P)/include $(INC_DIR)
+# library directories
+LIBDIR_P := $(PPUPATH_P)/lib 
+# library includes
+LIBS_P := -lfs_stub -lnet_stub #-lc_stub -lm_stub -lsysutil_stub
+# compiler flags
+CFLAGS_P := -O2 -Wall -Wno-format-extra-args -x c -std=gnu99 \
+			-DRB3E_PS3 $(patsubst %,-D%,$(DEFINES)) \
+			-mcpu=cell -fPIC \
+			$(patsubst %,-I %,$(INCLUDES_P)) -iquote src
+# linker flags for final compile
+LFLAGS_P := -mprx -zgenprx $(LIBS_P)
+# =================
+
 .PHONY: all
-all: xbox wii
+all: xbox wii ps3
 
 .PHONY: scripts
 scripts:
@@ -94,7 +126,7 @@ scripts:
 
 .PHONY: clean
 clean:
-	@rm -rf $(wildcard $(BUILD_W) $(BUILD_X) $(OUTPUT))
+	@rm -rf $(wildcard $(BUILD_W) $(BUILD_X) $(BUILD_P) $(OUTPUT))
 
 # Wii compilation, creates BrainSlug .MOD file
 
@@ -134,3 +166,23 @@ $(BUILD_X)/$(OUTNAME).exe: $(OBJECTS_X)
 $(BUILD_X)/%.obj: $(SRC_DIR)/%.c | scripts
 	@mkdir -p $(@D)
 	@INCLUDE=$(INCLUDES_X) $(WINDOWS_SHIM) $(COMPILER_X) $(CFLAGS_X) -Fo"$@" -TC $<
+
+# PS3 compilation, creates .SPRX file
+
+.PHONY: ps3
+ps3: $(OUTPUT)/$(OUTNAME).sprx
+
+$(OUTPUT)/$(OUTNAME).sprx: $(BUILD_P)/output.prx
+	@echo "Creating SPRX..."
+	@mkdir -p $(@D)
+	@$(MAKESELF_P) $^ $@
+
+$(BUILD_P)/output.prx: $(OBJECTS_P)
+	@echo "Linking PRX..."
+	@mkdir -p $(@D)
+	@$(COMPILER_P) $^ $(LFLAGS_P) -o $@
+
+$(BUILD_P)/%.c.o: $(SRC_DIR)/%.c | scripts
+	@echo $<
+	@mkdir -p $(@D)
+	@$(COMPILER_P) -c $(CFLAGS_P) $< -o $@

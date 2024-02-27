@@ -31,4 +31,6 @@ unsigned int RB3E_GetGatewayIP();
 #define AWAIT_SOCKET(...) (RB3E_LastError() == 10035)
 #elif RB3E_WII
 #define AWAIT_SOCKET(r) (r == -6)
+#elif RB3E_PS3
+#define AWAIT_SOCKET(...) (RB3E_LastError() == 35)
 #endif

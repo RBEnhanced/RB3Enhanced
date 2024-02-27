@@ -4,6 +4,7 @@
 */
 
 #include <stddef.h>
+#include <string.h>
 #include <stdio.h>
 #include "quazal/InetAddress.h"
 #include "rb3enhanced.h"
@@ -87,6 +88,8 @@ void RB3E_SendEvent(int type, void *data, int size)
     packet.Header.Platform = RB3E_IsEmulator() ? RB3E_PLATFORM_XENIA : RB3E_PLATFORM_XBOX;
 #elif RB3E_WII
     packet.Header.Platform = RB3E_IsEmulator() ? RB3E_PLATFORM_DOLPHIN : RB3E_PLATFORM_WII;
+#elif RB3E_PS3
+    packet.Header.Platform = RB3E_IsEmulator() ? RB3E_PLATFORM_RPCS3 : RB3E_PLATFORM_PS3;
 #else
     packet.Header.Platform = RB3E_PLATFORM_UNKNOWN;
 #endif

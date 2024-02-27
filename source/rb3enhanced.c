@@ -47,6 +47,8 @@ void SetVenueHook(int *thisMetaPerformer, Symbol venue)
     SetVenue(thisMetaPerformer, venue);
 }
 
+#ifndef RB3E_PS3 // TODO: port UpdatePresence to PS3
+
 void UpdatePresenceHook(void *thisPresenceMgr)
 {
     // when the game updates presence, fire off the current screen name to the events socket
@@ -55,6 +57,8 @@ void UpdatePresenceHook(void *thisPresenceMgr)
         RB3E_SendEvent(RB3E_EVENT_SCREEN_NAME, bandUI->currentScreen->screen_name.sym, strlen(bandUI->currentScreen->screen_name.sym));
     UpdatePresence(thisPresenceMgr);
 }
+
+#endif // RB3E_PS3
 
 // New file hook, for ARKless file loading
 void *NewFileHook(char *fileName, int flags)
@@ -74,6 +78,8 @@ LOAD_ORIGINAL:
         RB3E_MSG("File: %s (%s)", fileName, (flags & 0x10000) ? "Raw" : "ARK");
     return NewFile(fileName, flags);
 }
+
+#ifndef RB3E_PS3
 
 DataArray *DataReadFileHook(char *path, int dtb)
 {
@@ -102,6 +108,8 @@ DataArray *DataReadFileHook(char *path, int dtb)
 LOAD_ORIGINAL:
     return DataReadFile(path, dtb);
 }
+
+#endif
 
 void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
 {
@@ -174,7 +182,7 @@ void RB3E_RunLoop()
     framecount++;
 }
 
-#ifdef RB3E_XBOX
+#ifndef RB3E_WII
 // broadcasts stagekit events via the local network. not worth making a header file for imo
 void StagekitSetState(int state1, int state2);
 void StagekitSetStateHook(int state1, int state2)
@@ -212,10 +220,13 @@ void ApplyPatches()
 #elif RB3E_XBOX
     if (RB3E_IsEmulator())
         POKE_32(PORT_SONGMGR_ISDEMO_CHECK, NOP);
+#endif
 
+#ifndef RB3E_WII
     // skips check for stagekit to allow for fog commands to be issued without a stagekit plugged in
     POKE_32(PORT_STAGEKIT_EXISTS, NOP);
 #endif
+
     RB3E_MSG("Patches applied!", NULL);
 }
 
@@ -260,7 +271,7 @@ void ApplyConfigurablePatches()
         POKE_32(0x8006a170, LI(6, 1));
         POKE_32(0x8006c9d0, LI(6, 1));
         // POKE_32(0x8007b3d4, LI(6, 0x1b0));
-#else
+#elif RB3E_XBOX
         POKE_B(&OperatorEqualsFmt, 0x82a86ff0);
         POKE_BL(0x82a87550, &OperatorEqualsFmtHook);
         POKE_BL(0x82a97920, &OperatorEqualsFmtHook);
@@ -287,84 +298,106 @@ void InitialiseFunctions()
 {
 #ifndef RB3E_WII
     // AppConstructor is handled by the BrainSlug engine
-    POKE_B(&AppConstructor, PORT_APP_CT);
-    // the Wii has a different memory manager, these funcs don't exist
-    POKE_B(&MemPrintOverview, PORT_MEMPRINTOVERVIEW);
-    POKE_B(&MemPrint, PORT_MEMPRINT);
-    POKE_B(&MemNumHeaps, PORT_MEMNUMHEAPS);
+    POKE_STUB(AppConstructor, PORT_APP_CT);
     // TODO: port these to Wii
-    POKE_B(&DataFindArray, PORT_DATAARRAYFINDARRAY);
-    POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
+    POKE_STUB(DataFindArray, PORT_DATAARRAYFINDARRAY);
+    POKE_STUB(DataFindData, PORT_DATAARRAYFINDDATA);
 #endif
-    POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
-    POKE_B(&PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
-    POKE_B(&SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);
-    POKE_B(&ExecuteDTA, PORT_EXECUTEDTA);
-    POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
-    POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
-    POKE_B(&ModifierActive, PORT_MODIFIERMGR_ACTIVE);
-    POKE_B(&HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
-    POKE_B(&RandomInt, PORT_RANDOMINT);
-    POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);
-    POKE_B(&FileExists, PORT_FILE_EXISTS);
-    POKE_B(&SetAddress, PORT_SETADDRESS);
-    POKE_B(&QueueMessage, PORT_QUEUEMESSAGE);
-    POKE_B(&MusicLibrarySelect, PORT_MUSICLIBRARYSELECTMAYBE);
-    POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
-    POKE_B(&GetMetadata, PORT_GETMETADATA);
-    POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
-    POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
-    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
-    POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
-    POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
-    POKE_B(&Dynamic_Cast, PORT_DYNAMICCAST);
-    POKE_B(&GameGetActivePlayer, PORT_GAMEGETACTIVEPLAYER);
-    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
-    POKE_B(&JoypadGetPadData, PORT_JOYPADGETPADDATA);
-    POKE_B(&MemAlloc, PORT_MEMALLOC);
-    POKE_B(&MemFree, PORT_MEMFREE);
+
+#ifdef RB3E_XBOX
+    // xbox-specific memory manager (probably very similar on PS3)
+    POKE_STUB(MemPrintOverview, PORT_MEMPRINTOVERVIEW);
+    POKE_STUB(MemPrint, PORT_MEMPRINT);
+    POKE_STUB(MemNumHeaps, PORT_MEMNUMHEAPS);
+#endif
+
+#ifndef RB3E_PS3
+    // TODO: port these to PS3
+    POKE_STUB(BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
+    POKE_STUB(GetMetadata, PORT_GETMETADATA);
+    POKE_STUB(GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
+
+    // HmxFactoryFunc is handled by a dedicated function on PS3 for handling toc/got
+    POKE_STUB(HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
+#else
+    POKE_STUB(AddDTAFunctionPS3, PORT_ADDDTAFUNCTIONPS3);
+#endif
+    POKE_STUB(SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
+    POKE_STUB(PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
+    POKE_STUB(SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);
+    POKE_STUB(ExecuteDTA, PORT_EXECUTEDTA);
+    POKE_STUB(SymbolConstruct, PORT_SYMBOL_CT);
+    POKE_STUB(ModifierActive, PORT_MODIFIERMGR_ACTIVE);
+#ifndef RB3E_PS3
+    POKE_STUB(HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
+#else
+    POKE_STUB(AddDTAFunctionPS3, PORT_ADDDTAFUNCTIONPS3);
+#endif
+    POKE_STUB(RandomInt, PORT_RANDOMINT);
+    POKE_STUB(DataNodeEvaluate, PORT_DATANODEEVALUATE);
+    POKE_STUB(FileExists, PORT_FILE_EXISTS);
+    POKE_STUB(SetAddress, PORT_SETADDRESS);
+    POKE_STUB(QueueMessage, PORT_QUEUEMESSAGE);
+    POKE_STUB(MusicLibrarySelect, PORT_MUSICLIBRARYSELECTMAYBE);
+    POKE_STUB(GetSongShortname, PORT_GETSONGSHORTNAME);
+    POKE_STUB(GetBandUsers, PORT_GETBANDUSERS);
+    POKE_STUB(GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
+    POKE_STUB(FileStreamConstructor, PORT_FILESTREAM_CT);
+    POKE_STUB(ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
+    POKE_STUB(Dynamic_Cast, PORT_DYNAMICCAST);
+    POKE_STUB(GameGetActivePlayer, PORT_GAMEGETACTIVEPLAYER);
+    POKE_STUB(ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
+    POKE_STUB(JoypadGetPadData, PORT_JOYPADGETPADDATA);
+    POKE_STUB(MemAlloc, PORT_MEMALLOC);
+    POKE_STUB(MemFree, PORT_MEMFREE);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
 void ApplyHooks()
 {
-    POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
-    POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
-    POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
-    POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
-    POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
-    HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
-    HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
-    HookFunction(PORT_ADDGAMEGEM, &AddGameGem, &AddGameGemHook);
-    HookFunction(PORT_SETSONGANDARTISTNAME, &SetSongAndArtistName, SetSongAndArtistNameHook);
-    HookFunction(PORT_SETVENUE, &SetVenue, &SetVenueHook);
-    HookFunction(PORT_MODIFIERMGR_CT, &ModifierManagerConstructor, &ModifierManagerConstructorHook);
-    HookFunction(PORT_NEWFILE, &NewFile, &NewFileHook);
-    HookFunction(PORT_SETSONGSPEED, &SetMusicSpeed, &SetMusicSpeedHook);
-    HookFunction(PORT_SETTRACKSPEED, &UpdateTrackSpeed, &UpdateTrackSpeedHook);
-    HookFunction(PORT_SETADDRESS, &SetAddress, &SetAddressHook);
-    HookFunction(PORT_GETWIDGETBYNAME, &GetWidgetByName, &GetWidgetByNameHook);
-    HookFunction(PORT_GETSLOTCOLOR, &GetSlotColor, &GetSlotColorHook);
-    HookFunction(PORT_SETSYSTEMLANGUAGE, &SetSystemLanguage, &SetSystemLanguageHook);
-    HookFunction(PORT_DATAREADFILE, &DataReadFile, &DataReadFileHook);
-    HookFunction(PORT_GAME_CT, &GameConstruct, &GameConstructHook);
-    HookFunction(PORT_GAME_DT, &GameDestruct, &GameDestructHook);
-    HookFunction(PORT_GETSYMBOLBYGAMEORIGIN, &GetSymbolByGameOrigin, &GetSymbolByGameOriginHook);
-    HookFunction(PORT_GETGAMEORIGINBYSYMBOL, &GetGameOriginBySymbol, &GetGameOriginBySymbolHook);
-    HookFunction(PORT_RNDPROPANIMSETFRAME, &PropAnimSetFrame, &PropAnimSetFrameHook);
-    HookFunction(PORT_SYMBOLPREINIT, &SymbolPreInit, &SymbolPreInitHook);
-    HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
-    HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
+    POKE_PLUGIN_B(PORT_DATAINITFUNCS_TAIL, PLUGIN_PTR(AddDTAFunctions));
+    POKE_PLUGIN_B(PORT_ISSUPPORTEDLANGUAGE, PLUGIN_PTR(IsSupportedLanguageHook));
+    POKE_PLUGIN_BL(PORT_OPTIONSTR_DEFINE, PLUGIN_PTR(DefinesHook));
+    POKE_PLUGIN_BL(PORT_RUNLOOP_SPARE, PLUGIN_PTR(RB3E_RunLoop));
+    HookFunction(PORT_LOCALIZE, PLUGIN_PTR(Localize), PLUGIN_PTR(LocalizeHook));
+    HookFunction(PORT_SETSONGANDARTISTNAME, PLUGIN_PTR(SetSongAndArtistName), PLUGIN_PTR(SetSongAndArtistNameHook));
+    HookFunction(PORT_SETVENUE, PLUGIN_PTR(SetVenue), PLUGIN_PTR(SetVenueHook));
+    HookFunction(PORT_MODIFIERMGR_CT, PLUGIN_PTR(ModifierManagerConstructor), PLUGIN_PTR(ModifierManagerConstructorHook));
+    HookFunction(PORT_NEWFILE, PLUGIN_PTR(NewFile), PLUGIN_PTR(NewFileHook));
+    HookFunction(PORT_SETSONGSPEED, PLUGIN_PTR(SetMusicSpeed), PLUGIN_PTR(SetMusicSpeedHook));
+    HookFunction(PORT_SETTRACKSPEED, PLUGIN_PTR(UpdateTrackSpeed), PLUGIN_PTR(UpdateTrackSpeedHook));
+    HookFunction(PORT_SETADDRESS, PLUGIN_PTR(SetAddress), PLUGIN_PTR(SetAddressHook));
+    HookFunction(PORT_GETWIDGETBYNAME, PLUGIN_PTR(GetWidgetByName), PLUGIN_PTR(GetWidgetByNameHook));
+    HookFunction(PORT_GETSLOTCOLOR, PLUGIN_PTR(GetSlotColor), PLUGIN_PTR(GetSlotColorHook));
+    HookFunction(PORT_SETSYSTEMLANGUAGE, PLUGIN_PTR(SetSystemLanguage), PLUGIN_PTR(SetSystemLanguageHook));
+    HookFunction(PORT_GAME_CT, PLUGIN_PTR(GameConstruct), PLUGIN_PTR(GameConstructHook));
+    HookFunction(PORT_GAME_DT, PLUGIN_PTR(GameDestruct), PLUGIN_PTR(GameDestructHook));
+    HookFunction(PORT_GETSYMBOLBYGAMEORIGIN, PLUGIN_PTR(GetSymbolByGameOrigin), PLUGIN_PTR(GetSymbolByGameOriginHook));
+    HookFunction(PORT_GETGAMEORIGINBYSYMBOL, PLUGIN_PTR(GetGameOriginBySymbol), PLUGIN_PTR(GetGameOriginBySymbolHook));
+    HookFunction(PORT_SYMBOLPREINIT, PLUGIN_PTR(SymbolPreInit), PLUGIN_PTR(SymbolPreInitHook));
+    HookFunction(PORT_INITSONGMETADATA, PLUGIN_PTR(InitSongMetadata), PLUGIN_PTR(InitSongMetadataHook));
+#ifndef RB3E_PS3
+    // TODO: port these to PS3
+    POKE_PLUGIN_B(PORT_BUILDINSTRUMENTSELECTION, PLUGIN_PTR(BuildInstrumentSelectionList));
+    HookFunction(PORT_DATAREADFILE, PLUGIN_PTR(DataReadFile), PLUGIN_PTR(DataReadFileHook));
+    HookFunction(PORT_WILLBENOSTRUM, PLUGIN_PTR(WillBeNoStrum), PLUGIN_PTR(WillBeNoStrumHook));
+    HookFunction(PORT_ADDGAMEGEM, PLUGIN_PTR(AddGameGem), PLUGIN_PTR(AddGameGemHook));
+    HookFunction(PORT_RNDPROPANIMSETFRAME, PLUGIN_PTR(PropAnimSetFrame), PLUGIN_PTR(PropAnimSetFrameHook));
+    HookFunction(PORT_UPDATEPRESENCE, PLUGIN_PTR(UpdatePresence), PLUGIN_PTR(UpdatePresenceHook));
+#endif
+
+#ifndef RB3E_WII // hooks exclusive to TU5/1.05+ features
+    POKE_PLUGIN_B(PORT_GETSONGID, PLUGIN_PTR(GetSongIDHook));
+    POKE_PLUGIN_BL(PORT_SONG_ID_EVALUATE, PLUGIN_PTR(MetadataSongIDHook));
+    HookFunction(PORT_STAGEKIT_SET_STATE, PLUGIN_PTR(StagekitSetState), PLUGIN_PTR(StagekitSetStateHook));
+#endif
 
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
 #elif RB3E_XBOX // 360 exclusive hooks
-    HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
+    // TODO: port these to Wii and PS3
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
-    // TODO: port these to Wii
-    POKE_B(PORT_GETSONGID, &GetSongIDHook);
-    POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
@@ -392,5 +425,6 @@ void StartupHook(void *ThisApp, int argc, char **argv)
     RB3E_MSG("Starting Rock Band 3...", NULL);
     AppConstructor(ThisApp, argc, argv);
     // anything after here is post-splash
+    RB3E_DEBUG("AppConstructor returned", NULL);
     return;
 }

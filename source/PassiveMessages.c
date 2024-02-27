@@ -21,5 +21,9 @@ void DisplayMessage(char *message)
     messageArray.mNodes = &messageNode; // set this right for what it actually is
     messageArray.mRefCount = 1;
     messageArray.mFile = *(Symbol *)PORT_NULLSYMBOL;
+#ifndef RB3E_PS3
     QueueMessage((*(BandUI *)PORT_THEBANDUI).passiveMessagesPanel, &messageArray, 0, (*(Symbol *)PORT_NULLSYMBOL).sym, 0xFFFFFFFF);
+#else
+    RB3E_MSG("Tried to pop passing message on PS3 : %s", message);
+#endif
 }

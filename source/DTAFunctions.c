@@ -170,6 +170,7 @@ DataNode *DTASendModData(DataNode *node, DataArray *args)
 
 void AddDTAFunctions()
 {
+#ifndef RB3E_PS3
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.print_debug) = (int)PrintToDebugger;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_change_music_speed) = (int)ChangeMusicSpeed;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_change_track_speed) = (int)ChangeTrackSpeed;
@@ -180,5 +181,18 @@ void AddDTAFunctions()
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_relaunch_game) = (int)DTARelaunchGame;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_song_count) = (int)DTAGetSongCount;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_send_event_string) = (int)DTASendModData;
+#else // on PS3 it's completely different
+    // TODO(Emma): check if these actually work
+    AddDTAFunctionPS3(&globalSymbols.print_debug, &PrintToDebugger);
+    AddDTAFunctionPS3(&globalSymbols.rb3e_change_music_speed, &ChangeMusicSpeed);
+    AddDTAFunctionPS3(&globalSymbols.rb3e_change_track_speed, &ChangeTrackSpeed);
+    AddDTAFunctionPS3(&globalSymbols.rb3e_get_music_speed, &GetMusicSpeed);
+    AddDTAFunctionPS3(&globalSymbols.rb3e_get_track_speed, &GetTrackSpeed);
+    AddDTAFunctionPS3(&globalSymbols.rb3e_set_venue, &DTASetVenue);
+    AddDTAFunctionPS3(&globalSymbols.rb3e_is_emulator, &DTAIsEmulator);
+    AddDTAFunctionPS3(&globalSymbols.rb3e_relaunch_game, &DTARelaunchGame);
+    AddDTAFunctionPS3(&globalSymbols.rb3e_get_song_count, &DTAGetSongCount);
+    AddDTAFunctionPS3(&globalSymbols.rb3e_send_event_string, &DTASendModData);
+#endif
     RB3E_MSG("Added DTA functions!", NULL);
 }

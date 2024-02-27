@@ -17,6 +17,16 @@
     {                          \
         __asm { li r3, __LINE__ }     \
     }
+#elif RB3E_PS3 // PS3 is GCC but requires a bigger stub area for 2 stub functions
+#define RB3E_STUB(x)                   \
+    void x()                           \
+    {                                  \
+        asm("li 0, " LINE_STRING ";"); \
+        asm("li 0, " LINE_STRING ";"); \
+        asm("li 0, " LINE_STRING ";"); \
+        asm("li 0, " LINE_STRING ";"); \
+        asm("li 0, " LINE_STRING ";"); \
+    }
 #else // other platforms should use GCC notation
 #define RB3E_STUB(x)                   \
     void x()                           \
@@ -33,6 +43,7 @@ RB3E_STUB(ExecuteDTA)
 RB3E_STUB(SymbolConstruct)
 RB3E_STUB(ModifierActive)
 RB3E_STUB(HmxFactoryFuncAt)
+RB3E_STUB(AddDTAFunctionPS3)
 RB3E_STUB(BandLabelSetDisplayText)
 RB3E_STUB(RandomInt)
 RB3E_STUB(DataNodeEvaluate)

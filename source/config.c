@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #ifdef RB3E_WII
 #include <bslug.h>
 #endif
@@ -47,10 +48,12 @@ static int INIHandler(void *user, const char *section, const char *name, const c
     RB3E_DEBUG("%s - %s : %s", section == NULL ? "none" : section, name, value);
     if (strcmp(section, "General") == 0)
     {
+#ifndef RB3E_PS3 // we can't use atof on PS3 because we don't have libc
         if (strcmp(name, "SongSpeedMultiplier") == 0)
             config.SongSpeedMultiplier = (float)atof(value);
         if (strcmp(name, "TrackSpeedMultiplier") == 0)
             config.TrackSpeedMultiplier = (float)atof(value);
+#endif
         if (strcmp(name, "ForcedVenue") == 0 && strcmp(value, "false") != 0)
             strncpy(config.ForcedVenue, value, RB3E_MAX_CONFIG_LEN);
         if (strcmp(name, "GameOriginIcons") == 0)

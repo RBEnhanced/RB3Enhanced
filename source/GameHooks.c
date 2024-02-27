@@ -24,6 +24,7 @@ void *GameConstructHook(void *theGame) // You just lost
     SongMetadata *metadata;
     BandUser *bandUser;
     RB3E_EventBandInfo bandevent = {0};
+#ifndef RB3E_PS3 // TODO(Emma): port to PS3
 #ifdef RB3E_XBOX
     Symbol song;
     GetSongShortname(&song, *(int *)PORT_THEMETAPERFORMER);
@@ -59,6 +60,7 @@ void *GameConstructHook(void *theGame) // You just lost
             bandevent.MemberExists[i] = 0;
         }
     }
+#endif // RB3E_PS3
     RB3E_SendEvent(RB3E_EVENT_BAND_INFO, &bandevent, sizeof(bandevent));
     RB3E_SendEvent(RB3E_EVENT_STATE, &in_game, sizeof(in_game));
     return GameConstruct(theGame);

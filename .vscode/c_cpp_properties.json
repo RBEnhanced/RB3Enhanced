@@ -35,6 +35,22 @@
             "compilerPath": "C:/devkitPro/devkitPPC/bin/powerpc-eabi-gcc.exe",
             "cStandard": "c89",
             "intelliSenseMode": "gcc-x86"
+        },
+        {
+            "name": "PS3",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "${PS3SDKTARGET}/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "RB3E",
+                "RB3E_PS3",
+                "RB3EDEBUG"
+            ],
+            "compilerPath": "${PS3SDKHOST}/ppu/bin/ppu-lv2-gcc",
+            "cStandard": "c89",
+            "intelliSenseMode": "gcc-x86"
         }
     ],
     "version": 4
