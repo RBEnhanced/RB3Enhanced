@@ -69,6 +69,7 @@ int RB3E_RelaunchGame()
     return -1;
 }
 
+void InitCryptoHooks();
 static void CTHook(void *app, int argc, char **argv)
 {
     // we save what the game's TOC base is and switch to our own
@@ -91,8 +92,9 @@ static void CTHook(void *app, int argc, char **argv)
     RB3E_DEBUG("copying 0x8000 from game TOC into plugin TOC", NULL);
     PS3_WriteMemory(plugin_toc, (void *)game_toc, 0xA000);
 
+    InitCryptoHooks();
+
     // launch RB3Enhanced + RB3
-    RB3E_DEBUG("starting StartupHook", NULL);
     StartupHook(app, argc, argv);
 }
 

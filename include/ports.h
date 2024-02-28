@@ -293,7 +293,12 @@ void DbgPrint(const char *s, ...);
 #define PORT_RUNLOOP_SPARE 0x00010960           // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
 #define PORT_SONG_ID_EVALUATE 0x0063E6B8        // branch to DataNode::Evaluate in SongMetadata::__ct
 // #define PORT_LOADOBJS_BCTRL 0                   // bctrl to Object::PreLoad insie of DirLoader::LoadObjs
-#define PORT_STAGEKIT_EXISTS 0x00442FAC // StageKit check. nop over to allow for fog command without a physical StageKit connected.
+#define PORT_STAGEKIT_EXISTS 0x00442FAC               // StageKit check. nop over to allow for fog command without a physical StageKit connected.
+#define PORT_PS3_VORBISREADER_CTR_CHECK 0x00883F40    // check in the SPU VorbisReader decoder that checks if there is a CTR state
+#define PORT_NPDRM_UNAVAILABLE_FALLTHROUGH 0x008C8BD0 // fallthrough after sceNpDrmIsAvailable (r == CELL_OK) beq instruction
+#define PORT_NPDRM_FSOPEN_JUMP 0x008C8C6C             // statement that runs after sceNpDrmIsAvailable returns CELL_OK (starts "li r0, 2")
+#define PORT_NPDRM_FSOPEN_RETURN 0x008C8C80           // branch to a "extsw r4, r9" after the npdrm cellFsOpen completes
+#define PORT_NPDRM_SETERRORCODE_JUMP 0x008C8C5C       // "extsw r4, r3" after the call to cellFsOpen for unencrypted midi files
 // function patch addresses
 #define PORT_SETDISKERROR 0x008CB888       // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x000108C8            // App::Run
@@ -367,6 +372,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_INITSONGMETADATA 0x0063DAB4 // InitSongMetadata
 // #define PORT_UPDATEPRESENCE 0                        // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x000DD0D8 // Quazal::StepSequenceJob::SetStep
+#define PORT_CTR_DECRYPT 0x00A1FBF8            // ctr_decrypt
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x00F2B870 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x00F33948  // address of RockCentralGateway
