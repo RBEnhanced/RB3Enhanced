@@ -193,6 +193,14 @@ int _prx_start(unsigned int args, unsigned int *argp)
 {
     RB3E_MSG("RB3Enhanced.prx entered!", NULL);
 
+    // basic sanity check - has no significance
+    // just ensures someone is using the 1.06 BLES executable
+    if (*(uint32_t *)0x8be67c != LI(0, 0))
+    {
+        RB3E_DEBUG("Wrong executable! Bailing...", NULL);
+        return SYS_PRX_NO_RESIDENT;
+    }
+
     char write_strategy = PS3_MemoryWriteCheck();
     if (write_strategy == can_use_dbg)
         RB3E_DEBUG("Using DEX syscalls to write memory", NULL);
