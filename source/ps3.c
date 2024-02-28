@@ -69,6 +69,89 @@ int RB3E_RelaunchGame()
     return -1;
 }
 
+static char *EUR_TitleIDs[] = {
+    "BLES01611",
+    "BLES00986",
+    "BLES00385",
+    "BLES00228",
+};
+static int NumEURTitleIDs = 4;
+
+static char *USA_TitleIDs[] = {
+    "BLUS30463",
+    "BLUS30147",
+    "BLUS30050",
+};
+static int NumUSATitleIDs = 3;
+
+static char *primary_titleid = NULL;
+static int primary_region = 0; // 0 = EUR, 1 = USA
+static bool has_usa_titleids = false;
+static bool has_eur_titleids = false;
+
+int TitleIDRegister(char *titleid, uint32_t r4);
+int TitleIDRegisterHook(char *titleid, uint32_t r4)
+{
+    RB3E_DEBUG("TitleIDRegister(titleid=%s, r4=0x%08x)", titleid, r4);
+    // the first registered title ID is at startup after checking PARAM.SFO
+    if (primary_titleid == NULL)
+    {
+        primary_titleid = titleid;
+        if (strcmp(primary_titleid, USA_TitleIDs[0]) == 0)
+            primary_region = 1;
+        RB3E_DEBUG("Primary Title ID: %s", primary_titleid);
+    }
+
+    // check if it's european (Yay!)
+    if (!has_eur_titleids)
+    {
+        for (int i = 0; i < NumEURTitleIDs; i++)
+        {
+            if (strcmp(titleid, EUR_TitleIDs[i]) == 0)
+            {
+                RB3E_DEBUG("Game has passed EUR title IDs", NULL);
+                has_eur_titleids = true;
+                break;
+            }
+        }
+    }
+
+    // check if it's american (Noo!)
+    if (!has_usa_titleids)
+    {
+        for (int i = 0; i < NumUSATitleIDs; i++)
+        {
+            if (strcmp(titleid, USA_TitleIDs[i]) == 0)
+            {
+                RB3E_DEBUG("Game has passed USA title IDs", NULL);
+                has_usa_titleids = true;
+                break;
+            }
+        }
+    }
+
+    // register the title id
+    int r = TitleIDRegister(titleid, r4);
+
+    // if we are european, on our last title id, add the american ones too
+    if (primary_region == 0 && r4 == NumEURTitleIDs - 1 && !has_usa_titleids)
+        for (int i = 0; i < NumUSATitleIDs; i++)
+        {
+            RB3E_DEBUG("Registering USA title ID %s", USA_TitleIDs[i]);
+            TitleIDRegister(USA_TitleIDs[i], i + NumUSATitleIDs - 1);
+        }
+
+    // if we are american, on our last title id, add the european ones too
+    if (primary_region == 1 && r4 == NumUSATitleIDs - 1 && !has_eur_titleids)
+        for (int i = 0; i < NumEURTitleIDs; i++)
+        {
+            RB3E_DEBUG("Registering EUR title ID %s", USA_TitleIDs[i]);
+            TitleIDRegister(EUR_TitleIDs[i], i + NumEURTitleIDs - 1);
+        }
+
+    return r;
+}
+
 void InitCryptoHooks();
 static void CTHook(void *app, int argc, char **argv)
 {
@@ -93,6 +176,7 @@ static void CTHook(void *app, int argc, char **argv)
     PS3_WriteMemory(plugin_toc, (void *)game_toc, 0xA000);
 
     InitCryptoHooks();
+    HookFunction(PORT_TITLEIDREGISTER, PLUGIN_PTR(TitleIDRegister), PLUGIN_PTR(TitleIDRegisterHook));
 
     // launch RB3Enhanced + RB3
     StartupHook(app, argc, argv);

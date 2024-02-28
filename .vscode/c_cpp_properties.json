@@ -49,7 +49,7 @@
                 "RB3EDEBUG"
             ],
             "compilerPath": "${PS3SDKHOST}/ppu/bin/ppu-lv2-gcc",
-            "cStandard": "c89",
+            "cStandard": "c99",
             "intelliSenseMode": "gcc-x86"
         }
     ],
