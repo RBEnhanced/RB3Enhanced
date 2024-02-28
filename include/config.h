@@ -56,6 +56,9 @@ typedef struct _RB3E_Config
     // [Wii]
     char NASServer[RB3E_MAX_DOMAIN];
     char LegacySDMode;
+#elif RB3E_PS3
+    // [PS3]
+    char RegionFreeDLC;
 #endif
 #ifdef RB3EDEBUG
     // [Debug]

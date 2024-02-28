@@ -30,6 +30,8 @@ void InitDefaultConfig()
 #ifdef RB3E_WII
     // uncomment when GoCentral has a default instance that uses naswii auth
     // strcpy(config.NASServer, "naswii.rbenhanced.rocks");
+#elif RB3E_PS3
+    config.RegionFreeDLC = 1;
 #endif
     config.SongSpeedMultiplier = 1.0;
     config.TrackSpeedMultiplier = 1.0;
@@ -122,6 +124,12 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.STUNServer, value, RB3E_MAX_DOMAIN);
         if (strcmp(name, "STUNServerPort") == 0)
             config.STUNServerPort = atoi(value);
+    }
+#elif RB3E_PS3
+    if (strcmp(section, "PS3") == 0)
+    {
+        if (strcmp(name, "RegionFreeDLC") == 0)
+            config.RegionFreeDLC = RB3E_CONFIG_BOOL(value);
     }
 #endif
     if (strcmp(section, "Graphics") == 0)

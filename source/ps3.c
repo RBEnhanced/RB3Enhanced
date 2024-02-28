@@ -88,6 +88,7 @@ static char *primary_titleid = NULL;
 static int primary_region = 0; // 0 = EUR, 1 = USA
 static bool has_usa_titleids = false;
 static bool has_eur_titleids = false;
+static bool has_registered_ids = false;
 
 int TitleIDRegister(char *titleid, uint32_t r4);
 int TitleIDRegisterHook(char *titleid, uint32_t r4)
@@ -102,52 +103,57 @@ int TitleIDRegisterHook(char *titleid, uint32_t r4)
         RB3E_DEBUG("Primary Title ID: %s", primary_titleid);
     }
 
-    // check if it's european (Yay!)
-    if (!has_eur_titleids)
-    {
-        for (int i = 0; i < NumEURTitleIDs; i++)
-        {
-            if (strcmp(titleid, EUR_TitleIDs[i]) == 0)
-            {
-                RB3E_DEBUG("Game has passed EUR title IDs", NULL);
-                has_eur_titleids = true;
-                break;
-            }
-        }
-    }
-
-    // check if it's american (Noo!)
-    if (!has_usa_titleids)
-    {
-        for (int i = 0; i < NumUSATitleIDs; i++)
-        {
-            if (strcmp(titleid, USA_TitleIDs[i]) == 0)
-            {
-                RB3E_DEBUG("Game has passed USA title IDs", NULL);
-                has_usa_titleids = true;
-                break;
-            }
-        }
-    }
-
     // register the title id
     int r = TitleIDRegister(titleid, r4);
 
-    // if we are european, on our last title id, add the american ones too
-    if (primary_region == 0 && r4 == NumEURTitleIDs - 1 && !has_usa_titleids)
-        for (int i = 0; i < NumUSATitleIDs; i++)
+    if (config.RegionFreeDLC)
+    {
+        // check if it's european (Yay!)
+        if (!has_eur_titleids)
         {
-            RB3E_DEBUG("Registering USA title ID %s", USA_TitleIDs[i]);
-            TitleIDRegister(USA_TitleIDs[i], i + NumUSATitleIDs - 1);
+            for (int i = 0; i < NumEURTitleIDs; i++)
+            {
+                if (strcmp(titleid, EUR_TitleIDs[i]) == 0)
+                {
+                    RB3E_DEBUG("Game has passed EUR title IDs", NULL);
+                    has_eur_titleids = true;
+                    break;
+                }
+            }
         }
 
-    // if we are american, on our last title id, add the european ones too
-    if (primary_region == 1 && r4 == NumUSATitleIDs - 1 && !has_eur_titleids)
-        for (int i = 0; i < NumEURTitleIDs; i++)
+        // check if it's american (Noo!)
+        if (!has_usa_titleids)
         {
-            RB3E_DEBUG("Registering EUR title ID %s", USA_TitleIDs[i]);
-            TitleIDRegister(EUR_TitleIDs[i], i + NumEURTitleIDs - 1);
+            for (int i = 0; i < NumUSATitleIDs; i++)
+            {
+                if (strcmp(titleid, USA_TitleIDs[i]) == 0)
+                {
+                    RB3E_DEBUG("Game has passed USA title IDs", NULL);
+                    has_usa_titleids = true;
+                    break;
+                }
+            }
         }
+
+        // if we are european, on our last title id, add the american ones too
+        if (primary_region == 0 && r4 == NumEURTitleIDs - 1 && !has_usa_titleids && !has_registered_ids)
+            for (int i = 0; i < NumUSATitleIDs; i++)
+            {
+                RB3E_DEBUG("Registering USA title ID %s", USA_TitleIDs[i]);
+                TitleIDRegister(USA_TitleIDs[i], r4 + 1 + i);
+                has_registered_ids = true;
+            }
+
+        // if we are american, on our last title id, add the european ones too
+        if (primary_region == 1 && r4 == NumUSATitleIDs - 1 && !has_eur_titleids && !has_registered_ids)
+            for (int i = 0; i < NumEURTitleIDs; i++)
+            {
+                RB3E_DEBUG("Registering EUR title ID %s", EUR_TitleIDs[i]);
+                TitleIDRegister(EUR_TitleIDs[i], r4 + 1 + i);
+                has_registered_ids = true;
+            }
+    }
 
     return r;
 }
