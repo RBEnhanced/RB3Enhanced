@@ -61,7 +61,10 @@ char *RB3E_GetRawfilePath(char *path, int root_allowed)
 int RB3E_OpenFile(char *filename, char readWrite)
 {
     int fd = -1;
-    CellFsErrno r = cellFsOpen(filename, CELL_FS_O_RDONLY, &fd, NULL, 0);
+    int openflags = CELL_FS_O_RDONLY;
+    if (readWrite == 1)
+        openflags = CELL_FS_O_CREAT | CELL_FS_O_RDWR;
+    CellFsErrno r = cellFsOpen(filename, openflags, &fd, NULL, 0);
     return r == CELL_FS_SUCCEEDED ? fd : -1;
 }
 
@@ -77,6 +80,13 @@ int RB3E_ReadFile(int file, int offset, void *buffer, int size)
     uint64_t read_bytes = 0;
     CellFsErrno r = cellFsReadWithOffset(file, offset, buffer, size, &read_bytes);
     return r == CELL_FS_SUCCEEDED ? read_bytes : -1;
+}
+
+int RB3E_WriteFile(int file, int offset, void *buffer, int size)
+{
+    uint64_t write_bytes = 0;
+    CellFsErrno r = cellFsWriteWithOffset(file, offset, buffer, size, &write_bytes);
+    return r == CELL_FS_SUCCEEDED ? write_bytes : -1;
 }
 
 void RB3E_CloseFile(int file)

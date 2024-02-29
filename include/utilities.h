@@ -8,6 +8,11 @@ void UnhookFunction(unsigned int *OriginalAddress, unsigned int *StubFunction);
 
 #ifdef RB3E_PS3
 // utilities for working with PS3
+typedef struct _written_memory_patch
+{
+    uint32_t address;
+    uint32_t value;
+} written_memory_patch;
 char PS3_MemoryWriteCheck();
 void PS3_Write32(uint32_t address, uint32_t value);
 void PS3_WriteMemory(uint32_t address, void *data, size_t size);

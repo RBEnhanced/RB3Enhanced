@@ -12,6 +12,7 @@
 
 #include "rb3enhanced.h"
 #include "ports.h"
+#include "utilities.h"
 #include "ppcasm.h"
 
 #define PLUGIN_PTR(x) (uint32_t)(*(uint32_t *)&x)
@@ -39,10 +40,8 @@ static void BigAssStubFunction()
     asm("li 0, 0; nop; li 0, 2; blr; li 0, 1; nop; li 0, 4; nop;");
 }
 
-// TODO(Emma): detect if dbg syscall fails and use hen syscall after the fact
-// TODO(Emma): rpcs3 patch generation for llvm
-
-// gets process memory using PS3MAPI, for HEN
+int PS3_CodeWrites = 0;
+written_memory_patch PS3_Code[512];
 
 static sys_pid_t pid = 0;
 
@@ -113,7 +112,10 @@ char PS3_MemoryWriteCheck()
 void PS3_Write32(uint32_t address, uint32_t value)
 {
     uint32_t value_stack = value;
-    RB3E_DEBUG("Write: %08x = %08x", address, value);
+    // RB3E_DEBUG("Write: %08x = %08x", address, value);
+    PS3_Code[PS3_CodeWrites].address = address;
+    PS3_Code[PS3_CodeWrites].value = value;
+    PS3_CodeWrites++;
     if (!should_use_mapi)
         sys_dbg_write_process_memory(address, &value_stack, 4);
     else
