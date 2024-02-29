@@ -10,6 +10,7 @@
 #include <sys/process.h>
 #include <sys/syscall.h>
 
+#include "rb3enhanced.h"
 #include "ports.h"
 #include "ppcasm.h"
 
@@ -90,7 +91,6 @@ char PS3_MemoryWriteCheck()
     static uint8_t expected[4] = {0x7F, 'E', 'L', 'F'};
 
     pid = sys_process_getpid();
-    RB3E_DEBUG("pid=0x%08x", pid);
 
 #ifndef RB3E_DISABLE_PS3DEX
     int dbg_r = sys_dbg_read_process_memory(0x10000, elf_header, 4);

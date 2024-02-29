@@ -60,8 +60,8 @@ void set_toc_base(uint64_t toc)
 
 int RB3E_IsEmulator()
 {
-    // TODO(Emma): RPCS3 detection
-    return 0;
+    // Detecting RPCS3 is done by checking if the PID is a low number.
+    return sys_process_getpid() < 0x1000;
 }
 
 int RB3E_RelaunchGame()
@@ -70,17 +70,17 @@ int RB3E_RelaunchGame()
 }
 
 static char *EUR_TitleIDs[] = {
-    "BLES01611",
-    "BLES00986",
-    "BLES00385",
-    "BLES00228",
+    "BLES01611", // band3_patch
+    "BLES00986", // band3
+    "BLES00385", // rb2
+    "BLES00228", // rb1
 };
 static int NumEURTitleIDs = 4;
 
 static char *USA_TitleIDs[] = {
-    "BLUS30463",
-    "BLUS30147",
-    "BLUS30050",
+    "BLUS30463", // band3
+    "BLUS30147", // rb2
+    "BLUS30050", // rb1
 };
 static int NumUSATitleIDs = 3;
 
@@ -100,7 +100,7 @@ int TitleIDRegisterHook(char *titleid, uint32_t r4)
         primary_titleid = titleid;
         if (strcmp(primary_titleid, USA_TitleIDs[0]) == 0)
             primary_region = 1;
-        RB3E_DEBUG("Primary Title ID: %s", primary_titleid);
+        RB3E_MSG("Primary Title ID: %s", primary_titleid);
     }
 
     // register the title id

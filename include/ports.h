@@ -312,11 +312,11 @@ void DbgPrint(const char *s, ...);
 #define PORT_LOCALIZE 0x00937554           // Locale::Localize
 // #define PORT_ADDGAMEGEM 0                            // GameGemList::AddGameGem
 // #define PORT_WILLBENOSTRUM 0                         // GameGemList::WillBeNoStrum
-#define PORT_SETVENUE 0x002CC1E0     // MetaPerformer::SetVenue(?) (actual func name is not known)
-#define PORT_ISUGCPLUS 0x00276470    // function that checks song source(?)
-#define PORT_KEYSONGUITAR 0x0030028C // function that checks "key_keys_on_guitar"
-#define PORT_EXECUTEDTA 0x00416A58   // RockCentralGateway::ExecuteConfig
-// #define PORT_BANDLABELSETDISPLAYTEXT 0               // BandLabel::SetDisplayText
+#define PORT_SETVENUE 0x002CC1E0                     // MetaPerformer::SetVenue(?) (actual func name is not known)
+#define PORT_ISUGCPLUS 0x00276470                    // function that checks song source(?)
+#define PORT_KEYSONGUITAR 0x0030028C                 // function that checks "key_keys_on_guitar"
+#define PORT_EXECUTEDTA 0x00416A58                   // RockCentralGateway::ExecuteConfig
+#define PORT_BANDLABELSETDISPLAYTEXT 0x00465D78      // BandLabel::SetDisplayText
 #define PORT_SETSONGANDARTISTNAME 0x00265A44         // BandLabel::SetSongAndArtistName
 #define PORT_SETSONGNAMEFROMNODE 0x00263C28          // BandLabel::SetSongNameFromNode
 #define PORT_DATANODEEVALUATE 0x008FBE24             // DataNode::Evaluate
