@@ -46,17 +46,12 @@ uint64_t get_plugin_toc_base()
         "blr;");
 }
 
-void set_stack_toc(uint64_t toc)
-{
-    asm("std 3, 0x28(1);");
-}
-
-uint64_t get_toc_base()
+static uint64_t get_toc_base()
 {
     asm("mr 3, 2;");
 }
 
-void set_toc_base(uint64_t toc)
+static void set_toc_base(uint64_t toc)
 {
     asm("mr 2, 3;");
 }
@@ -166,25 +161,32 @@ int TitleIDRegisterHook(char *titleid, uint32_t r4)
 }
 
 static bool has_run_cthook = false;
-extern void sys_timer_sleep(int time);
 void RPCS3NotifyButton(int button, void *arg)
 {
+    // we don't do anything here
 }
+
+// imported from ps3_utilities.c, set by PS3_Write32
 extern int PS3_CodeWrites;
 extern written_memory_patch PS3_Code[];
+
+extern void sys_timer_sleep(int time);
 void RPCS3NotifyThread(uint64_t arg)
 {
-    sys_timer_sleep(5);
+    // wait 5 seconds for everything to be done
+    sys_timer_sleep(3);
     if (!has_run_cthook)
     {
+        // if we haven't run our constructor hook, inform the player
         cellMsgDialogOpen2(CELL_MSGDIALOG_TYPE_SE_TYPE_ERROR | CELL_MSGDIALOG_TYPE_BUTTON_TYPE_OK,
                            "RB3Enhanced requires that you run RPCS3 with the PPU Decoder setting set to 'Interpreter' mode.\n\n"
-                           "Please re-launch Rock Band 3 with that setting applied.",
+                           "Please re-launch Rock Band 3 with that setting applied so a patch file can be generated.",
                            RPCS3NotifyButton, NULL, NULL);
         return;
     }
     else
     {
+        // make the filename based on the current game's title id
         char filename[128];
         sprintf(filename, "/dev_hdd0/rb3/%s_patch.yml", primary_region == 0 ? EUR_TitleIDs[1] : USA_TitleIDs[0]);
         if (!RB3E_FileExists(filename))
@@ -198,9 +200,24 @@ void RPCS3NotifyThread(uint64_t arg)
             }
             else
             {
+                // load the PPU and PRX hashes from text files if they exist
+                char ppu_hash[] = "PPU-0000000000000000000000000000000000000000";
+                char prx_hash[] = "PRX-aaaaaaaaaaaaaaaaaaaaaaaaaaaa-0";
+                int fd2 = -1;
+                if ((fd2 = RB3E_OpenFile("/dev_hdd0/rb3/hash_EBOOT.BIN.txt", 0)) != -1)
+                {
+                    RB3E_ReadFile(fd2, 0, ppu_hash, sizeof(ppu_hash));
+                    RB3E_CloseFile(fd2);
+                }
+                if ((fd2 = RB3E_OpenFile("/dev_hdd0/rb3/hash_RB3Enhanced.sprx.txt", 0)) != -1)
+                {
+                    RB3E_ReadFile(fd2, 0, prx_hash, sizeof(prx_hash));
+                    RB3E_CloseFile(fd2);
+                }
+
                 // sprintf(buf, patch_header_template, MODULE_HASH, MODULE_TYPE, TITLE_ID, VERSION);
                 char *patch_header_template = "%s:\n"
-                                              "  \"RB3Enhanced " RB3E_BUILDCOMMIT " (%s)\":\n"
+                                              "  \"RB3Enhanced " RB3E_BUILDTAG " (%s)\":\n"
                                               "    Games:\n"
                                               "      \"Rock Band 3\":\n"
                                               "        %s: [ 01.%02i ]\n"
@@ -214,9 +231,8 @@ void RPCS3NotifyThread(uint64_t arg)
                 int fileoff = RB3E_WriteFile(fd, 0, "Version: 1.2\n\n", strlen("Version: 1.2\n\n"));
 
                 // write the PPU patches
-                // TODO: is it somehow possible to read the module IDs at runtime?
                 sprintf(header_buffer, patch_header_template,
-                        "PPU-0000000000000000000000000000000000000000", "EBOOT",
+                        ppu_hash, "EBOOT",
                         primary_region == 0 ? EUR_TitleIDs[1] : USA_TitleIDs[0], primary_region == 0 ? 6 : 5);
                 fileoff += RB3E_WriteFile(fd, fileoff, header_buffer, strlen(header_buffer));
                 for (int i = 0; i < PS3_CodeWrites; i++)
@@ -229,12 +245,15 @@ void RPCS3NotifyThread(uint64_t arg)
                     }
                 }
 
+                // newline for luck
+                fileoff += RB3E_WriteFile(fd, fileoff, "\n", 1);
+
                 // write the RB3E PRX patches
                 sprintf(header_buffer, patch_header_template,
-                        "PRX-aaaaaaaaaaaaaaaaaaaaaaaaaaaa-0", "PRX",
+                        prx_hash, "PRX",
                         primary_region == 0 ? EUR_TitleIDs[1] : USA_TitleIDs[0], primary_region == 0 ? 6 : 5);
                 fileoff += RB3E_WriteFile(fd, fileoff, header_buffer, strlen(header_buffer));
-                // hack to get our base address
+                // hack to get our base address - AppConstructor is the first reference built (in _functions.c)
                 uint32_t base_address = PLUGIN_PTR(AppConstructor);
                 for (int i = 0; i < PS3_CodeWrites; i++)
                 {
@@ -247,10 +266,13 @@ void RPCS3NotifyThread(uint64_t arg)
                 }
 
                 RB3E_CloseFile(fd);
+
+                // notify the user
                 char dialog[512];
                 sprintf(dialog, "A patch file has been written to %s!\n\n"
-                                "Copy this file into your RPCS3 \"patches\" folder, then enable the \"RB3Enhanced\" patches\n"
-                                "in the RPCS3 Patch Manager.",
+                                "Copy this file into your RPCS3 \"patches\" folder, then enable the two RB3Enhanced patches\n"
+                                "in the RPCS3 Patch Manager. PPU Recompiler mode can be enabled after this.\n\n"
+                                "(Remember to do this again if you update RB3Enhanced!)",
                         filename);
                 cellMsgDialogOpen2(CELL_MSGDIALOG_TYPE_SE_TYPE_NORMAL | CELL_MSGDIALOG_TYPE_BUTTON_TYPE_OK,
                                    dialog,
@@ -328,6 +350,7 @@ int _prx_start(unsigned int args, unsigned int *argp)
     // poke our CTHook into the App::__ct call
     PS3_Write32(PORT_APP_CALL, BL(PLUGIN_PTR(CTHook), PORT_APP_CALL));
 
+    // if we detect an emulator (RPCS3), spawn our thread that generates patch files
     if (RB3E_IsEmulator())
     {
         RB3E_MSG("RPCS3 detected", NULL);

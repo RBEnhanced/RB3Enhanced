@@ -176,6 +176,7 @@ $(OUTPUT)/$(OUTNAME).sprx: $(BUILD_P)/output.prx
 	@echo "Creating SPRX..."
 	@mkdir -p $(@D)
 	@$(MAKESELF_P) $^ $@
+	-@python scripts\rpcs3_hash.py $^ $(OUTPUT)/hash_$(OUTNAME).sprx.txt
 
 $(BUILD_P)/output.prx: $(OBJECTS_P)
 	@echo "Linking PRX..."
