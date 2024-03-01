@@ -389,6 +389,10 @@ void DbgPrint(const char *s, ...);
 // #define PORT_THEMUSICLIBRARY 0              // pointer to TheMusicLibrary
 // #define PORT_THEGAME 0                      // pointer to TheGame (you lost)
 // #define PORT_OBJECTDIRMAINDIR 0             // ObjectDir::sMainDir
+// ps3 usb specific hooks
+#define PORT_LDDREGISTERTAIL 0x008e4240  // the "ld r2" instruction after the final call to cellUsbdRegisterExtraLdd2
+#define PORT_LDDADDRESS 0x00f1bf1c       // just one of the LDDs. doesn't matter which. this one is RockBandKeyboard
+#define PORT_ISUSBDEVICEVALID 0x008e1074 // function called by the Probe LDD function that checks if a device is valid
 
 // define logging functions
 extern int _sys_printf(char *fmt, ...);

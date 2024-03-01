@@ -107,7 +107,7 @@ INCLUDES_P := $(PPUHOSTPATH_P)/lib/gcc/ppu-lv2/$(GCC_VER_P)/include \
 # library directories
 LIBDIR_P := $(PPUPATH_P)/lib 
 # library includes
-LIBS_P := -lfs_stub -lnet_stub -lsysutil_stub #-lc_stub -lm_stub
+LIBS_P := -lfs_stub -lnet_stub -lsysutil_stub -lusbd_stub #-lc_stub -lm_stub
 # compiler flags
 CFLAGS_P := -O2 -Wall -Wno-format-extra-args -x c -std=gnu99 \
 			-DRB3E_PS3 $(patsubst %,-D%,$(DEFINES)) \

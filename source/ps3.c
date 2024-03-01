@@ -287,6 +287,9 @@ void RPCS3NotifyThread(uint64_t arg)
 }
 
 void InitCryptoHooks();
+void RegisterLDDsHook();
+int IsUSBDeviceValid(int device, uint8_t *descriptor);
+int IsUSBDeviceValidHook(int device, uint8_t *descriptor);
 static void CTHook(void *app, int argc, char **argv)
 {
     // we save what the game's TOC base is and switch to our own
@@ -313,6 +316,11 @@ static void CTHook(void *app, int argc, char **argv)
 
     InitCryptoHooks();
     HookFunction(PORT_TITLEIDREGISTER, PLUGIN_PTR(TitleIDRegister), PLUGIN_PTR(TitleIDRegisterHook));
+    // poking a BL where an r2 restore should be. sneaky!
+    // this is okay, though, as our own function will return with an r2 the game is happy with
+    // and it'll quickly be restored anyway after cellPadInit. so who cares?
+    POKE_PLUGIN_BL(PORT_LDDREGISTERTAIL, PLUGIN_PTR(RegisterLDDsHook));
+    HookFunction(PORT_ISUSBDEVICEVALID, PLUGIN_PTR(IsUSBDeviceValid), PLUGIN_PTR(IsUSBDeviceValidHook));
 
     // launch RB3Enhanced + RB3
     StartupHook(app, argc, argv);
