@@ -66,7 +66,7 @@ extern int *HmxFactoryFuncAt(int *gDataFuncs, Symbol *sym);
 #ifdef RB3E_PS3
 // ps3 only - directly sets a function pointer as a DTA function
 typedef int (*DTAFunction_t)(DataNode *node, DataArray *args);
-extern void AddDTAFunctionPS3(Symbol *sym, DTAFunction_t func);
+extern void AddDTAFunctionPS3(Symbol sym, DTAFunction_t func);
 #endif
 
 extern DataNode *DataNodeEvaluate(DataNode *ret);

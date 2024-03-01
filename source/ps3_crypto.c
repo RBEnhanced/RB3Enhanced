@@ -27,6 +27,9 @@ int ctr_decrypt_hook(char *input, char *output, int size, void *ctr_state)
 
 void InitCryptoHooks()
 {
+    // VorbisReader's SPU code runloop doesn't decrement a counter when mCtrState isn't set
+    // so we nop the mCtrState check out and change ctr_decrypt to just pass data through if
+    // there isnt a state. Work smarter not harder
     POKE_32(PORT_PS3_VORBISREADER_CTR_CHECK, NOP);
     HookFunction(PORT_CTR_DECRYPT, PLUGIN_PTR(ctr_decrypt), PLUGIN_PTR(ctr_decrypt_hook));
 

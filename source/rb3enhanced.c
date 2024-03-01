@@ -328,11 +328,6 @@ void InitialiseFunctions()
     POKE_STUB(ExecuteDTA, PORT_EXECUTEDTA);
     POKE_STUB(SymbolConstruct, PORT_SYMBOL_CT);
     POKE_STUB(ModifierActive, PORT_MODIFIERMGR_ACTIVE);
-#ifndef RB3E_PS3
-    POKE_STUB(HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
-#else
-    POKE_STUB(AddDTAFunctionPS3, PORT_ADDDTAFUNCTIONPS3);
-#endif
     POKE_STUB(RandomInt, PORT_RANDOMINT);
     POKE_STUB(DataNodeEvaluate, PORT_DATANODEEVALUATE);
     POKE_STUB(FileExists, PORT_FILE_EXISTS);

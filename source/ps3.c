@@ -39,7 +39,7 @@ static void putstring(char *str, int len)
 // this function is written to in the prx entrypoint
 // to act as a way to consistently reference the plugin's TOC base
 // without needing to do a TOC lookup
-uint64_t get_plugin_toc_base()
+static uint64_t get_plugin_toc_base()
 {
     asm("lis 3, 0xFFFF;"
         "ori 3, 3, 0xFFFF;"
@@ -66,11 +66,6 @@ int RB3E_IsEmulator()
     return EmuDetectResult;
 }
 
-int RB3E_RelaunchGame()
-{
-    return -1;
-}
-
 static char *EUR_TitleIDs[] = {
     "BLES01611", // band3_patch
     "BLES00986", // band3
@@ -91,6 +86,15 @@ static int primary_region = 0; // 0 = EUR, 1 = USA
 static bool has_usa_titleids = false;
 static bool has_eur_titleids = false;
 static bool has_registered_ids = false;
+
+int RB3E_RelaunchGame()
+{
+    char eboot_path[64];
+    sprintf(eboot_path, "/dev_hdd0/game/%s/USRDIR/EBOOT.BIN", primary_region == 0 ? EUR_TitleIDs[1] : USA_TitleIDs[0]);
+    RB3E_DEBUG("Rebooting to %s", eboot_path);
+    sys_game_process_exitspawn(eboot_path, NULL, NULL, NULL, 0, 1024, 0);
+    return -1;
+}
 
 int TitleIDRegister(char *titleid, uint32_t r4);
 int TitleIDRegisterHook(char *titleid, uint32_t r4)
