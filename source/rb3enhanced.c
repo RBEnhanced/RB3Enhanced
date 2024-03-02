@@ -185,12 +185,16 @@ void RB3E_RunLoop()
 #ifndef RB3E_WII
 // broadcasts stagekit events via the local network. not worth making a header file for imo
 void StagekitSetState(int state1, int state2);
+void SantrollerSendStagekit(uint8_t l, uint8_t r); // ps3
 void StagekitSetStateHook(int state1, int state2)
 {
     RB3E_EventStagekit event;
     event.LeftChannel = state1;
     event.RightChannel = state2;
     RB3E_SendEvent(RB3E_EVENT_STAGEKIT, &event, sizeof(RB3E_EventStagekit));
+#ifdef RB3E_PS3
+    SantrollerSendStagekit(state1, state2);
+#endif
     StagekitSetState(state1, state2);
 }
 #endif

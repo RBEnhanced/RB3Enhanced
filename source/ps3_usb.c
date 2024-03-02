@@ -13,21 +13,80 @@
 
 #define LE16(i) (((((i) & 0xFF) << 8) | (((i) >> 8) & 0xFF)) & 0xFFFF)
 
+static int stagekit_device_id = -1;
+static int stagekit_pipe = -1;
+void SantrollerSendStagekit(uint8_t l, uint8_t r)
+{
+    if (stagekit_device_id == -1 || stagekit_pipe == -1)
+        return;
+    uint8_t report[] = {0x01, 0x5A, l, r, 0x00, 0x00, 0x00, 0x00};
+    UsbDeviceRequest req;
+    req.bmRequestType = USB_REQTYPE_TYPE_CLASS | USB_REQTYPE_RECIP_INTERFACE | USB_REQTYPE_DIR_TO_DEVICE;
+    req.bRequest = 9; // SET_REPORT
+    req.wValue = 0x200;
+    req.wIndex = 0;
+    req.wLength = sizeof(report);
+    cellUsbdControlTransfer(stagekit_pipe, &req, report, NULL, 0);
+}
+
+static int santrollerpipe = 0;
+void SantrollerKickToNormal(void *ctrl_pipe)
+{
+    int pipe = santrollerpipe;
+    uint8_t rep[8];
+    UsbDeviceRequest req;
+    req.bmRequestType = USB_REQTYPE_TYPE_CLASS | USB_REQTYPE_RECIP_INTERFACE | USB_REQTYPE_DIR_TO_HOST;
+    req.bRequest = 0x01;
+    req.wValue = 0x0303;
+    req.wIndex = 0;
+    req.wLength = 8;
+    cellUsbdControlTransfer(pipe, &req, rep, NULL, 0);
+}
+
 int SantrollerProbe(int device)
 {
-    RB3E_DEBUG("Santroller probed (device=%08x)", device);
+    UsbDeviceDescriptor *descriptor = cellUsbdScanStaticDescriptor(device, NULL, USB_DESCRIPTOR_TYPE_DEVICE);
+    if (descriptor != NULL && // santroller detection
+        descriptor->idVendor == LE16(0x1209) && descriptor->idProduct == LE16(0x2882))
+    {
+        return CELL_USBD_PROBE_SUCCEEDED;
+    }
     return CELL_USBD_PROBE_FAILED;
 }
 
 int SantrollerAttach(int device)
 {
-    RB3E_DEBUG("Santroller attached (device=%08x)", device);
-    return 0;
+    UsbDeviceDescriptor *desc = cellUsbdScanStaticDescriptor(device, NULL, USB_DESCRIPTOR_TYPE_DEVICE);
+    if (desc != NULL)
+    {
+        int ctrl_pipe = cellUsbdOpenPipe(device, NULL);
+        if (ctrl_pipe >= CELL_OK)
+        {
+            UsbConfigurationDescriptor *config = cellUsbdScanStaticDescriptor(device, NULL, USB_DESCRIPTOR_TYPE_CONFIGURATION);
+            santrollerpipe = ctrl_pipe;
+            cellUsbdSetConfiguration(ctrl_pipe, config->bConfigurationValue, SantrollerKickToNormal, &santrollerpipe);
+            if (desc->bcdDevice == LE16(0x0900))
+            { // stagekit
+                stagekit_device_id = device;
+                stagekit_pipe = ctrl_pipe;
+            }
+            return CELL_USBD_ATTACH_SUCCEEDED;
+        }
+        else
+        {
+            RB3E_DEBUG("cellUsbdOpenPipe returned %08x for santroller", ctrl_pipe);
+        }
+    }
+    return CELL_USBD_ATTACH_FAILED;
 }
 
 int SantrollerDetach(int device)
 {
-    RB3E_DEBUG("Santroller detached (device=%08x)", device);
+    if (device == stagekit_device_id)
+    {
+        stagekit_device_id = -1;
+        stagekit_pipe = -1;
+    }
     return 0;
 }
 
@@ -54,8 +113,7 @@ void RegisterLDDsHook()
 int IsUSBDeviceValid(int device, UsbDeviceDescriptor *descriptor);
 int IsUSBDeviceValidHook(int device, UsbDeviceDescriptor *descriptor)
 {
-    RB3E_DEBUG("Device valid check (device=%08x, descriptor=%p)", device, descriptor);
-    RB3E_DEBUG("Device: %02x %02x", descriptor->idVendor, descriptor->idProduct);
+    RB3E_DEBUG("USB Instrument - VID: %02x - PID: %02x", LE16(descriptor->idVendor), LE16(descriptor->idProduct));
     if (descriptor->idVendor == LE16(0x1BAD)) // Harmonix Music Systems
     {
         // don't patch it everywhere, instead just change the descriptor in-memory
