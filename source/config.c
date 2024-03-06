@@ -31,7 +31,8 @@ void InitDefaultConfig()
     // uncomment when GoCentral has a default instance that uses naswii auth
     // strcpy(config.NASServer, "naswii.rbenhanced.rocks");
 #elif RB3E_PS3
-    config.RegionFreeDLC = 1;
+    // uncomment when BLUS doesn't crash with this enabled
+    // config.RegionFreeDLC = 1;
 #endif
     config.SongSpeedMultiplier = 1.0;
     config.TrackSpeedMultiplier = 1.0;
