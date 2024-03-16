@@ -357,7 +357,7 @@ void ApplyHooks()
     HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
 
 #ifdef RB3E_WII // wii exclusive hooks
-    HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
+    // HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
