@@ -23,6 +23,7 @@ int RB3E_FileExists(char *filename);
 int RB3E_OpenFile(char *filename, char readWrite);
 int RB3E_FileSize(int file);
 int RB3E_ReadFile(int file, int offset, void *buffer, int size);
+int RB3E_WriteFile(int file, int offset, void *buffer, int size);
 void RB3E_CloseFile(int file);
 int RB3E_CreateThread(void *address, void *arg, int stack_size);
 void RB3E_Sleep(int ms);

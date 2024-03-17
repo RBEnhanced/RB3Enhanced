@@ -3,6 +3,8 @@
     Functions for interacting with the music library.
 */
 
+#ifndef RB3E_PS3
+
 #include "rb3e_include.h"
 
 void CheckForPanelAndJump(Symbol entryName, int sortType)
@@ -36,3 +38,5 @@ void MusicLibrarySelectSong(char *shortname)
     SymbolConstruct(&songname, shortname);
     CheckForPanelAndJump(songname, 4);
 }
+
+#endif

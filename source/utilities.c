@@ -3,6 +3,8 @@
     Helper functions for managing function hooks.
 */
 
+#ifndef RB3E_PS3
+
 #include "ports.h"
 #include "ppcasm.h"
 
@@ -23,3 +25,5 @@ void UnhookFunction(unsigned int OriginalAddress, unsigned int *StubFunction)
     unsigned int *stub = (unsigned int *)StubFunction;
     orig[0] = stub[0];
 }
+
+#endif // RB3E_PS3
