@@ -29,6 +29,8 @@ static char *originToIcon[][2] = {
     {"gh1", "<alt>R</alt> "},
     {"gh2", "<alt>S</alt> "},
     {"gh3", "<alt>s</alt> "},
+    {"gh", "<alt>R</alt> "},
+    {"ghdlc", "<alt>R</alt> "},
     {"onyxite", "<alt>G</alt> "},
 };
 static int numOriginToIcon = sizeof(originToIcon) / sizeof(originToIcon[0]);
