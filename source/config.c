@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #ifdef RB3E_WII
 #include <bslug.h>
 #endif
@@ -29,6 +30,9 @@ void InitDefaultConfig()
 #ifdef RB3E_WII
     // uncomment when GoCentral has a default instance that uses naswii auth
     // strcpy(config.NASServer, "naswii.rbenhanced.rocks");
+#elif RB3E_PS3
+    // uncomment when BLUS doesn't crash with this enabled
+    // config.RegionFreeDLC = 1;
 #endif
     config.SongSpeedMultiplier = 1.0;
     config.TrackSpeedMultiplier = 1.0;
@@ -47,10 +51,12 @@ static int INIHandler(void *user, const char *section, const char *name, const c
     RB3E_DEBUG("%s - %s : %s", section == NULL ? "none" : section, name, value);
     if (strcmp(section, "General") == 0)
     {
+#ifndef RB3E_PS3 // we can't use atof on PS3 because we don't have libc
         if (strcmp(name, "SongSpeedMultiplier") == 0)
             config.SongSpeedMultiplier = (float)atof(value);
         if (strcmp(name, "TrackSpeedMultiplier") == 0)
             config.TrackSpeedMultiplier = (float)atof(value);
+#endif
         if (strcmp(name, "ForcedVenue") == 0 && strcmp(value, "false") != 0)
             strncpy(config.ForcedVenue, value, RB3E_MAX_CONFIG_LEN);
         if (strcmp(name, "GameOriginIcons") == 0)
@@ -119,6 +125,12 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.STUNServer, value, RB3E_MAX_DOMAIN);
         if (strcmp(name, "STUNServerPort") == 0)
             config.STUNServerPort = atoi(value);
+    }
+#elif RB3E_PS3
+    if (strcmp(section, "PS3") == 0)
+    {
+        if (strcmp(name, "RegionFreeDLC") == 0)
+            config.RegionFreeDLC = RB3E_CONFIG_BOOL(value);
     }
 #endif
     if (strcmp(section, "Graphics") == 0)
