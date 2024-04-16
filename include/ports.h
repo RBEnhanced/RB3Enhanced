@@ -46,6 +46,8 @@
 #define PORT_LOADOBJS_BCTRL 0x827562e4          // bctrl to Object::PreLoad insie of DirLoader::LoadObjs
 #define PORT_SONGMGR_ISDEMO_CHECK 0x82575f9c    // "bne" after IsUGC check inside SongMgr::IsDemo
 #define PORT_STAGEKIT_EXISTS 0x8228d03c         // StageKit check. nop over to allow for fog command without a physical StageKit connected.
+#define PORT_VERTEX_READ_1 0x82418704           // call to Vector3::operator>> to read vertex position
+#define PORT_VERTEX_READ_2 0x82418748           // call to Vector3::operator>> to read vertex normals
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
@@ -127,6 +129,10 @@
 #define PORT_INITSONGMETADATA 0x827aa450             // InitSongMetadata
 #define PORT_UPDATEPRESENCE 0x82680430               // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x82af92b8       // Quazal::StepSequenceJob::SetStep
+#define PORT_BINSTREAMWRITE 0x827c4f58               // BinStream::Write
+#define PORT_BINSTREAMREAD 0x827c4ea8                // BinStream::Read
+#define PORT_BINSTREAMREADENDIAN 0x827c5058          // BinStream::ReadEndian
+#define PORT_BINSTREAMWRITEENDIAN 0x827c5098         // BinStream::WriteEndian
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -142,6 +148,7 @@
 #define PORT_THEMUSICLIBRARY 0x82dfd3a8     // pointer to TheMusicLibrary
 #define PORT_THEGAME 0x82e02128             // pointer to TheGame (you lost)
 #define PORT_OBJECTDIRMAINDIR 0x82e054b8    // ObjectDir::sMainDir
+#define PORT_MESH_GREV 0x82cc2638           // address of RndMesh::gRev
 // import function stubs
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c

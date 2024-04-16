@@ -28,4 +28,9 @@ struct _BinStream
     BinStream_vtable *vtable;
 };
 
+extern void BinstreamWrite(void *thisBinStream, void *data, int size);
+extern void BinstreamRead(void *thisBinStream, void *data, int size);
+extern void BinstreamReadEndian(void *thisBinStream, void *data, int size);
+extern void BinstreamWriteEndian(void *thisBinStream, void *data, int size);
+
 #endif // _BINSTREAM_H

@@ -323,6 +323,10 @@ void InitialiseFunctions()
     POKE_B(&JoypadGetPadData, PORT_JOYPADGETPADDATA);
     POKE_B(&MemAlloc, PORT_MEMALLOC);
     POKE_B(&MemFree, PORT_MEMFREE);
+    POKE_B(&BinstreamWrite, PORT_BINSTREAMWRITE);
+    POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
+    POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
+    POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -333,6 +337,8 @@ void ApplyHooks()
     POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
+    POKE_BL(PORT_VERTEX_READ_1, &VertexReadHook);
+    POKE_BL(PORT_VERTEX_READ_2, &VertexReadHook);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
     HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
     HookFunction(PORT_ADDGAMEGEM, &AddGameGem, &AddGameGemHook);
