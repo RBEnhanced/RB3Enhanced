@@ -39,9 +39,9 @@ static int numOverrideLocales = sizeof(overrideLocales) / sizeof(overrideLocales
 static char *newLocales[][2] = {
     {"mod_black_background", "Black Background"},
     {"mod_force_hopos", "Force HOPOs"},
-    {"mod_mirror_mode", "Mirror Mode (Guitar Only)"},
+    {"mod_mirror_mode", "Mirror Mode"},
     {"mod_color_shuffle", "Gem Color Shuffle"},
-};
+    {"mod_gem_shuffle", "Note Shuffle"}};
 static int numNewLocales = sizeof(newLocales) / sizeof(newLocales[0]);
 
 char RB3E_ActiveLocale[RB3E_LANG_LEN + 1] = {0};

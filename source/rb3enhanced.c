@@ -111,6 +111,7 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_force_hopos)}}");
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_mirror_mode)}}");
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_color_shuffle)}}");
+    ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_gem_shuffle)}}");
     return ModifierManagerConstructor(thisModifierManager, unk);
 }
 
@@ -337,8 +338,6 @@ void ApplyHooks()
     POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
-    POKE_BL(PORT_VERTEX_READ_1, &VertexReadHook);
-    POKE_BL(PORT_VERTEX_READ_2, &VertexReadHook);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
     HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
     HookFunction(PORT_ADDGAMEGEM, &AddGameGem, &AddGameGemHook);
@@ -372,6 +371,8 @@ void ApplyHooks()
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
+    POKE_BL(PORT_VERTEX_READ_1, &VertexReadHook);
+    POKE_BL(PORT_VERTEX_READ_2, &VertexReadHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }

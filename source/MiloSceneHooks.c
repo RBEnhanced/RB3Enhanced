@@ -71,6 +71,7 @@ object_pre_load:
 // This hook allows for GH2-360/RB1/RB2 meshes to load correctly in RB3
 void VertexReadHook(BinStream *thisBinStream, Vector3 *vec3)
 {
+#ifdef RB3E_XBOX
     // the gRev of the current mesh
     int gRev = *(int *)PORT_MESH_GREV;
     char empty[4] = {0};
@@ -88,4 +89,5 @@ void VertexReadHook(BinStream *thisBinStream, Vector3 *vec3)
     }
 
     return;
+#endif
 }

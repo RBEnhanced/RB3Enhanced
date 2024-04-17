@@ -61,6 +61,7 @@
 #define PORT_SYMBOL_CT 0x827c0728                    // Symbol::Symbol
 #define PORT_LOCALIZE 0x827c96d8                     // Locale::Localize
 #define PORT_ADDGAMEGEM 0x8278e530                   // GameGemList::AddGameGem
+#define PORT_SONGDATAADDMULTIGEM 0x827719b0          // SongData::AddMultiGem
 #define PORT_WILLBENOSTRUM 0x8278cbb0                // GameGemList::WillBeNoStrum
 #define PORT_SETVENUE 0x8257d1c0                     // MetaPerformer::SetVenue(?) (actual func name is not known)
 #define PORT_ISUGCPLUS 0x8259e890                    // function that checks song source(?)
@@ -255,6 +256,10 @@ void DbgPrint(const char *s, ...);
 #define PORT_INITSONGMETADATA 0x805147a4         // InitSongMetadata
 #define PORT_UPDATEPRESENCE 0x801879d4           // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x80025364   // Quazal::StepSequenceJob::SetStep
+#define PORT_BINSTREAMWRITE 0x80342f48           // BinStream::Write
+#define PORT_BINSTREAMREAD 0x80342e7c            // BinStream::Read
+#define PORT_BINSTREAMREADENDIAN 0x803430bc      // BinStream::ReadEndian
+#define PORT_BINSTREAMWRITEENDIAN 0x80343190     // BinStream::WriteEndian
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
