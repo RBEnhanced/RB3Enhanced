@@ -331,6 +331,48 @@ void InitialiseFunctions()
     RB3E_MSG("Functions initialized!", NULL);
 }
 
+void ApplyCrossplayHooks()
+{
+    // we need to hook the function that gets the MessageBroker's ID so we can ensure its the same on Wii and 360
+    HookFunction(PORT_MESSAGEBROKERDDL, &MessageBrokerDDL, &MessageBrokerDDLHook);
+
+#ifdef RB3E_WII // wii exclusive hooks
+
+    HookFunction(PORT_PROPSYNCBOOL, &PropSyncBool, &PropSyncBoolHook); // hook to restore Wii venue intros for crossplay
+
+    // kill voice chat registration (for now, we shouldn't sacrifice voice chat in the final version)
+    // likely we can do some hooks for getting/setting the IDs for these so they are safely out of the range that 360 would ever use
+    // so wiis can still use and exchange voice chat packets, but 360 will just ignore them
+    POKE_32(0x80087164, NOP);
+    POKE_32(0x80087188, NOP);
+    POKE_32(0x800871ac, NOP);
+    POKE_32(0x800871d0, NOP);
+    POKE_32(0x800871f4, NOP);
+    POKE_32(0x80087218, NOP);
+    POKE_32(0x8008723c, NOP);
+    POKE_32(0x80087260, NOP);
+
+    // kill flow request registration (its completely unused anyway, not sure what the purpose was)
+    POKE_32(0x8021f974, NOP);
+
+    // change Quazal RV short version to match PS3/360
+    POKE_32(0x8007b3d4, LI(6, 0x1b0));
+
+    // disable forced video venues when hosting online on wii
+    POKE_32(0x80228390, NOP);
+
+#elif RB3E_XBOX
+    // do not include an XnAddr in certain packets
+    // TODO: ensure that two 360s can still connect to each other without this
+    POKE_32(0x823f15f8, NOP);
+    POKE_32(0x823f1608, NOP);
+
+    // massaging to make the Xbox packets look like Wii
+    POKE_32(0x825245bc, LI(5, 4)); // OnlineID::operator>> patch to make the OnlineID save only 4 bytes like Wii
+    POKE_32(0x825245fc, LI(5, 4)); // OnlineID::operator<< patch to make the OnlineID read only 4 bytes like Wii
+#endif
+}
+
 void ApplyHooks()
 {
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
@@ -384,6 +426,7 @@ void StartupHook(void *ThisApp, int argc, char **argv)
     InitialiseFunctions();
     ApplyPatches();
     ApplyHooks();
+    ApplyCrossplayHooks();
     // initialise the default config state
     InitDefaultConfig();
     // if the launcher's passed a config, try to load it

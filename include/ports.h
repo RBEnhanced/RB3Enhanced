@@ -134,6 +134,7 @@
 #define PORT_BINSTREAMREAD 0x827c4ea8                // BinStream::Read
 #define PORT_BINSTREAMREADENDIAN 0x827c5058          // BinStream::ReadEndian
 #define PORT_BINSTREAMWRITEENDIAN 0x827c5098         // BinStream::WriteEndian
+#define PORT_MESSAGEBROKERDDL 0x823f4498             // MessageBrokerDDL
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -260,6 +261,12 @@ void DbgPrint(const char *s, ...);
 #define PORT_BINSTREAMREAD 0x80342e7c            // BinStream::Read
 #define PORT_BINSTREAMREADENDIAN 0x803430bc      // BinStream::ReadEndian
 #define PORT_BINSTREAMWRITEENDIAN 0x80343190     // BinStream::WriteEndian
+#define PORT_PROPSYNCBOOL 0x800fd3d4             // PropSync::Bool
+#define PORT_MESSAGEBROKERDDL 0x800bcbd8         // MessageBrokerDDL
+#define PORT_BANDUSERSYNCSAVE 0x800fc408         // BandUser::SyncSave
+#define PORT_USERSYNCSAVE 0x803117d4             // User::SyncSave
+#define PORT_REMOTEBANDUSERSYNCLOAD 0x800fe6fc   // RemoteBandUser::SyncLoad
+#define PORT_REMOTEUSERSYNCLOAD 0x80311f14       // RemoteUser::SyncLoad
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
