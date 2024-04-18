@@ -328,6 +328,7 @@ void InitialiseFunctions()
     POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
     POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
     POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
+    POKE_B(&BinstreamWriteLengthString, PORT_BINSTREAMWRITELENGTHSTRING);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -337,6 +338,7 @@ void ApplyCrossplayHooks()
     HookFunction(PORT_MESSAGEBROKERDDL, &MessageBrokerDDL, &MessageBrokerDDLHook);
     POKE_BL(PORT_ONLINEIDREAD, &OnlineIDReadHook);
     POKE_BL(PORT_ONLINEIDWRITE, &OnlineIDWriteHook);
+    POKE_BL(PORT_WRITEUSERNAME, &WriteUsernameHook);
 
 #ifdef RB3E_WII // wii exclusive hooks
 
