@@ -335,6 +335,8 @@ void ApplyCrossplayHooks()
 {
     // we need to hook the function that gets the MessageBroker's ID so we can ensure its the same on Wii and 360
     HookFunction(PORT_MESSAGEBROKERDDL, &MessageBrokerDDL, &MessageBrokerDDLHook);
+    POKE_BL(PORT_ONLINEIDREAD, &OnlineIDReadHook);
+    POKE_BL(PORT_ONLINEIDWRITE, &OnlineIDWriteHook);
 
 #ifdef RB3E_WII // wii exclusive hooks
 
@@ -366,10 +368,6 @@ void ApplyCrossplayHooks()
     // TODO: ensure that two 360s can still connect to each other without this
     POKE_32(0x823f15f8, NOP);
     POKE_32(0x823f1608, NOP);
-
-    // massaging to make the Xbox packets look like Wii
-    POKE_32(0x825245bc, LI(5, 4)); // OnlineID::operator>> patch to make the OnlineID save only 4 bytes like Wii
-    POKE_32(0x825245fc, LI(5, 4)); // OnlineID::operator<< patch to make the OnlineID read only 4 bytes like Wii
 #endif
 }
 

@@ -7,3 +7,16 @@ void MessageBrokerDDLHook(unsigned int doClassID)
     MessageBrokerDDL(36);
     return;
 }
+
+BinStream *OnlineIDReadHook(BinStream *thisBinStream, void *onlineID)
+{
+    BinstreamRead(thisBinStream, (void **)onlineID, 24);
+    return thisBinStream;
+}
+
+BinStream *OnlineIDWriteHook(BinStream *thisBinStream, void *onlineID)
+{
+    char empty[24] = {0};
+    BinstreamWrite(thisBinStream, (void **)&empty, 24);
+    return thisBinStream;
+}
