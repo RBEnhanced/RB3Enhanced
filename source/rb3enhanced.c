@@ -370,6 +370,7 @@ void ApplyCrossplayHooks()
     // TODO: ensure that two 360s can still connect to each other without this
     POKE_32(0x823f15f8, NOP);
     POKE_32(0x823f1608, NOP);
+    POKE_32(0x823f28bc, NOP);
 #endif
 }
 
