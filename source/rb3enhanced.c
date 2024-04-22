@@ -272,7 +272,7 @@ void ApplyConfigurablePatches()
         POKE_32(0x82a976dc, LI(8, 1));
         POKE_32(0x82a97920, NOP);
 #endif
-
+        HookFunction(PORT_NETMESSENGERDISPATCHMSG, &NetMessengerDispatchMsg, &NetMessengerDispatchMsgHook);
         HookFunction(PORT_STEPSEQUENCEJOBSETSTEP, &StepSequenceJobSetStep, &StepSequenceJobSetStepHook);
     }
 #endif
@@ -329,6 +329,7 @@ void InitialiseFunctions()
     POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
     POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
     POKE_B(&BinstreamWriteLengthString, PORT_BINSTREAMWRITELENGTHSTRING);
+    POKE_B(&NetMessageFactoryCreateNetMessage, PORT_NETMESSAGEFACTORYCREATENETMESSAGE);
     RB3E_MSG("Functions initialized!", NULL);
 }
 

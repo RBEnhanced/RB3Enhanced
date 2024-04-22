@@ -5,6 +5,7 @@
 */
 
 #include "rb3e_include.h"
+#include "rb3/BinStream.h"
 #include <string.h>
 
 // dirty hack to get the game to print Quazal debug logging out to DbgPrint/OSReport instead
@@ -23,4 +24,38 @@ int StepSequenceJobSetStepHook(int *unk, StepSequenceJobStep *step)
         RB3E_DEBUG("Quazal Job: %s", step->jobName);
     }
     return StepSequenceJobSetStep(unk, step);
+}
+
+// function is very simple so lets just completely rewrite it and also introduce additional safety checks
+void NetMessengerDispatchMsgHook(NetMessenger *thisNetMessenger, int *sender, unsigned char byteCode, BinStream *buffer)
+{
+    NetMessage *retMsg = {0};
+
+    if (thisNetMessenger == NULL)
+    {
+        RB3E_DEBUG("NetMessenger is NULL, can't dispatch message", NULL);
+        return;
+    }
+
+    if (sender == NULL)
+    {
+        RB3E_DEBUG("Sender is NULL, can't dispatch message", NULL);
+        return;
+    }
+
+    thisNetMessenger->mLastSender = *sender;
+
+    retMsg = NetMessageFactoryCreateNetMessage((void *)PORT_THENETMESSAGEFACTORY, byteCode);
+    if (retMsg == NULL)
+    {
+        RB3E_DEBUG("Failed to create NetMessage for byteCode %i", byteCode);
+        return;
+    }
+
+    RB3E_DEBUG("Dispatching NetMessage of class name %s", retMsg->vtable->name(retMsg));
+    retMsg->vtable->load(retMsg, buffer);
+    retMsg->vtable->dispatch(retMsg);
+    retMsg->vtable->destructor(retMsg, 1);
+
+    return;
 }

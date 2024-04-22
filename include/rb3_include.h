@@ -40,6 +40,8 @@
 #include "rb3/Vector.h"
 #include "quazal/InetAddress.h"
 #include "quazal/QuazalSocket.h"
+#include "quazal/NetMessenger.h"
+#include "quazal/StepSequenceJobStep.h"
 
 // rnd headers
 #include "rb3/Rnd/RndPropAnim.h"
