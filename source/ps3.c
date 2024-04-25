@@ -87,6 +87,14 @@ static bool has_usa_titleids = false;
 static bool has_eur_titleids = false;
 static bool has_registered_ids = false;
 
+int RB3E_CreateThread(void *address, void *arg, int stack_size)
+{
+    sys_ppu_thread_t thread_id;
+    if (sys_ppu_thread_create(&thread_id, address, arg, 1024, stack_size, 0, "RB3Enhanced Thread") == CELL_OK)
+        return thread_id;
+    return -1;
+}
+
 int RB3E_RelaunchGame()
 {
     char eboot_path[64];
@@ -144,12 +152,13 @@ int TitleIDRegisterHook(char *titleid, uint32_t r4)
 
         // if we are european, on our last title id, add the american ones too
         if (primary_region == 0 && r4 == NumEURTitleIDs - 1 && !has_usa_titleids && !has_registered_ids)
-            for (int i = 0; i < NumUSATitleIDs; i++)
-            {
-                RB3E_DEBUG("Registering USA title ID %s", USA_TitleIDs[i]);
-                TitleIDRegister(USA_TitleIDs[i], r4 + 1 + i);
-                has_registered_ids = true;
-            }
+            TitleIDRegister("RBEN00000", r4 + 1);
+        /*for (int i = 0; i < NumUSATitleIDs; i++)
+        {
+            RB3E_DEBUG("Registering USA title ID %s %i", USA_TitleIDs[i], r4 + 1 + i);
+            TitleIDRegister(USA_TitleIDs[i], r4 + 1 + i);
+            has_registered_ids = true;
+        }*/
 
         // if we are american, on our last title id, add the european ones too
         if (primary_region == 1 && r4 == NumUSATitleIDs - 1 && !has_eur_titleids && !has_registered_ids)
@@ -286,8 +295,14 @@ void RPCS3NotifyThread(uint64_t arg)
     }
 }
 
+int CanPlaySong()
+{
+    return 1; // lol
+}
+
 void InitCryptoHooks();
 void RegisterLDDsHook();
+void AsyncFileSTFS_InitGlobal();
 int IsUSBDeviceValid(int device, uint8_t *descriptor);
 int IsUSBDeviceValidHook(int device, uint8_t *descriptor);
 static void CTHook(void *app, int argc, char **argv)
@@ -322,8 +337,12 @@ static void CTHook(void *app, int argc, char **argv)
     POKE_PLUGIN_BL(PORT_LDDREGISTERTAIL, PLUGIN_PTR(RegisterLDDsHook));
     HookFunction(PORT_ISUSBDEVICEVALID, PLUGIN_PTR(IsUSBDeviceValid), PLUGIN_PTR(IsUSBDeviceValidHook));
 
+    POKE_PLUGIN_B(0x00391648, PLUGIN_PTR(CanPlaySong));
+
     // launch RB3Enhanced + RB3
     StartupHook(app, argc, argv);
+
+    AsyncFileSTFS_InitGlobal();
 }
 
 typedef enum _debugcheck_result

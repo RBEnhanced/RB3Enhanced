@@ -374,6 +374,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x000DD0D8 // Quazal::StepSequenceJob::SetStep
 #define PORT_CTR_DECRYPT 0x00A1FBF8            // ctr_decrypt
 #define PORT_TITLEIDREGISTER 0x008A6224        // TitleIDRegister(?) - function that gets passed title IDs at startup / config parsing
+#define PORT_CANPLAYSONG_PARENTAL 0x00391648   // broken function that checks against parental controls whether a song is playable
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x00F2B870 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x00F33948  // address of RockCentralGateway

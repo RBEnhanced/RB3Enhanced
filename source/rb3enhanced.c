@@ -61,6 +61,7 @@ void UpdatePresenceHook(void *thisPresenceMgr)
 #endif // RB3E_PS3
 
 // New file hook, for ARKless file loading
+void *AsyncFileSTFS_New(char *stfs_file_path, char *file_path);
 void *NewFileHook(char *fileName, int flags)
 {
     char *new_path = NULL;
@@ -76,6 +77,13 @@ void *NewFileHook(char *fileName, int flags)
 LOAD_ORIGINAL:
     if (config.LogFileAccess)
         RB3E_MSG("File: %s (%s)", fileName, (flags & 0x10000) ? "Raw" : "ARK");
+    /*
+    TODO: STFS discovery handling
+    if (strncmp("GD:/dev_hdd0/game/RBEN00000/USRDIR/CON0001/", fileName, 43) == 0)
+    {
+        return AsyncFileSTFS_New("/dev_hdd0/game/RBEN00000/USRDIR/example_con_file", fileName + 43);
+    }
+    */
     return NewFile(fileName, flags);
 }
 

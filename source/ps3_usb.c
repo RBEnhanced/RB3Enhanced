@@ -11,6 +11,21 @@
 #include <stdbool.h>
 #include "ports.h"
 
+// game internal struct
+typedef struct _UsbdPS3Instrument
+{
+    int usbd_device_id;
+    char unk1[0x208];
+    int usbd_intr_pipe;
+    int usbd_unk_pipe_1;
+    int usbd_control_pipe;
+    int usbd_unk_pipe_2;
+    short read_len;
+    char unk2[0x112];
+    int pad_ldd_handle;
+    char controller_data[0x20]; // no clue how big this is honestly fuck it yolo swag
+} UsbdPS3Instrument;
+
 #define LE16(i) (((((i) & 0xFF) << 8) | (((i) >> 8) & 0xFF)) & 0xFFFF)
 
 static int stagekit_device_id = -1;
@@ -114,15 +129,16 @@ int IsUSBDeviceValid(int device, UsbDeviceDescriptor *descriptor);
 int IsUSBDeviceValidHook(int device, UsbDeviceDescriptor *descriptor)
 {
     RB3E_DEBUG("USB Instrument - VID: %02x - PID: %02x", LE16(descriptor->idVendor), LE16(descriptor->idProduct));
+
+#define SWAP_INSTRUMENT(old_pid, new_pid)       \
+    if (descriptor->idProduct == LE16(old_pid)) \
+    descriptor->idProduct = LE16(new_pid)
+
     if (descriptor->idVendor == LE16(0x1BAD)) // Harmonix Music Systems
     {
         // don't patch it everywhere, instead just change the descriptor in-memory
         // all real sneaky style :eye:
         descriptor->idVendor = LE16(0x12BA); // Sony Computer Entertainment
-
-#define SWAP_INSTRUMENT(wii_pid, ps3_pid)       \
-    if (descriptor->idProduct == LE16(wii_pid)) \
-    descriptor->idProduct = LE16(ps3_pid)
 
         SWAP_INSTRUMENT(0x0004, 0x0200); // RB1 Guitar
         SWAP_INSTRUMENT(0x3010, 0x0200); // RB2 Guitar
