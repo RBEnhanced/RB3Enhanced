@@ -41,7 +41,8 @@ static char *newLocales[][2] = {
     {"mod_force_hopos", "Force HOPOs"},
     {"mod_mirror_mode", "Mirror Mode"},
     {"mod_color_shuffle", "Gem Color Shuffle"},
-    {"mod_gem_shuffle", "Note Shuffle"}};
+    {"mod_gem_shuffle", "Note Shuffle"},
+    {"mod_double_bass", "Double Bass Pedal"}};
 static int numNewLocales = sizeof(newLocales) / sizeof(newLocales[0]);
 
 char RB3E_ActiveLocale[RB3E_LANG_LEN + 1] = {0};

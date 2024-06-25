@@ -15,7 +15,7 @@
 #define RB3E_STUB(x)           \
     __declspec(naked) void x() \
     {                          \
-        __asm { li r3, __LINE__ }     \
+        __asm { li r3, __LINE__ }      \
     }
 #else // other platforms should use GCC notation
 #define RB3E_STUB(x)                   \
@@ -96,3 +96,4 @@ RB3E_STUB(BinstreamWrite)
 RB3E_STUB(BinstreamRead)
 RB3E_STUB(BinstreamReadEndian)
 RB3E_STUB(BinstreamWriteEndian)
+RB3E_STUB(SongParserPitchToSlot)

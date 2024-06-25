@@ -42,6 +42,7 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.forceHopos, "mod_force_hopos");
     SymbolConstruct(&globalSymbols.mirrorMode, "mod_mirror_mode");
     SymbolConstruct(&globalSymbols.gemShuffle, "mod_gem_shuffle");
+    SymbolConstruct(&globalSymbols.doubleBass, "mod_double_bass");
 
     SymbolConstruct(&globalSymbols.greenGem, "gem_green.wid");
     SymbolConstruct(&globalSymbols.redGem, "gem_red.wid");

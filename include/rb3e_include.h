@@ -25,6 +25,7 @@
 #include "RndPropAnimHooks.h"
 #include "SetlistHooks.h"
 #include "SongHooks.h"
+#include "SongParserHooks.h"
 #include "SongSort.h"
 #include "SpeedHooks.h"
 #include "utilities.h"
