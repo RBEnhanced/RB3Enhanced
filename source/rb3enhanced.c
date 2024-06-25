@@ -240,8 +240,8 @@ void ApplyConfigurablePatches()
     if (config.UnlockClothing == 1)
     {
         // Unlocks all clothing, tattoos, face paint, and video venues
-        // TODO: Figure out what marks items as locked in the UI and patch that as well, right now it still shows them as locked
-        POKE_32(PORT_CHARACTER_CLOTHES_CHECK, NOP);
+        POKE_32(PORT_CHARACTER_CLOTHES_CHECK, LI(3, 1));
+        POKE_32(PORT_CHARACTER_CLOTHES_CHECK2, BLR);
         POKE_32(PORT_TATTOO_CHECK, LI(3, 1));
         POKE_32(PORT_FACE_PAINT_CHECK, LI(3, 1));
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
