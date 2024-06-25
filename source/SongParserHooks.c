@@ -1,5 +1,5 @@
 /*
-    RB3Enhanced - SongHooks.c
+    RB3Enhanced - SongParserHooks.c
     Hooks related to the parsing of song MIDIs.
 */
 
@@ -12,7 +12,9 @@
 int SongParserPitchToSlotHook(SongParser *thisSongParser, int pitch, int *difficulty, int tick)
 {
     Modifier *doubleBassModifier;
+    int ret;
 
+    ret = SongParserPitchToSlot(thisSongParser, pitch, difficulty, tick);
     doubleBassModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.doubleBass, 0);
 
     // only read the notes when double bass pedal modifier is on
@@ -35,5 +37,5 @@ int SongParserPitchToSlotHook(SongParser *thisSongParser, int pitch, int *diffic
         }
     }
 
-    return SongParserPitchToSlot(thisSongParser, pitch, difficulty, tick);
+    return ret;
 }
