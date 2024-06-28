@@ -253,7 +253,6 @@ static int STFS_FindFileEntry(int file_fd, STFSHeader header, char *file_path, S
         // HACK: filename rewrites for PS3 compatibility
         if (!looking_for_dir)
         {
-            // milo_ps3 is the same length as mid.edat so we take that optimisation
             // game requests .milo_ps3 -> stfs looks up .milo_xbox
             // game requests .mid.edat -> stfs looks up .mid
             // game requests .png_ps3 -> stfs looks up .png_xbox

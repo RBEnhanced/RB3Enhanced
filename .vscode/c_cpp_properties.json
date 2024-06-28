@@ -40,7 +40,7 @@
             "name": "PS3",
             "includePath": [
                 "${workspaceFolder}/include",
-                "${PS3SDKTARGET}/include"
+                "${PS3SDKTARGET}/ppu/include"
             ],
             "defines": [
                 "_DEBUG",
