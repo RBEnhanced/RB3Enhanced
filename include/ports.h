@@ -49,6 +49,8 @@
 #define PORT_STAGEKIT_EXISTS 0x8228d03c          // StageKit check. nop over to allow for fog command without a physical StageKit connected.
 #define PORT_VERTEX_READ_1 0x82418704            // call to Vector3::operator>> to read vertex position
 #define PORT_VERTEX_READ_2 0x82418748            // call to Vector3::operator>> to read vertex normals
+#define PORT_MULTIPLAYER_CRASH 0x82ae6880        // branch to a function that can crash in online multiplayer
+#define PORT_MULTIPLAYER_FIX 0x8282b238          // the function that doesn't crash
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
@@ -197,6 +199,8 @@ void DbgPrint(const char *s, ...);
 #define PORT_MICCHECK 0x8024a4e8                 // a bne that throws an error on the song select screen if the mic is not connected
 #define PORT_BIGSYMBOLFUNC_TAIL 0x8037a3d4       // blr after a function that initialises a bunch of symbols
 #define PORT_UPDATEPRESENCEBLOCK_B 0x80188194    // branch after the failure case in a function that calls UpdatePresence
+#define PORT_MULTIPLAYER_CRASH 0x80018a78        // branch to a function that can crash in online multiplayer
+#define PORT_MULTIPLAYER_FIX 0x806ec0e8          // the function that doesn't crash
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError

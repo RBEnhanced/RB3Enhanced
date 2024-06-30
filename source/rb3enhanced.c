@@ -218,6 +218,12 @@ void ApplyPatches()
     // skips check for stagekit to allow for fog commands to be issued without a stagekit plugged in
     POKE_32(PORT_STAGEKIT_EXISTS, NOP);
 #endif
+    // fixes a crash in online multiplayer
+#ifdef RB3E_WII
+    POKE_B(PORT_MULTIPLAYER_CRASH, PORT_MULTIPLAYER_FIX);
+#else
+    POKE_BL(PORT_MULTIPLAYER_CRASH, PORT_MULTIPLAYER_FIX);
+#endif
     RB3E_MSG("Patches applied!", NULL);
 }
 
