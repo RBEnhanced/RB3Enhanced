@@ -33,3 +33,8 @@ extern int RB3E_LoadedSongCount;
 
 // Emulator detection
 int RB3E_IsEmulator();
+
+// StageKit set state, needed for fixing LED bug.
+#ifdef RB3E_XBOX
+  void StagekitSetStateHook(int state1, int state2);
+#endif
