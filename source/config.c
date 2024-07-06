@@ -74,6 +74,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.EnableEvents = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "BroadcastTarget") == 0)
             strncpy(config.BroadcastTarget, value, RB3E_MAX_DOMAIN);
+        if (strcmp(name, "SendStagekit") == 0)
+            config.SendStagekit = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "GoCentral") == 0)
     {
@@ -105,8 +107,6 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.ArtNetEnable = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "ArtNetPort") == 0)
             config.ArtNetPort = atoi(value);
-        if (strcmp(name, "ArtNetDisableSendingStageKitEvents") == 0)
-            config.ArtNetDisableSendingStageKitEvents = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "ArtNetTarget") == 0)
             strncpy(config.ArtNetTarget, value, RB3E_MAX_DOMAIN);
         if (strcmp(name, "ArtNetUniverse") == 0)

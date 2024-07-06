@@ -184,11 +184,11 @@ void StagekitSetState(int state1, int state2);
 void StagekitSetStateHook(int state1, int state2)
 {
     RB3E_EventStagekit event;
+    
     if (config.ArtNetEnable)
-    {
-        RB3E_ArtNetSend(state1, state2);        
-    }
-    if (!(config.ArtNetEnable & config.ArtNetDisableSendingStageKitEvents))
+        RB3E_ArtNetSend(state1, state2);
+      
+    if (config.SendStagekit)
     {
         event.LeftChannel = state1;
         event.RightChannel = state2;
