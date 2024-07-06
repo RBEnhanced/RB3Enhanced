@@ -167,6 +167,8 @@ void RB3E_RunLoop()
         Liveless_Poll();
     if (config.EnableUPnP)
         UPNP_Poll();
+    if (config.ArtNetEnable && framecount % 150 == 0) // Send ArtPoll every 2.5s
+        RB3E_ArtNetPoll();
 #endif
 #ifdef RB3EDEBUG
     // print out memory every 5 seconds
@@ -182,9 +184,16 @@ void StagekitSetState(int state1, int state2);
 void StagekitSetStateHook(int state1, int state2)
 {
     RB3E_EventStagekit event;
-    event.LeftChannel = state1;
-    event.RightChannel = state2;
-    RB3E_SendEvent(RB3E_EVENT_STAGEKIT, &event, sizeof(RB3E_EventStagekit));
+    if (config.ArtNetEnable)
+    {
+        RB3E_ArtNetSend(state1, state2);        
+    }
+    if (!(config.ArtNetEnable & config.ArtNetDisableSendingStageKitEvents))
+    {
+        event.LeftChannel = state1;
+        event.RightChannel = state2;
+        RB3E_SendEvent(RB3E_EVENT_STAGEKIT, &event, sizeof(RB3E_EventStagekit));
+    }
     StagekitSetState(state1, state2);
 }
 #endif
