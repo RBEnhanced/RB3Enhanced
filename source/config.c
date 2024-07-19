@@ -74,6 +74,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.EnableEvents = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "BroadcastTarget") == 0)
             strncpy(config.BroadcastTarget, value, RB3E_MAX_DOMAIN);
+        if (strcmp(name, "SendStagekit") == 0)
+            config.SendStagekit = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "GoCentral") == 0)
     {
@@ -96,6 +98,124 @@ static int INIHandler(void *user, const char *section, const char *name, const c
         if (strcmp(name, "EnableUPnP") == 0)
             config.EnableUPnP = RB3E_CONFIG_BOOL(value);
     }
+#ifdef RB3E_XBOX
+    if (strcmp(section, "Art-Net") == 0)
+    {
+        char tokenbuffer[25];
+        int loopi = 1;
+        if (strcmp(name, "ArtNetEnable") == 0)
+            config.ArtNetEnable = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "ArtNetPort") == 0)
+            config.ArtNetPort = atoi(value);
+        if (strcmp(name, "ArtNetTarget") == 0)
+            strncpy(config.ArtNetTarget, value, RB3E_MAX_DOMAIN);
+        if (strcmp(name, "ArtNetUniverse") == 0)
+            config.ArtNetUniverse = (char)atoi(value);
+        if (strcmp(name, "ArtNetGlobalBrightnessChannel") == 0)
+            config.ArtNetGlobalBrightnessChannel = (unsigned short) (atoi(value) - 1);
+        if (strcmp(name, "ArtNetGlobalBrightnessValue") == 0)
+            config.ArtNetGlobalBrightnessValue = (char)atoi(value);
+        
+        // LED translation data
+        for (; loopi <=8; loopi++)
+        {
+            sprintf(tokenbuffer, "ArtNetBlue%dChannel", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetColourTranslationChannel[0][loopi-1] = (unsigned short) (atoi(value) - 1);
+                break;
+            }
+            sprintf(tokenbuffer, "ArtNetBlue%dValue", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetColourTranslationValue[0][loopi-1] = (unsigned char)atoi(value);
+                break;
+            }
+            sprintf(tokenbuffer, "ArtNetGreen%dChannel", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetColourTranslationChannel[1][loopi-1] = (unsigned short) (atoi(value) - 1);
+                break;
+            }
+            sprintf(tokenbuffer, "ArtNetGreen%dValue", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetColourTranslationValue[1][loopi-1] = (unsigned char)atoi(value);
+                break;
+            }
+            sprintf(tokenbuffer, "ArtNetYellow%dChannel", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetColourTranslationChannel[2][loopi-1] = (unsigned short) (atoi(value) - 1);
+                break;
+            }
+            sprintf(tokenbuffer, "ArtNetYellow%dValue", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetColourTranslationValue[2][loopi-1] = (unsigned char)atoi(value);
+                break;
+            }
+            sprintf(tokenbuffer, "ArtNetRed%dChannel", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetColourTranslationChannel[3][loopi-1] = (unsigned short) (atoi(value) - 1);
+                break;
+            }
+            sprintf(tokenbuffer, "ArtNetRed%dValue", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetColourTranslationValue[3][loopi-1] = (unsigned char)atoi(value);
+                break;
+            }
+        }
+        
+        // Additive Colour (BGYR)
+        if (strcmp(name, "ArtNetAdditiveBlue") == 0)
+            config.ArtNetColourAdditive[0] = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "ArtNetAdditiveGreen") == 0)
+            config.ArtNetColourAdditive[1] = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "ArtNetAdditiveYellow") == 0)
+            config.ArtNetColourAdditive[2] = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "ArtNetAdditiveRed") == 0)
+            config.ArtNetColourAdditive[3] = RB3E_CONFIG_BOOL(value);          
+        
+        // Fog
+        if (strcmp(name, "ArtNetFogChannel") == 0)
+            config.ArtNetFogChannel = (unsigned short) (atoi(value) - 1);
+        if (strcmp(name, "ArtNetFogValue") == 0)
+            config.ArtNetFogValue = (char)atoi(value);
+
+        // Strobe
+        if (strcmp(name, "ArtNetStrobeRateChannel") == 0)
+            config.ArtNetStrobeRateChannel = (unsigned short) (atoi(value) - 1);
+        if (strcmp(name, "ArtNetStrobeIntensityChannel") == 0)
+            config.ArtNetStrobeIntensityChannel = (unsigned short) (atoi(value) - 1);
+        if (strcmp(name, "ArtNetStrobeDurationChannel") == 0)
+            config.ArtNetStrobeDurationChannel = (unsigned short) (atoi(value) - 1);
+          
+        for (loopi = 1; loopi <=4; loopi++)
+        {
+            sprintf(tokenbuffer, "ArtNetStrobeRate%d", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetStrobeRate[loopi-1] = (unsigned char)atoi(value);
+                break;
+            }
+            sprintf(tokenbuffer, "ArtNetStrobeIntensity%d", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetStrobeIntensity[loopi-1] = (unsigned char)atoi(value);
+                break;
+            }
+            sprintf(tokenbuffer, "ArtNetStrobeDuration%d", loopi);
+            if (strcmp(name, tokenbuffer) == 0)
+            {
+                config.ArtNetStrobeDuration[loopi-1] = (unsigned char)atoi(value);
+                break;
+            }
+        }
+    }
+#endif
 #ifdef RB3E_WII
     if (strcmp(section, "Wii") == 0)
     {
