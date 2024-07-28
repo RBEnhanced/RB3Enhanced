@@ -14,6 +14,7 @@
 #include "MiloSceneHooks.h"
 #include "MusicLibrary.h"
 #include "net_events.h"
+#include "net_art-net.h"
 #include "net_natpmp.h"
 #include "net_liveless_online.h"
 #include "net.h"

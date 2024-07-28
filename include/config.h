@@ -52,6 +52,25 @@ typedef struct _RB3E_Config
     char ExternalIP[RB3E_MAX_IP_LEN];
     char STUNServer[RB3E_MAX_DOMAIN];
     int STUNServerPort;
+    // [Art-Net]
+    char ArtNetEnable;
+    int  ArtNetPort;
+    char ArtNetDisableSendingStageKitEvents;
+    char ArtNetTarget[RB3E_MAX_DOMAIN];
+    unsigned char ArtNetUniverse;
+    unsigned short ArtNetGlobalBrightnessChannel;
+    unsigned char ArtNetGlobalBrightnessValue;
+    unsigned short ArtNetColourTranslationChannel[4][8];  // Colour (BGYR) | LED number | Channel
+    unsigned char ArtNetColourTranslationValue[4][8];  // Colour (BGYR) | LED number | Value
+    unsigned char ArtNetColourAdditive[4];
+    unsigned short ArtNetFogChannel;
+    unsigned char ArtNetFogValue;
+    unsigned short ArtNetStrobeRateChannel;
+    unsigned short ArtNetStrobeIntensityChannel;
+    unsigned short ArtNetStrobeDurationChannel;
+    unsigned char ArtNetStrobeRate[4];
+    unsigned char ArtNetStrobeIntensity[4];
+    unsigned char ArtNetStrobeDuration[4];
 #elif RB3E_WII
     // [Wii]
     char NASServer[RB3E_MAX_DOMAIN];
