@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>RB3Enhanced</title>
+	<meta name="viewport" content="width=device-width"></meta>
+	<style>
+/* font choice */
+* {
+	font-family: "Century Gothic", sans-serif;
+}
+/* disable browser margin */
+body {
+	margin: 0;
+}
+/* header */
+.header {
+	background-color: cornflowerblue;
+	color: white;
+	text-align: center;
+	padding: 20px;
+	margin-bottom: 20px;
+}
+.header h1 {
+	font-size: 24px;
+	margin-top: 0px;
+	margin-bottom: 10px;
+}
+
+/* songs table */
+.songlist {
+	border-style: solid;
+	border-width: 1px;
+	border-color: gray;
+	border-radius: 7.5px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.stb td {
+	border-bottom: 1px solid gray;
+}
+.sinfo {
+	padding: 12px;
+}
+.sname {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+.sbuttons {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	float: right;
+}
+/* buttons/links */
+.button {
+	text-decoration: none;
+	padding: 7.5px;
+	border-radius: 7.5px;
+	border-style: solid;
+	border-width: 1px;
+	white-space: nowrap;
+}
+.bmain {
+	color: white;
+	background-color: cornflowerblue;
+	border-color: white;
+	transition: all .2s;
+}
+.bmain:hover {
+	background-color: blue;
+}
+.balt {
+	color: cornflowerblue;
+	background-color: white;
+	border-color: cornflowerblue;
+	transition: all .2s;
+}
+.balt:hover {
+	color: blue;
+	border-color: blue;
+}
+.textbox {
+	text-decoration: none;
+	padding: 7.5px;
+	border-radius: 7.5px;
+	border-style: solid;
+	border-width: 1px;
+	white-space: nowrap;
+}
+/* dark mode! */
+@media (prefers-color-scheme: dark) {
+	body {
+		color: mintcream;
+		background-color: darkslategray;
+	}
+	.balt {
+		background-color: #333333;
+	}
+	.textbox {
+		color: mintcream;
+		background-color: #333333;
+	}
+	.balt:hover {
+		color: mintcream;
+		border-color: mintcream;
+	}
+}
+	</style>
+	<script>
+function ParseListINI(data){
+    var regex = {
+        section: /^\s*\[\s*([^\]]*)\s*\]\s*$/,
+        param: /^\s*([^=]+?)\s*=\s*(.*?)\s*$/
+    };
+    var song_list_parsed = [];
+    var lines = data.split(/[\r\n]+/);
+    var song_num = -1;
+	for (var i = 0; i < lines.length; i++) {
+		const line = lines[i];
+        if (regex.param.test(line)){
+            var match = line.match(regex.param);
+			song_list_parsed[song_num][match[1]] = match[2];
+        } else if (regex.section.test(line)){
+			song_list_parsed.push({});
+			song_num++;
+        }
+	}
+    return song_list_parsed;
+}
+var song_list = [];
+function ClearList() {
+	document.getElementById("songlisttable").innerHTML = "";
+}
+function AddSongCountToList(num) {
+	const row = document.createElement("tr");
+	const sinfo = document.createElement("td");
+	const center = document.createElement("center");
+	center.appendChild(document.createTextNode(`Showing ${num} songs!`));
+	sinfo.appendChild(center);
+	sinfo.className = "sinfo";
+	row.className = "stb";
+	row.appendChild(sinfo);
+	document.getElementById("songlisttable").prepend(row);
+}
+function AddSongToList(song) {
+	const row = document.createElement("tr");
+	const sinfo = document.createElement("td");
+	const h3 = document.createElement("h3");
+	const span = document.createElement("span");
+	const sbuttons = document.createElement("div");
+	const button = document.createElement("button");
+	button.appendChild(document.createTextNode("Play"));
+	button.onclick = ()=>{ JumpToSong(song.shortname); };
+	button.className = "button bmain";
+	sbuttons.className = "sbuttons";
+	sinfo.className = "sinfo";
+	h3.className = "sname";
+	h3.appendChild(document.createTextNode(song.title));
+	span.appendChild(document.createTextNode(song.artist));
+	sbuttons.appendChild(button);
+	sinfo.appendChild(h3);
+	sinfo.appendChild(span);
+	sinfo.appendChild(sbuttons);
+	row.className = "stb";
+	row.appendChild(sinfo);
+	document.getElementById("songlisttable").appendChild(row);
+}
+function ParseSongList(listini) {
+	song_list = ParseListINI(listini);
+	ClearList();
+	song_list.forEach((song) => {
+		AddSongToList(song);
+	});
+	AddSongCountToList(song_list.length);
+}
+function FetchSongList() {
+	document.getElementById("songlistbutton").style.display = "none";
+	document.getElementById("songloadingbox").style.display = "block";
+	fetch('/list_songs').then((data) => data.text().then((t) => ParseSongList(t)));
+}
+function JumpToSong(shortname) {
+	fetch(`/jump?shortname=${shortname}`);
+}
+function DoSearch() {
+	ClearList();
+	const search_term = document.getElementById("searchbox").value.toLowerCase();
+	var loaded_songs = 0;
+	song_list.forEach((song) => {
+		if (song.title.toLowerCase().includes(search_term) || song.artist.toLowerCase().includes(search_term) || song.album.toLowerCase().includes(search_term)) {
+			AddSongToList(song);
+			loaded_songs++;
+		}
+	});
+	AddSongCountToList(loaded_songs);
+}
+	</script>
+</head>
+<body>
+	<div class="header">
+		<h1>RB3Enhanced</h1>
+		<input id="searchbox" type="text" class="textbox"></input> <button class="button balt" onclick="DoSearch()">Search</button>
+	</div>
+	<table id="songlisttable" class="songlist" cellspacing="0">
+		<tr id="songlistbutton">
+			<td class="sinfo">
+				<center>
+					<button class="button bmain" onclick="FetchSongList()">Load Song List</button><br>
+					<small>(Don't press this until you're in the Music Library!)</small>
+				</center>
+			</td>
+		</tr>
+		<tr id="songloadingbox" style="display: none;">
+			<td class="sinfo">
+				<center>
+					<small>Loading... this may take a while!</small>
+				</center>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
