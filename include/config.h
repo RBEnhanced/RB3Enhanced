@@ -38,6 +38,7 @@ typedef struct _RB3E_Config
     // [GoCentral]
     char EnableGoCentral;
     char GoCentralAddress[RB3E_MAX_DOMAIN];
+    char UseCrossplayNetcode;
     // [Network]
     char EnableNATPMP;
     char EnableUPnP;

@@ -81,6 +81,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.EnableGoCentral = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "GoCentralAddress") == 0)
             strncpy(config.GoCentralAddress, value, RB3E_MAX_CONFIG_LEN);
+        if (strcmp(name, "UseCrossplayNetcode") == 0)
+            config.UseCrossplayNetcode = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "HTTP") == 0)
     {

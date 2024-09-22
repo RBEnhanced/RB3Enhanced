@@ -246,6 +246,11 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
     }
 
+    if (config.UseCrossplayNetcode == 1)
+    {
+        ApplyCrossplayHooks();
+    }
+
 #ifdef RB3EDEBUG
     if (config.QuazalLogging == 1)
     {
@@ -440,7 +445,7 @@ void StartupHook(void *ThisApp, int argc, char **argv)
     InitialiseFunctions();
     ApplyPatches();
     ApplyHooks();
-    ApplyCrossplayHooks();
+
     // initialise the default config state
     InitDefaultConfig();
     // if the launcher's passed a config, try to load it
