@@ -72,6 +72,9 @@ typedef struct _GlobalSymbols
     Symbol overshell_drums_pro;
     Symbol overshell_vocal_solo;
     Symbol overshell_vocal_harmony;
+
+    // crossplay region
+    Symbol crossplay;
 } GlobalSymbols;
 
 extern GlobalSymbols globalSymbols;

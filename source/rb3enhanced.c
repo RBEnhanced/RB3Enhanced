@@ -362,6 +362,8 @@ void ApplyCrossplayHooks()
 
     HookFunction(PORT_PROPSYNCBOOL, &PropSyncBool, &PropSyncBoolHook); // hook to restore Wii venue intros for crossplay
 
+    HookFunction(0x803093e8, &PlatformRegionToSymbol, &PlatformRegionToSymbolHook); // hook to change the region to crossplay
+
     // comp note: commented this out, for crossplay to work on 360 this will need to be re-added
     // 360 does not have voice chat through quazal stuff, so we'll need to fix up the ids for every non-voice chat duplicated object method on 360 so they match ps3 + wii
     // -------------------

@@ -82,5 +82,7 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.overshell_vocal_solo, "overshell_vocal_solo");
     SymbolConstruct(&globalSymbols.overshell_vocal_harmony, "overshell_vocal_harmony");
 
+    SymbolConstruct(&globalSymbols.crossplay, "crossplay");
+
     globalSymbolsInitialised = 1;
 }

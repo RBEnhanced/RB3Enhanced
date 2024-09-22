@@ -15,7 +15,7 @@
 #define RB3E_STUB(x)           \
     __declspec(naked) void x() \
     {                          \
-        __asm { li r3, __LINE__ }     \
+        __asm { li r3, __LINE__ }      \
     }
 #else // other platforms should use GCC notation
 #define RB3E_STUB(x)                   \
@@ -101,3 +101,4 @@ RB3E_STUB(MessageBrokerDDL)
 RB3E_STUB(PropSyncBool)
 RB3E_STUB(NetMessengerDispatchMsg)
 RB3E_STUB(NetMessageFactoryCreateNetMessage)
+RB3E_STUB(PlatformRegionToSymbol);

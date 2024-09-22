@@ -41,3 +41,15 @@ BinStream *WriteUsernameHook(BinStream *thisBinStream, char *username)
     newUsername[sizeof(newUsername) - 1] = '\0';
     BinstreamWriteLengthString(thisBinStream, newUsername);
 }
+
+Symbol PlatformRegionToSymbolHook(int region)
+{
+    if (config.UseCrossplayNetcode == 1)
+    {
+        return globalSymbols.crossplay;
+    }
+    else
+    {
+        return PlatformRegionToSymbol(region);
+    }
+}
