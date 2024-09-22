@@ -335,27 +335,39 @@ void InitialiseFunctions()
 
 void ApplyCrossplayHooks()
 {
-    // we need to hook the function that gets the MessageBroker's ID so we can ensure its the same on Wii and 360
-    HookFunction(PORT_MESSAGEBROKERDDL, &MessageBrokerDDL, &MessageBrokerDDLHook);
+    // patches so DDLs get registered with the same IDs on all platforms
+    // these could be anything in theory, but use the values from PS3/Wii
+    POKE_32(PORT_MESSAGEBROKERDDL, LI(3, 0x24));
+    POKE_32(PORT_IDGENERATORDDL, LI(3, 0x05));
+    POKE_32(PORT_PROMOTIONREFEREEDDL, LI(3, 0x06));
+    POKE_32(PORT_ROOTDODDL, LI(3, 0x02));
+    POKE_32(PORT_SESSIONDDL, LI(3, 0x04));
+    POKE_32(PORT_STATIONDDL, LI(3, 0x03));
+    POKE_32(PORT_SESSIONCLOCKDDL, LI(3, 0x12));
+    POKE_32(PORT_DEFAULTCELLDDL, LI(3, 0x0c));
+
     POKE_BL(PORT_ONLINEIDREAD, &OnlineIDReadHook);
     POKE_BL(PORT_ONLINEIDWRITE, &OnlineIDWriteHook);
     POKE_BL(PORT_WRITEUSERNAME, &WriteUsernameHook);
 
 #ifdef RB3E_WII // wii exclusive hooks
 
+    // voice chat is only on wii, so no need to change it for 360
+    POKE_32(PORT_VOICECHANNELDDL, LI(3, 0x18));
+
     HookFunction(PORT_PROPSYNCBOOL, &PropSyncBool, &PropSyncBoolHook); // hook to restore Wii venue intros for crossplay
 
-    // kill voice chat registration (for now, we shouldn't sacrifice voice chat in the final version)
-    // likely we can do some hooks for getting/setting the IDs for these so they are safely out of the range that 360 would ever use
-    // so wiis can still use and exchange voice chat packets, but 360 will just ignore them
-    POKE_32(0x80087164, NOP);
-    POKE_32(0x80087188, NOP);
-    POKE_32(0x800871ac, NOP);
-    POKE_32(0x800871d0, NOP);
-    POKE_32(0x800871f4, NOP);
-    POKE_32(0x80087218, NOP);
-    POKE_32(0x8008723c, NOP);
-    POKE_32(0x80087260, NOP);
+    // comp note: commented this out, for crossplay to work on 360 this will need to be re-added
+    // 360 does not have voice chat through quazal stuff, so we'll need to fix up the ids for every non-voice chat duplicated object method on 360 so they match ps3 + wii
+    // -------------------
+    // POKE_32(0x80087164, NOP);
+    // POKE_32(0x80087188, NOP);
+    // POKE_32(0x800871ac, NOP);
+    // POKE_32(0x800871d0, NOP);
+    // POKE_32(0x800871f4, NOP);
+    // POKE_32(0x80087218, NOP);
+    // POKE_32(0x8008723c, NOP);
+    // POKE_32(0x80087260, NOP);
 
     // kill flow request registration (its completely unused anyway, not sure what the purpose was)
     POKE_32(0x8021f974, NOP);

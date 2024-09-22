@@ -48,6 +48,14 @@
 #define PORT_STAGEKIT_EXISTS 0x8228d03c         // StageKit check. nop over to allow for fog command without a physical StageKit connected.
 #define PORT_VERTEX_READ_1 0x82418704           // call to Vector3::operator>> to read vertex position
 #define PORT_VERTEX_READ_2 0x82418748           // call to Vector3::operator>> to read vertex normals
+#define PORT_MESSAGEBROKERDDL 0x823f45d0        // force MessageBrokerDDL to get registered with ID 0x24
+#define PORT_IDGENERATORDDL 0x82aa04c4          // force IDGeneratorDDL to get registered with ID 0x05
+#define PORT_PROMOTIONREFEREEDDL 0x82aa04d4     // force PromotionRefereeDDL to get registered with ID 0x06
+#define PORT_ROOTDODDL 0x82aa04e0               // force RootDODDL to get registered with ID 0x02
+#define PORT_SESSIONDDL 0x82aa04f0              // force SessionDDL to get registered with ID 0x04
+#define PORT_STATIONDDL 0x82aa0500              // force StationDDL to get registered with ID 0x03
+#define PORT_SESSIONCLOCKDDL 0x82b267dc         // force SessionClockDDL to get registered with ID 0x12
+#define PORT_DEFAULTCELLDDL 0x82b2674c          // force DefaultCellDDL to get registered with ID 0x0c
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                      // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                           // App::Run
@@ -135,7 +143,6 @@
 #define PORT_BINSTREAMREADENDIAN 0x827c5058               // BinStream::ReadEndian
 #define PORT_BINSTREAMWRITEENDIAN 0x827c5098              // BinStream::WriteEndian
 #define PORT_BINSTREAMWRITELENGTHSTRING 0x827c5100        // BinStream::WriteLengthString
-#define PORT_MESSAGEBROKERDDL 0x823f4498                  // MessageBrokerDDL
 #define PORT_ONLINEIDREAD 0x82523e80                      // OnlineID::operator<<
 #define PORT_ONLINEIDWRITE 0x82523a24                     // OnlineID::operator>>
 #define PORT_WRITEUSERNAME 0x82523a18                     // BinStream::WriteLengthString call that writes username into userdata
@@ -202,6 +209,15 @@ void DbgPrint(const char *s, ...);
 #define PORT_MICCHECK 0x8024a4e8                // a bne that throws an error on the song select screen if the mic is not connected
 #define PORT_BIGSYMBOLFUNC_TAIL 0x8037a3d4      // blr after a function that initialises a bunch of symbols
 #define PORT_UPDATEPRESENCEBLOCK_B 0x80188194   // branch after the failure case in a function that calls UpdatePresence
+#define PORT_MESSAGEBROKERDDL 0x800bc4bc        // force MessageBrokerDDL to get registered with ID 36
+#define PORT_IDGENERATORDDL 0x80053efc          // force IDGeneratorDDL to get registered with ID 0x05
+#define PORT_PROMOTIONREFEREEDDL 0x80053f08     // force PromotionRefereeDDL to get registered with ID 0x06
+#define PORT_ROOTDODDL 0x80053f10               // force RootDODDL to get registered with ID 0x02
+#define PORT_SESSIONDDL 0x80053f1c              // force SessionDDL to get registered with ID 0x04
+#define PORT_STATIONDDL 0x80053f28              // force StationDDL to get registered with ID 0x03
+#define PORT_SESSIONCLOCKDDL 0x80083768         // force SessionClockDDL to get registered with ID 0x12
+#define PORT_DEFAULTCELLDDL 0x8007e004          // force DefaultCellDDL to get registered with ID 0x0c
+#define PORT_VOICECHANNELDDL 0x80088a34
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c                      // PlatformMgr::SetDiskError
@@ -270,7 +286,6 @@ void DbgPrint(const char *s, ...);
 #define PORT_BINSTREAMWRITEENDIAN 0x80343190              // BinStream::WriteEndian
 #define PORT_BINSTREAMWRITELENGTHSTRING 0x80342ad8        // BinStream::WriteLengthString
 #define PORT_PROPSYNCBOOL 0x800fd3d4                      // PropSync::Bool
-#define PORT_MESSAGEBROKERDDL 0x800bcbd8                  // MessageBrokerDDL
 #define PORT_BANDUSERSYNCSAVE 0x800fc408                  // BandUser::SyncSave
 #define PORT_USERSYNCSAVE 0x803117d4                      // User::SyncSave
 #define PORT_REMOTEBANDUSERSYNCLOAD 0x800fe6fc            // RemoteBandUser::SyncLoad
