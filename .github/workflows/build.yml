@@ -30,7 +30,7 @@ jobs:
           make wii -j2 DEBUG=1
 
       - name: Upload binaries (debug)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with: 
           name: RB3Enhanced-Wii-Debug
           path: out/RB3Enhanced.mod
@@ -41,7 +41,7 @@ jobs:
           make wii -j2
 
       - name: Upload binaries (no-debug)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with: 
           name: RB3Enhanced-Wii-NoDebug
           path: out/RB3Enhanced.mod
@@ -72,7 +72,7 @@ jobs:
           make xbox -j2 DEBUG=1
 
       - name: Upload binaries (debug)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with: 
           name: RB3Enhanced-Xbox-Debug
           path: out/RB3Enhanced.dll
@@ -85,7 +85,7 @@ jobs:
           make xbox -j2
 
       - name: Upload binaries (no-debug)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with: 
           name: RB3Enhanced-Xbox-NoDebug
           path: out/RB3Enhanced.dll
