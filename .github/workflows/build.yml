@@ -19,7 +19,7 @@ jobs:
 
       - name: Install BrainSlug
         run: | 
-          git clone https://github.com/Chadderz121/brainslug-wii
+          git clone -b atof https://github.com/InvoxiPlayGames/brainslug-wii.git
           cd brainslug-wii
           make install
           cd ..
