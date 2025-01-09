@@ -117,11 +117,11 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
 }
 
 // a TextStream object that prints straight to RB3E_DEBUG
-void DebugTextStreamDestructor(void *thisTextStream)
+void DebugTextStreamDestructor(TextStream *thisTextStream)
 {
     // not dynamically allocating anything, can't be a destructor
 }
-void DebugTextStreamPrint(void *thisTextStream, char *text)
+void DebugTextStreamPrint(TextStream *thisTextStream, char *text)
 {
 #ifdef RB3E_XBOX
     // HACK(Emma): retail xbdm doesn't like newlines.

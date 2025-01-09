@@ -34,8 +34,9 @@ void LoadObj(Object *object, BinStream *stream)
     if (strlen(origPath) + strlen(object->name) - 20 > sizeof(newPath))
         goto object_pre_load;
     strncpy(newPath, origPath, strlen(origPath) - 10);
-    strncat(newPath, "/", 1);
-    strncat(newPath, object->name, strlen(object->name));
+    // HACK(Emma): we don't have strncat on Wii so just strcat. THIS IS NOT SAFE!
+    strcat(newPath, "/");          //, 1);
+    strcat(newPath, object->name); //, strlen(object->name));
 
     replacementPath = RB3E_GetRawfilePath(newPath, 0);
     if (replacementPath != NULL)
@@ -56,7 +57,7 @@ void LoadObj(Object *object, BinStream *stream)
         // not sure if this is 100% necessary, but cannot hurt
         fileStream.vtable->seekImpl(&fileStream, 0, 0);
 
-        object->table->preLoad(object, &fileStream);
+        object->table->preLoad(object, (BinStream *)&fileStream);
 
         // destroy the FileStream so we do not leak memory
         fileStream.vtable->destructor(&fileStream, 0);
