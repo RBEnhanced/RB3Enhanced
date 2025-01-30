@@ -217,6 +217,9 @@ void ApplyPatches()
 
     // skips check for stagekit to allow for fog commands to be issued without a stagekit plugged in
     POKE_32(PORT_STAGEKIT_EXISTS, NOP);
+
+    // just blr instead of actually triggering the breakpoint
+    POKE_32(PORT_QUAZAL_BREAKPOINT, BLR);
 #endif
     // fixes a crash in online multiplayer
 #ifdef RB3E_WII
