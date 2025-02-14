@@ -88,6 +88,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.EnableHTTPServer = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "AllowCORS") == 0)
             config.AllowCORS = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "AllowScripts") == 0)
+            config.AllowScripts = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "Network") == 0)
     {

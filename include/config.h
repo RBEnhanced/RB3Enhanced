@@ -44,6 +44,7 @@ typedef struct _RB3E_Config
     // [HTTP]
     char EnableHTTPServer;
     char AllowCORS;
+    char AllowScripts;
 #ifdef RB3E_XBOX
     // [Xbox360]
     char EnableLiveless;
