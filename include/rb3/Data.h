@@ -7,7 +7,7 @@ typedef union _DataNode_Value
 {
     int intVal;
     float floatVal;
-    int *dataArray;
+    void *dataArray;
     int *object;
     char *string;
 } DataNode_Value;
@@ -69,5 +69,11 @@ extern DataArray *DataReadFile(char *file, int dtb);
 
 extern DataArray *DataFindArray(DataArray *data, Symbol name);
 extern int DataFindData(DataArray *data, Symbol name, DataNode *out);
+
+extern DataNode *DataSet(DataNode *ret, DataArray *array);
+extern DataNode *DataSetElem(DataNode *ret, DataArray *array);
+extern DataNode *DataOnElem(DataNode *ret, DataArray *array);
+
+extern void *DataNodeGetObj(DataNode *node);
 
 #endif // _DATA_H

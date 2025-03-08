@@ -4,6 +4,7 @@
 #include "rb3_include.h"
 #include "config.h"
 #include "crc32.h"
+#include "DataDebug.h"
 #include "DTAFunctions.h"
 #include "GameHooks.h"
 #include "GemHooks.h"

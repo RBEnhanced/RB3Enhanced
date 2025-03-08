@@ -139,6 +139,10 @@
 #define PORT_BINSTREAMREADENDIAN 0x827c5058          // BinStream::ReadEndian
 #define PORT_BINSTREAMWRITEENDIAN 0x827c5098         // BinStream::WriteEndian
 #define PORT_SONGPARSERPITCHTOSLOT 0x82783c20        // SongParser::PitchToSlot
+#define PORT_DATASET 0x8275d670                      // DataSet
+#define PORT_DATASETELEM 0x82760b38                  // DataSetElem
+#define PORT_DATAONELEM 0x8275ff50                   // DataOnElem
+#define PORT_DATANODEGETOBJ 0x8274b088               // DataNode::GetObj
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -269,6 +273,9 @@ void DbgPrint(const char *s, ...);
 #define PORT_BINSTREAMREADENDIAN 0x803430bc      // BinStream::ReadEndian
 #define PORT_BINSTREAMWRITEENDIAN 0x80343190     // BinStream::WriteEndian
 #define PORT_SONGPARSERPITCHTOSLOT 0x8048e298    // SongParser::PitchToSlot
+#define PORT_DATASET 0x8031b86c                  // DataSetSet
+#define PORT_DATASETELEM 0x8031e9a0              // DataSetElem
+#define PORT_DATAONELEM 0x8031dc40               // DataOnElem
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

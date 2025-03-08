@@ -60,6 +60,8 @@ void UpdatePresenceHook(void *thisPresenceMgr)
 void *NewFileHook(char *fileName, int flags)
 {
     char *new_path = NULL;
+    if (strlen(fileName) > 250)
+        return NULL;
     if (config.DisableRawfiles)
         goto LOAD_ORIGINAL;
     // checks the platform-specific APIs for the file
@@ -371,6 +373,9 @@ void ApplyHooks()
     HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
     HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
     HookFunction(PORT_SONGPARSERPITCHTOSLOT, &SongParserPitchToSlot, &SongParserPitchToSlotHook);
+    HookFunction(PORT_DATASET, &DataSet, &DataSetHook);
+    HookFunction(PORT_DATASETELEM, &DataSetElem, &DataSetElemHook);
+    HookFunction(PORT_DATAONELEM, &DataOnElem, &DataOnElemHook);
 
 #ifdef RB3E_WII // wii exclusive hooks
     // HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
@@ -379,6 +384,7 @@ void ApplyHooks()
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
     // TODO: port these to Wii
+    HookFunction(PORT_DATANODEGETOBJ, &DataNodeGetObj, &DataNodeGetObjHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
