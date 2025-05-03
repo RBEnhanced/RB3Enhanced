@@ -20,6 +20,12 @@
 #include "rb3enhanced.h"
 #include "GlobalSymbols.h"
 #include "config.h"
+#include "rb3/WiiMemMgr.h"
+#include "wii_ipc.h"
+#include "utilities.h"
+
+char _has256MBMem2 = 0;
+int RB3E_Launcher_ExpandedRAM = 0;
 
 BSLUG_MODULE_GAME("SZB?");
 BSLUG_MODULE_NAME("RB3Enhanced");
@@ -97,8 +103,26 @@ int RB3E_RelaunchGame()
     return -1;
 }
 
+void HeapInit(Heap *heap, const char *name, int num, int *mem, int sizeWords, int isHandle, int strategy, int debug_level, int allow_temp);
+void HeapInitHook(Heap *heap, const char *name, int num, int *mem, int sizeWords, int isHandle, int strategy, int debug_level, int allow_temp)
+{
+    if (strcmp(name, "main") == 0)
+    {
+        // TODO(Emma): somehow reclaim original "mem" buffer here, as right now it's a very large (~38MiB) memory leak
+        //             ideally we would add it as a free block in the resulting heap
+        mem = (int *)(0x94000000);
+        sizeWords = 0x3000000;
+    }
+    RB3E_DEBUG("Heap %i (\"%s\") = %p, words: 0x%x (size: 0x%x)", num, name, mem, sizeWords, sizeWords * 4);
+    HeapInit(heap, name, num, mem, sizeWords, isHandle, strategy, debug_level, allow_temp);
+}
+
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
+    if (_has256MBMem2)
+    {
+        RB3E_MSG("Running with 256MB MEM2!", NULL);
+    }
     // launch game
     StartupHook(ThisApp, argc, argv);
     // apply wfc url patches if gocentral is enabled and configured server isn't Ninty
@@ -137,6 +161,55 @@ static void _startHook()
 {
     POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
     POKE_B(PORT_BIGSYMBOLFUNC_TAIL, InitGlobalSymbols);
+#ifdef RB3EDEBUG
+    // for now we limit the ability to use more than intentional RAM to debug builds
+    // just in case shit hits the fan
+    // Cool Facts: on a devkit Wii, the retail build of RB3 will have a 128MB heap by default. so we don't want to handle anything extra!
+
+    // detect 256MB being enabled in Dolphin
+    if (*(uint32_t *)0x80003118 >= 0x10000000)
+    {
+        _has256MBMem2 = 1;
+        // change OS1 globals to act like MEM2 is 64MB
+        // this is because our Heap expansion code relies on the game thinking it's running on 64MB
+        POKE_32(0x80003118, 0x04000000); // mem2 size physical
+        POKE_32(0x8000311C, 0x04000000); // mem2 size simulated
+        POKE_32(0x80003120, 0x93400000); // end of mem2
+        POKE_32(0x80003128, 0x933E0000); // usable mem2 end
+        POKE_32(0x80003130, 0x933E0000); // ipc buffer start
+        POKE_32(0x80003134, 0x93400000); // ipc buffer end
+    }
+    // otherwise, detect the launcher enabling 256MB on vWii
+    else if (RB3E_Launcher_ExpandedRAM == 0xCAFE1337)
+    {
+        _has256MBMem2 = 1;
+    }
+
+    if (_has256MBMem2)
+    {
+        // change the IBAT and DBAT initialisation functions
+
+        // change ConfigMEM2_52MB to allocate 256MB DBAT
+        POKE_32(PORT_CONFIGMEM2_52MB_INST + 0x0, ADDI(3, 3, 0x1FFF));  // 0x90000000 cached DBAT
+        POKE_32(PORT_CONFIGMEM2_52MB_INST + 0x10, ADDI(5, 5, 0x1FFF)); // 0xd0000000 uncached DBAT
+        // change ConfigMEM2_56MB to allocate 256MB DBAT
+        POKE_32(PORT_CONFIGMEM2_56MB_INST + 0x0, ADDI(3, 3, 0x1FFF));  // 0x90000000 cached DBAT
+        POKE_32(PORT_CONFIGMEM2_56MB_INST + 0x10, ADDI(5, 5, 0x1FFF)); // 0xd0000000 uncached DBAT
+        // change ConfigMEM2_64MB to allocate 256MB DBAT
+        POKE_32(PORT_CONFIGMEM2_64MB_INST + 0x0, ADDI(3, 3, 0x1FFF));  // 0x90000000 cached DBAT
+        POKE_32(PORT_CONFIGMEM2_64MB_INST + 0x10, ADDI(5, 5, 0x1FFF)); // 0xd0000000 uncached DBAT
+        // change EnableInstsOnMEM2Lo16MB to enable insts on all 256MB
+        // RsoInit calls this in RealMode to allow RSOs to run from MEM2
+        POKE_32(PORT_ENABLEINSTSONMEM2LO16MB_INST + 0x0, ADDI(6, 6, 0x1FFF)); // 0x90000000 cached IBAT
+        // clear icache just in case
+        ICInvalidateRange((void *)PORT_CONFIGMEM2_52MB_INST, 0x800);
+
+        // hook Heap::Init to change size and location of main heap
+        HookFunction(PORT_HEAPINIT, HeapInit, HeapInitHook);
+    }
+#endif
+
+    // launch the game
     _start();
 }
 

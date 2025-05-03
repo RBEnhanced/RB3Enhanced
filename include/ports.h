@@ -276,6 +276,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_DATASET 0x8031b86c                  // DataSetSet
 #define PORT_DATASETELEM 0x8031e9a0              // DataSetElem
 #define PORT_DATAONELEM 0x8031dc40               // DataOnElem
+#define PORT_HEAPINIT 0x80352cbc                 // Heap::Init
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
@@ -294,6 +295,13 @@ void DbgPrint(const char *s, ...);
 // string pointers
 #define PORT_NASWII_AC_URL 0x808e2310
 #define PORT_NASWII_PR_URL 0x808e2390
+// wii stuff
+#define PORT_WII_OS0_GLOBALS 0x80000000              // "os0"/"early" globals
+#define PORT_WII_OS1_GLOBALS 0x80003000              // "os1"/"late" globals
+#define PORT_CONFIGMEM2_52MB_INST 0x80769340         // ConfigMEM2_52MB 0x90000000 length param
+#define PORT_CONFIGMEM2_56MB_INST 0x80769420         // ConfigMEM2_56MB 0x90000000 length param
+#define PORT_CONFIGMEM2_64MB_INST 0x80769500         // ConfigMEM2_64MB 0x90000000 length param
+#define PORT_ENABLEINSTSONMEM2LO16MB_INST 0x80769740 // EnableInstsOnMEM2Lo16MB 0x90000000 length param
 
 // define logging functions
 #define RB3E_PRINT printf
