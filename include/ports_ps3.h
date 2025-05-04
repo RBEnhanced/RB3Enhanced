@@ -49,7 +49,7 @@
 #define PORT_DATANODEEVALUATE 0x008FBE24             // DataNode::Evaluate
 #define PORT_DATAARRAYFINDARRAY 0x008E95B4           // DataArray::FindArray
 #define PORT_DATAARRAYFINDDATA 0x008E9D14            // DataArray::FindData
-#define PORT_ADDDTAFUNCTIONPS3 0x008F0AC0            // unknown name function, adds DTA function to gDataFuncs, PS3 only
+#define PORT_DATAREGISTERFUNC 0x008F0AC0             // DataRegisterFunc
 #define PORT_SETADDRESS 0x000D12B4                   // Quazal::InetAddress::SetAddress
 #define PORT_RANDOMINT 0x0096F5D4                    // RandomInt(min, max)
 #define PORT_GETWIDGETBYNAME 0x009CC848              // GemManager::GetWidgetByName

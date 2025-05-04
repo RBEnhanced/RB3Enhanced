@@ -49,7 +49,7 @@ jobs:
       - name: Compile (bank8-debug)
         run: |
           make clean
-          make wii -j2 DEBUG=1
+          make wii -j2 DEBUG=1 BANK8=1
 
       - name: Upload binaries (bank8-debug)
         uses: actions/upload-artifact@v4

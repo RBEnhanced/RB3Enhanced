@@ -121,6 +121,37 @@ void HeapInitHook(Heap *heap, const char *name, int num, int *mem, int sizeWords
     HeapInit(heap, name, num, mem, sizeWords, isHandle, strategy, debug_level, allow_temp);
 }
 
+#ifdef RB3E_WII_BANK8
+void ResolvedModuleKeyboard(void *keyboardRso);
+void ResolvedModuleKeyboardHook(void *keyboardRso)
+{
+    // The keyboard RSO in bank 8 has asserts that detect if the address is outside of 128MB worth of MEM2
+    // so we try to patch out the asserts that crash as well as all the address checks.
+    // Does this suck? Yes. Does it work? Debatable.
+    uint32_t *rsoAsUint32 = (uint32_t *)keyboardRso;
+    for (int i = 0; i < (0x100000 / 4); i++)
+    {
+        // check for (address & 0xF8000000) == 0x90000000
+        if ((rsoAsUint32[i] & 0xF00FFFFF) == 0x50030008 &&     // rlwinm rD, rA, 0, 0, 0x4
+            (rsoAsUint32[i + 1] & 0xFF00FFFF) == 0x3c007000 && // addis r0, rA, 0x7000
+            rsoAsUint32[i + 2] == 0x28000000)                  // cmplwi r0, 0
+        {
+            RB3E_DEBUG("Patching keyboard address check at %p", &rsoAsUint32[i]);
+            rsoAsUint32[i + 1] = LI(0, 0); // make the check always 0 (always succeed)
+        }
+        // check for assert function start
+        if (rsoAsUint32[i] == 0x90010070 &&
+            rsoAsUint32[i + 1] == 0x41820158 &&
+            rsoAsUint32[i + 2] == 0x7f83e378)
+        {
+            RB3E_DEBUG("Patching assert function at %p", &rsoAsUint32[i]);
+            rsoAsUint32[i] = BLR;
+        }
+    }
+    ResolvedModuleKeyboard(keyboardRso);
+}
+#endif
+
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
     if (_has256MBMem2)
@@ -217,6 +248,8 @@ static void _startHook()
         POKE_32(PORT_BANK8_MEM2_RSO_ASSERT2, LIS(0, 0xa000));
         POKE_32(PORT_BANK8_MEM2_RSO_ASSERT3, LIS(0, 0xa000));
         POKE_32(PORT_BANK8_MEM2_RSO_ASSERT4, LIS(0, 0xa000));
+        // hook the keyboard RSO function to accept pointers past 0x98000000
+        HookFunction(PORT_BANK8_KEYBOARD_RESOLVED, ResolvedModuleKeyboard, ResolvedModuleKeyboardHook);
 #endif
     }
 #endif

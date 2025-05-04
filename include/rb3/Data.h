@@ -76,9 +76,8 @@ extern DataNode *DataOnElem(DataNode *ret, DataArray *array);
 
 extern void *DataNodeGetObj(DataNode *node);
 
-#ifdef RB3E_WII_BANK8
-// used on bank 8
-extern void DataRegisterFunc(Symbol name, void *func);
-#endif
+// inlined on 360
+typedef DataNode *(*DTAFunction_t)(DataNode *node, DataArray *args);
+extern void DataRegisterFunc(Symbol name, DTAFunction_t func);
 
 #endif // _DATA_H

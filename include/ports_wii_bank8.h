@@ -132,6 +132,7 @@
 #define PORT_BANK8_MEM2_RSO_ASSERT2 0x80442940
 #define PORT_BANK8_MEM2_RSO_ASSERT3 0x804b42a8
 #define PORT_BANK8_MEM2_RSO_ASSERT4 0x804b4198
+#define PORT_BANK8_KEYBOARD_RESOLVED 0x80448750 // ResolvedModule<keyboardModule>?
 
 // define logging functions
 #define RB3E_PRINT printf
