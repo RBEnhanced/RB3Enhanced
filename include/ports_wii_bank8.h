@@ -11,20 +11,20 @@
 #include <string.h>
 
 // instruction patch addresses
-#define PORT_SONGLIMIT 0x8026fbf0          // call to "max_song_count" DataNode::_value
-#define PORT_SONGBLACKLIST 0x80273298      // call to BandSongMgr::IsInExclusionList
-#define PORT_DATAINITFUNCS_TAIL 0x8045d080 // blr of DataInitFuncs
-#define PORT_FASTSTART_CHECK 0x8000e464    // beq after OptionBool("fast",0) in App::_ct
-#define PORT_STRAPSCREEN_1 0x8000e5a4      // branch to CustomSplash::Show in App::_ct
-#define PORT_STRAPSCREEN_2 0x8000e5b4      // branch to CustomSplash::EndShow in App::_ct
-#define PORT_NASWII_HOST 0x80b2df90        // branch to the add header function in the DWCDL login function
-// #define PORT_CHARACTER_CLOTHES_CHECK 0x802607bc  // FIXME check to see if the goal required to select a piece of clothing has been unlocked
-// #define PORT_CHARACTER_CLOTHES_CHECK2 0x802607c0 // FIXME check to see if the goal required to select a piece of clothing has been unlocked 2
-// #define PORT_FACE_PAINT_CHECK 0x801fd9a8         // FIXME check to see if face paint is unlocked
-// #define PORT_TATTOO_CHECK 0x801fd9c4             // FIXME check to see if tattoos are unlocked
-// #define PORT_VIDEO_VENUE_CHECK 0x80227e34        // FIXME check to see if video venues are unlocked
-#define PORT_OPTIONSTR_DEFINE 0x8044219c // bl to OptionStr("define", NULL) in PreInitSystem
-// #define PORT_RUNLOOP_SPARE 0x8000f740         // FIXME branch to a function that only has a "blr" in App::Run(WithoutDebugging)
+#define PORT_SONGLIMIT 0x8026fbf0                // call to "max_song_count" DataNode::_value
+#define PORT_SONGBLACKLIST 0x80273298            // call to BandSongMgr::IsInExclusionList
+#define PORT_DATAINITFUNCS_TAIL 0x8045d080       // blr of DataInitFuncs
+#define PORT_FASTSTART_CHECK 0x8000e464          // beq after OptionBool("fast",0) in App::_ct
+#define PORT_STRAPSCREEN_1 0x8000e5a4            // branch to CustomSplash::Show in App::_ct
+#define PORT_STRAPSCREEN_2 0x8000e5b4            // branch to CustomSplash::EndShow in App::_ct
+#define PORT_NASWII_HOST 0x80b2df90              // branch to the add header function in the DWCDL login function
+#define PORT_CHARACTER_CLOTHES_CHECK 0x80348410  // (ProfileAssets::HasAsset) check to see if the goal required to select a piece of clothing has been unlocked
+#define PORT_CHARACTER_CLOTHES_CHECK2 0x80348414 // check to see if the goal required to select a piece of clothing has been unlocked 2
+#define PORT_FACE_PAINT_CHECK 0x802b58b0         // check to see if face paint is unlocked (key_unlocked_face_paint BandProfile::HasCampaignKey)
+#define PORT_TATTOO_CHECK 0x802b58cc             // check to see if tattoos are unlocked (key_unlocked_tattoos BandProfile::HasCampaignKey)
+#define PORT_VIDEO_VENUE_CHECK 0x802f0ce8        // check to see if video venues are unlocked (key_video_venues BandProfile::HasCampaignKey)
+#define PORT_OPTIONSTR_DEFINE 0x8044219c         // bl to OptionStr("define", NULL) in PreInitSystem
+#define PORT_RUNLOOP_SPARE 0x80010788            // branch to a function that only has a "blr" in App::Run(WithoutDebugging) (branch to UIStats::Poll)
 // #define PORT_MICCHECK 0x8024a4e8              // NOT NEEDED? a bne that throws an error on the song select screen if the mic is not connected
 #define PORT_BIGSYMBOLFUNC_TAIL 0x804d3bac    // blr after a function that initialises a bunch of symbols
 #define PORT_UPDATEPRESENCEBLOCK_B 0x8021cbd0 // branch after the failure case in a function that calls UpdatePresence
@@ -36,11 +36,11 @@
 #define PORT_NEWFILE 0x804204a0                 // NewFile
 #define PORT_SETTRACKSPEED 0x805f9060           // TrackPanelDirBase::UpdateTrackSpeed
 #define PORT_SETSONGSPEED 0x8017fa80            // Game::SetMusicSpeed
-#define PORT_MODIFIERMGR_CT 0x802f7130          // ModifierManager::__ct
-#define PORT_MODIFIERMGR_ACTIVE 0x802f7990      // ModifierManager::ModifierActive
+#define PORT_MODIFIERMGR_CT 0x802f7130          // ModifierMgr::__ct
+#define PORT_MODIFIERMGR_ACTIVE 0x802f7ab0      // ModifierMgr::GetModifier
 #define PORT_SYMBOL_CT 0x804bd1c0               // Symbol::Symbol
 #define PORT_LOCALIZE 0x8049b7f0                // Locale::Localize
-#define PORT_SETVENUE 0x802f12f0                // MetaPerformer::SetVenue(?) (actual func name is not known)
+#define PORT_SETVENUE 0x802f12f0                // MetaPerformer::SetVenue
 #define PORT_EXECUTEDTA 0x803edbd0              // RockCentralGateway::ExecuteConfig
 #define PORT_BANDLABELSETDISPLAYTEXT 0x80518360 // BandLabel::SetDisplayText
 #define PORT_SETSONGANDARTISTNAME 0x80254650    // BandLabel::SetSongAndArtistName
@@ -68,21 +68,21 @@
 #define PORT_SOMEVECTORPUSHBACKMAYBE 0x802484a8  // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
 #define PORT_POSTPROC_DOPOST 0x809ef2d0          // WiiPostProc::DoPost
 #define PORT_MUSICLIBRARYSELECTMAYBE 0x802ff140  // UNSURE MusicLibrary::TryToSetHighlight, Selects an entry in the Music Library screen - actual name not known
-// #define PORT_GETSYMBOLBYGAMEORIGIN 0x8027dd3c    // FIXME SongSortByRecent::GetSymbolByGameOrigin
-// #define PORT_GETGAMEORIGINBYSYMBOL 0x8027dc58    // FIXME SongSortByRecent::GetGameOriginBySymbol
-#define PORT_SONGSORTBYRECENT 0x803747d0 // FIXME RecentCmp::__ct
-#define PORT_FILESTREAM_CT 0x80494fd0    // FileStream::__ct (the one that takes a char * path instead of a File object)
-#define PORT_CHUNKSTREAM_CT 0x804929a0   // ChunkStream::__ct
-// #define PORT_GETBANDUSERFROMSLOT 0x8010021c    // FIXME BandUserMgr::GetBandUserFromSlot
-#define PORT_GETBANDUSERS 0x801683e0     // BandUserMgr::GetBandUsers
-#define PORT_GETSONGSHORTNAME 0x802f5dd0 // MetaPerformer::GetSongSymbol
-#define PORT_GETMETADATA 0x80271de0      // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
-// #define PORT_GETSONGID 0x8051513c              // FIXME GetSongID, function used when adding songs to BandSongMgr
-#define PORT_SONGMGRGETRANKEDSONGS 0x802726a0  // BandSongMgr::GetRankedSongs(?) - not sure on the real name of the function
-#define PORT_GETSONGIDFROMSHORTNAME 0x801d0b44 // BandSongMgr::GetSongIDFromShortname
-#define PORT_RNDPROPANIMSETFRAME 0x80928020    // RndPropAnim::SetFrame
-#define PORT_DYNAMICCAST 0x80a38f54            // dynamic_cast
-// #define PORT_OBJECTFINDUIPANEL 0x80101d74      // FIXME Object::Find<UIPanel>
+#define PORT_GETSYMBOLBYGAMEORIGIN 0x80374910    // RecentCmp::RecentTypeToOrigin FIXME SongSortByRecent::GetSymbolByGameOrigin
+#define PORT_GETGAMEORIGINBYSYMBOL 0x80374870    // RecentCmp::OriginToRecentType FIXME SongSortByRecent::GetGameOriginBySymbol
+#define PORT_SONGSORTBYRECENT 0x803747d0         // FIXME RecentCmp::__ct
+#define PORT_FILESTREAM_CT 0x80494fd0            // FileStream::__ct (the one that takes a char * path instead of a File object)
+#define PORT_CHUNKSTREAM_CT 0x804929a0           // ChunkStream::__ct
+#define PORT_GETBANDUSERFROMSLOT 0x80168010      // BandUserMgr::GetUserFromSlot
+#define PORT_GETBANDUSERS 0x801683e0             // BandUserMgr::GetBandUsers
+#define PORT_GETSONGSHORTNAME 0x802f5dd0         // MetaPerformer::GetSongSymbol
+#define PORT_GETMETADATA 0x80271de0              // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
+#define PORT_GETSONGID 0x8075af40                // DataArray::GetSongID ???, function used when adding songs to BandSongMgr
+#define PORT_SONGMGRGETRANKEDSONGS 0x802726a0    // BandSongMgr::GetRankedSongs(?) - not sure on the real name of the function
+#define PORT_GETSONGIDFROMSHORTNAME 0x801d0b44   // BandSongMgr::GetSongIDFromShortname
+#define PORT_RNDPROPANIMSETFRAME 0x80928020      // RndPropAnim::SetFrame
+#define PORT_DYNAMICCAST 0x80a38f54              // dynamic_cast
+// #define PORT_OBJECTFINDUIPANEL 0x80101d74      // FIXME Object::Find<UIPanel> - inlined on bank8?
 #define PORT_JOYPADGETPADDATA 0x8042f6f0       // JoypadGetPadData
 #define PORT_MEMALLOC 0x804a0a70               // MemAlloc
 #define PORT_MEMFREE 0x804a12c0                // MemFree
