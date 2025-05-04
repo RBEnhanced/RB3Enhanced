@@ -170,6 +170,7 @@ DataNode *DTASendModData(DataNode *node, DataArray *args)
 
 void AddDTAFunctions()
 {
+#ifndef RB3E_WII_BANK8
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.print_debug) = (int)PrintToDebugger;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_change_music_speed) = (int)ChangeMusicSpeed;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_change_track_speed) = (int)ChangeTrackSpeed;
@@ -180,5 +181,17 @@ void AddDTAFunctions()
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_relaunch_game) = (int)DTARelaunchGame;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_song_count) = (int)DTAGetSongCount;
     *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_send_event_string) = (int)DTASendModData;
+#else
+    DataRegisterFunc(globalSymbols.print_debug, PrintToDebugger);
+    DataRegisterFunc(globalSymbols.rb3e_change_music_speed, ChangeMusicSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_change_track_speed, ChangeTrackSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_get_music_speed, GetMusicSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_get_track_speed, GetTrackSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_set_venue, DTASetVenue);
+    DataRegisterFunc(globalSymbols.rb3e_is_emulator, DTAIsEmulator);
+    DataRegisterFunc(globalSymbols.rb3e_relaunch_game, DTARelaunchGame);
+    DataRegisterFunc(globalSymbols.rb3e_get_song_count, DTAGetSongCount);
+    DataRegisterFunc(globalSymbols.rb3e_send_event_string, DTASendModData);
+#endif
     RB3E_MSG("Added DTA functions!", NULL);
 }

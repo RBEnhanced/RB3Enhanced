@@ -209,8 +209,11 @@ void ApplyPatches()
     POKE_32(PORT_STRAPSCREEN_2, NOP);
     // Patch out erroneous second host header
     POKE_32(PORT_NASWII_HOST, NOP);
+#ifndef RB3E_WII_BANK8
     // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
+    // bank 8 does not have the mic check
     POKE_32(PORT_MICCHECK, 0x42800140);
+#endif
     // always fire the UpdatePresence function. TODO(Emma): look into it, still not firing when screen is changed :/
     POKE_32(PORT_UPDATEPRESENCEBLOCK_B, NOP);
 #elif RB3E_XBOX
@@ -248,6 +251,9 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_RENDER_RES_Y_PATCH1, LI(11, config.RenderResY));
     }
 #endif
+
+#ifndef RB3E_WII_BANK8
+    // TODO(Emma): port offsets to bank8
     if (config.UnlockClothing == 1)
     {
         // Unlocks all clothing, tattoos, face paint, and video venues
@@ -257,6 +263,7 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_FACE_PAINT_CHECK, LI(3, 1));
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
     }
+#endif
 
 #ifdef RB3EDEBUG
     if (config.QuazalLogging == 1)
@@ -316,7 +323,13 @@ void InitialiseFunctions()
     POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
     POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
     POKE_B(&ModifierActive, PORT_MODIFIERMGR_ACTIVE);
+#ifndef RB3E_WII_BANK8
     POKE_B(&HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
+    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
+    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
+#else
+    POKE_B(&DataRegisterFunc, PORT_DATAREGISTERFUNC);
+#endif
     POKE_B(&RandomInt, PORT_RANDOMINT);
     POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);
     POKE_B(&FileExists, PORT_FILE_EXISTS);
@@ -327,12 +340,10 @@ void InitialiseFunctions()
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
     POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
-    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
     POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
     POKE_B(&Dynamic_Cast, PORT_DYNAMICCAST);
     POKE_B(&GameGetActivePlayer, PORT_GAMEGETACTIVEPLAYER);
-    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
     POKE_B(&JoypadGetPadData, PORT_JOYPADGETPADDATA);
     POKE_B(&MemAlloc, PORT_MEMALLOC);
     POKE_B(&MemFree, PORT_MEMFREE);
@@ -349,7 +360,10 @@ void ApplyHooks()
     POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
     POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
+#ifndef RB3E_WII_BANK8
+    // TODO(Emma): find suitable alternative for bank8
     POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
+#endif
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
     HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
     HookFunction(PORT_ADDGAMEGEM, &AddGameGem, &AddGameGemHook);
@@ -364,10 +378,14 @@ void ApplyHooks()
     HookFunction(PORT_GETSLOTCOLOR, &GetSlotColor, &GetSlotColorHook);
     HookFunction(PORT_SETSYSTEMLANGUAGE, &SetSystemLanguage, &SetSystemLanguageHook);
     HookFunction(PORT_DATAREADFILE, &DataReadFile, &DataReadFileHook);
+#ifndef RB3E_WII_BANK8
+    // TODO(Emma): port GetBandUserFromSlot to bank8
     HookFunction(PORT_GAME_CT, &GameConstruct, &GameConstructHook);
     HookFunction(PORT_GAME_DT, &GameDestruct, &GameDestructHook);
+    // TODO(Emma): port offsets to bank 8
     HookFunction(PORT_GETSYMBOLBYGAMEORIGIN, &GetSymbolByGameOrigin, &GetSymbolByGameOriginHook);
     HookFunction(PORT_GETGAMEORIGINBYSYMBOL, &GetGameOriginBySymbol, &GetGameOriginBySymbolHook);
+#endif
     HookFunction(PORT_RNDPROPANIMSETFRAME, &PropAnimSetFrame, &PropAnimSetFrameHook);
     HookFunction(PORT_SYMBOLPREINIT, &SymbolPreInit, &SymbolPreInitHook);
     HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);

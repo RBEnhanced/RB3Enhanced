@@ -29,7 +29,11 @@ int RB3E_Launcher_ExpandedRAM = 0;
 
 BSLUG_MODULE_GAME("SZB?");
 BSLUG_MODULE_NAME("RB3Enhanced");
+#ifndef RB3E_WII_BANK8
 BSLUG_MODULE_VERSION(RB3E_BUILDTAG);
+#else
+BSLUG_MODULE_VERSION(RB3E_BUILDTAG "-BANK8");
+#endif
 BSLUG_MODULE_AUTHOR("github.com/RBEnhanced");
 BSLUG_MODULE_LICENSE("GPLv2");
 
@@ -206,6 +210,14 @@ static void _startHook()
 
         // hook Heap::Init to change size and location of main heap
         HookFunction(PORT_HEAPINIT, HeapInit, HeapInitHook);
+
+#ifdef RB3E_WII_BANK8
+        // RSO loader code gets real mad at you
+        POKE_32(PORT_BANK8_MEM2_RSO_ASSERT1, LIS(0, 0xa000));
+        POKE_32(PORT_BANK8_MEM2_RSO_ASSERT2, LIS(0, 0xa000));
+        POKE_32(PORT_BANK8_MEM2_RSO_ASSERT3, LIS(0, 0xa000));
+        POKE_32(PORT_BANK8_MEM2_RSO_ASSERT4, LIS(0, 0xa000));
+#endif
     }
 #endif
 

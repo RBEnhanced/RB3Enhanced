@@ -1,3 +1,7 @@
+/*
+    RB3Enhanced - wii_ipc.h
+    IPC structures for interacting with the IOS processor.
+*/
 #ifdef RB3E_WII
 #ifndef _WII_IPC_H
 #define _WII_IPC_H

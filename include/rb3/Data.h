@@ -76,4 +76,9 @@ extern DataNode *DataOnElem(DataNode *ret, DataArray *array);
 
 extern void *DataNodeGetObj(DataNode *node);
 
+#ifdef RB3E_WII_BANK8
+// used on bank 8
+extern void DataRegisterFunc(Symbol name, void *func);
+#endif
+
 #endif // _DATA_H
