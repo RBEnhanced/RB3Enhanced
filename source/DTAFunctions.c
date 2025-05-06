@@ -37,13 +37,13 @@ DataNode *PrintToDebugger(DataNode *node, DataArray *args)
 }
 
 // Get configuration values
-DataNode *GetMusicSpeed(DataNode *node, int *args)
+DataNode *GetMusicSpeed(DataNode *node, DataArray *args)
 {
     node->type = FLOAT_VALUE;
     node->value.floatVal = config.SongSpeedMultiplier;
     return node;
 }
-DataNode *GetTrackSpeed(DataNode *node, int *args)
+DataNode *GetTrackSpeed(DataNode *node, DataArray *args)
 {
     node->type = FLOAT_VALUE;
     node->value.floatVal = config.TrackSpeedMultiplier;
@@ -118,21 +118,21 @@ DataNode *DTASetVenue(DataNode *node, DataArray *args)
     return node;
 }
 
-DataNode *DTAIsEmulator(DataNode *node, int *args)
+DataNode *DTAIsEmulator(DataNode *node, DataArray *args)
 {
     node->type = INT_VALUE;
     node->value.intVal = RB3E_IsEmulator();
     return node;
 }
 
-DataNode *DTARelaunchGame(DataNode *node, int *args)
+DataNode *DTARelaunchGame(DataNode *node, DataArray *args)
 {
     node->type = INT_VALUE;
     node->value.intVal = RB3E_RelaunchGame();
     return node;
 }
 
-DataNode *DTAGetSongCount(DataNode *node, int *args)
+DataNode *DTAGetSongCount(DataNode *node, DataArray *args)
 {
     node->type = INT_VALUE;
     node->value.intVal = RB3E_LoadedSongCount;
@@ -168,17 +168,25 @@ DataNode *DTASendModData(DataNode *node, DataArray *args)
     return node;
 }
 
+#ifdef RB3E_XBOX
+// this function is inlined on the Xbox version, so we re-create it
+void DataRegisterFunc(Symbol name, DTAFunction_t func)
+{
+    *(DTAFunction_t *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &name) = func;
+}
+#endif
+
 void AddDTAFunctions()
 {
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.print_debug) = (int)PrintToDebugger;
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_change_music_speed) = (int)ChangeMusicSpeed;
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_change_track_speed) = (int)ChangeTrackSpeed;
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_music_speed) = (int)GetMusicSpeed;
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_track_speed) = (int)GetTrackSpeed;
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_set_venue) = (int)DTASetVenue;
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_is_emulator) = (int)DTAIsEmulator;
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_relaunch_game) = (int)DTARelaunchGame;
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_get_song_count) = (int)DTAGetSongCount;
-    *(int *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &globalSymbols.rb3e_send_event_string) = (int)DTASendModData;
+    DataRegisterFunc(globalSymbols.print_debug, PrintToDebugger);
+    DataRegisterFunc(globalSymbols.rb3e_change_music_speed, ChangeMusicSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_change_track_speed, ChangeTrackSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_get_music_speed, GetMusicSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_get_track_speed, GetTrackSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_set_venue, DTASetVenue);
+    DataRegisterFunc(globalSymbols.rb3e_is_emulator, DTAIsEmulator);
+    DataRegisterFunc(globalSymbols.rb3e_relaunch_game, DTARelaunchGame);
+    DataRegisterFunc(globalSymbols.rb3e_get_song_count, DTAGetSongCount);
+    DataRegisterFunc(globalSymbols.rb3e_send_event_string, DTASendModData);
     RB3E_MSG("Added DTA functions!", NULL);
 }

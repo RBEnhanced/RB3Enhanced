@@ -46,6 +46,17 @@ jobs:
           name: RB3Enhanced-Wii-NoDebug
           path: out/RB3Enhanced.mod
 
+      - name: Compile (bank8-debug)
+        run: |
+          make clean
+          make wii -j2 DEBUG=1 BANK8=1
+
+      - name: Upload binaries (bank8-debug)
+        uses: actions/upload-artifact@v4
+        with: 
+          name: RB3Enhanced-Wii-Bank8-Debug
+          path: out/RB3Enhanced.mod
+
   Xbox:
     if: github.repository == 'RBEnhanced/RB3Enhanced'
     runs-on: windows-2019

@@ -29,7 +29,11 @@ int RB3E_Launcher_ExpandedRAM = 0;
 
 BSLUG_MODULE_GAME("SZB?");
 BSLUG_MODULE_NAME("RB3Enhanced");
+#ifndef RB3E_WII_BANK8
 BSLUG_MODULE_VERSION(RB3E_BUILDTAG);
+#else
+BSLUG_MODULE_VERSION(RB3E_BUILDTAG "-BANK8");
+#endif
 BSLUG_MODULE_AUTHOR("github.com/RBEnhanced");
 BSLUG_MODULE_LICENSE("GPLv2");
 
@@ -117,6 +121,37 @@ void HeapInitHook(Heap *heap, const char *name, int num, int *mem, int sizeWords
     HeapInit(heap, name, num, mem, sizeWords, isHandle, strategy, debug_level, allow_temp);
 }
 
+#ifdef RB3E_WII_BANK8
+void ResolvedModuleKeyboard(void *keyboardRso);
+void ResolvedModuleKeyboardHook(void *keyboardRso)
+{
+    // The keyboard RSO in bank 8 has asserts that detect if the address is outside of 128MB worth of MEM2
+    // so we try to patch out the asserts that crash as well as all the address checks.
+    // Does this suck? Yes. Does it work? Debatable.
+    uint32_t *rsoAsUint32 = (uint32_t *)keyboardRso;
+    for (int i = 0; i < (0x100000 / 4); i++)
+    {
+        // check for (address & 0xF8000000) == 0x90000000
+        if ((rsoAsUint32[i] & 0xF00FFFFF) == 0x50030008 &&     // rlwinm rD, rA, 0, 0, 0x4
+            (rsoAsUint32[i + 1] & 0xFF00FFFF) == 0x3c007000 && // addis r0, rA, 0x7000
+            rsoAsUint32[i + 2] == 0x28000000)                  // cmplwi r0, 0
+        {
+            RB3E_DEBUG("Patching keyboard address check at %p", &rsoAsUint32[i]);
+            rsoAsUint32[i + 1] = LI(0, 0); // make the check always 0 (always succeed)
+        }
+        // check for assert function start
+        if (rsoAsUint32[i] == 0x90010070 &&
+            rsoAsUint32[i + 1] == 0x41820158 &&
+            rsoAsUint32[i + 2] == 0x7f83e378)
+        {
+            RB3E_DEBUG("Patching assert function at %p", &rsoAsUint32[i]);
+            rsoAsUint32[i] = BLR;
+        }
+    }
+    ResolvedModuleKeyboard(keyboardRso);
+}
+#endif
+
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
     if (_has256MBMem2)
@@ -161,6 +196,20 @@ static void _startHook()
 {
     POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
     POKE_B(PORT_BIGSYMBOLFUNC_TAIL, InitGlobalSymbols);
+
+    // Extrems's 480p fix
+    POKE_B(PORT_VISETMODE_LI_28, PORT_VISETMODE_PATCH_CODE);
+    POKE_32(PORT_VISETMODE_PATCH_CODE + 0, LI(3, 3));
+    POKE_32(PORT_VISETMODE_PATCH_CODE + 4, LI(28, 1));
+    POKE_B(PORT_VISETMODE_PATCH_CODE + 8, PORT_VISETMODE_LI_28 + 4);
+    POKE_32(PORT_VISETMODE_STB_28, 0x98610021); // replace stb r28,0x21(r1) with stb r3,0x21(r1)
+
+#if 0
+    // TODO(Emma): can we somehow make this an optional toggle in the launcher?
+    // Remove the deflicker filter
+    POKE_32(PORT_GXSETCOPYFILTER_BEQ, 0x48000040); // replace beq with b
+#endif
+
 #ifdef RB3EDEBUG
     // for now we limit the ability to use more than intentional RAM to debug builds
     // just in case shit hits the fan
@@ -206,6 +255,16 @@ static void _startHook()
 
         // hook Heap::Init to change size and location of main heap
         HookFunction(PORT_HEAPINIT, HeapInit, HeapInitHook);
+
+#ifdef RB3E_WII_BANK8
+        // RSO loader code gets real mad at you
+        POKE_32(PORT_BANK8_MEM2_RSO_ASSERT1, LIS(0, 0xa000));
+        POKE_32(PORT_BANK8_MEM2_RSO_ASSERT2, LIS(0, 0xa000));
+        POKE_32(PORT_BANK8_MEM2_RSO_ASSERT3, LIS(0, 0xa000));
+        POKE_32(PORT_BANK8_MEM2_RSO_ASSERT4, LIS(0, 0xa000));
+        // hook the keyboard RSO function to accept pointers past 0x98000000
+        HookFunction(PORT_BANK8_KEYBOARD_RESOLVED, ResolvedModuleKeyboard, ResolvedModuleKeyboardHook);
+#endif
     }
 #endif
 

@@ -209,10 +209,13 @@ void ApplyPatches()
     POKE_32(PORT_STRAPSCREEN_2, NOP);
     // Patch out erroneous second host header
     POKE_32(PORT_NASWII_HOST, NOP);
-    // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
-    POKE_32(PORT_MICCHECK, 0x42800140);
     // always fire the UpdatePresence function. TODO(Emma): look into it, still not firing when screen is changed :/
     POKE_32(PORT_UPDATEPRESENCEBLOCK_B, NOP);
+#ifndef RB3E_WII_BANK8
+    // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
+    // bank 8 does not have the mic check
+    POKE_32(PORT_MICCHECK, 0x42800140);
+#endif
 #elif RB3E_XBOX
     if (RB3E_IsEmulator())
         POKE_32(PORT_SONGMGR_ISDEMO_CHECK, NOP);
@@ -248,6 +251,7 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_RENDER_RES_Y_PATCH1, LI(11, config.RenderResY));
     }
 #endif
+
     if (config.UnlockClothing == 1)
     {
         // Unlocks all clothing, tattoos, face paint, and video venues
@@ -316,7 +320,14 @@ void InitialiseFunctions()
     POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
     POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
     POKE_B(&ModifierActive, PORT_MODIFIERMGR_ACTIVE);
+    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
+#ifndef RB3E_WII_BANK8
     POKE_B(&HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
+    // TODO(Emma): port to bank8
+    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
+#else
+    POKE_B(&DataRegisterFunc, PORT_DATAREGISTERFUNC);
+#endif
     POKE_B(&RandomInt, PORT_RANDOMINT);
     POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);
     POKE_B(&FileExists, PORT_FILE_EXISTS);
@@ -327,12 +338,10 @@ void InitialiseFunctions()
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
     POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
-    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
     POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
     POKE_B(&Dynamic_Cast, PORT_DYNAMICCAST);
     POKE_B(&GameGetActivePlayer, PORT_GAMEGETACTIVEPLAYER);
-    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
     POKE_B(&JoypadGetPadData, PORT_JOYPADGETPADDATA);
     POKE_B(&MemAlloc, PORT_MEMALLOC);
     POKE_B(&MemFree, PORT_MEMFREE);

@@ -76,4 +76,8 @@ extern DataNode *DataOnElem(DataNode *ret, DataArray *array);
 
 extern void *DataNodeGetObj(DataNode *node);
 
+// inlined on 360
+typedef DataNode *(*DTAFunction_t)(DataNode *node, DataArray *args);
+extern void DataRegisterFunc(Symbol name, DTAFunction_t func);
+
 #endif // _DATA_H
