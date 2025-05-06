@@ -172,7 +172,7 @@ DataNode *DTASendModData(DataNode *node, DataArray *args)
 // this function is inlined on the Xbox version, so we re-create it
 void DataRegisterFunc(Symbol name, DTAFunction_t func)
 {
-    *(DTAFunction_t *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &name) = &func;
+    *(DTAFunction_t *)HmxFactoryFuncAt((int *)PORT_GDATAFUNCS, &name) = func;
 }
 #endif
 

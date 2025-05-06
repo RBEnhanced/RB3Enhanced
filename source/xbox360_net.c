@@ -67,7 +67,7 @@ unsigned int RB3E_GetGatewayIP()
     XnpRouteEntry routes[2] = {0};
     int size = sizeof(routes);
     // XNET_OPTID_ROUTE_ENTRY
-    int ret = XNetGetOpt(0x1392, routes, &size);
+    int ret = XNetGetOpt(0x1392, (BYTE *)routes, &size);
     if (ret == 0)
     {
         return routes[1].interface_addr;

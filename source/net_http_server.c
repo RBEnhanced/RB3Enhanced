@@ -12,6 +12,7 @@
 #include "quazal/InetAddress.h"
 #include "rb3/SongMetadata.h"
 #include "rb3/BandSongMgr.h"
+#include "rb3/RockCentralGateway.h"
 #include "rb3enhanced.h"
 #include "version.h"
 #include "ports.h"
@@ -65,27 +66,31 @@ typedef enum _HTTP_Request_Status
 void urldecode2(char *dst, const char *src)
 {
     char a, b;
-    while (*src) {
-            if ((*src == '%') &&
-                ((a = src[1]) && (b = src[2])) &&
-                (isxdigit(a) && isxdigit(b))) {
-                    if (a >= 'a')
-                            a -= 'a'-'A';
-                    if (a >= 'A')
-                            a -= ('A' - 10);
-                    else
-                            a -= '0';
-                    if (b >= 'a')
-                            b -= 'a'-'A';
-                    if (b >= 'A')
-                            b -= ('A' - 10);
-                    else
-                            b -= '0';
-                    *dst++ = 16*a+b;
-                    src+=3;
-            } else {
-                    *dst++ = *src++;
-            }
+    while (*src)
+    {
+        if ((*src == '%') &&
+            ((a = src[1]) && (b = src[2])) &&
+            (isxdigit(a) && isxdigit(b)))
+        {
+            if (a >= 'a')
+                a -= 'a' - 'A';
+            if (a >= 'A')
+                a -= ('A' - 10);
+            else
+                a -= '0';
+            if (b >= 'a')
+                b -= 'a' - 'A';
+            if (b >= 'A')
+                b -= ('A' - 10);
+            else
+                b -= '0';
+            *dst++ = 16 * a + b;
+            src += 3;
+        }
+        else
+        {
+            *dst++ = *src++;
+        }
     }
     *dst++ = '\0';
 }
