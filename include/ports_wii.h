@@ -125,6 +125,10 @@
 #define PORT_CONFIGMEM2_56MB_INST 0x80769420         // ConfigMEM2_56MB 0x90000000 length param
 #define PORT_CONFIGMEM2_64MB_INST 0x80769500         // ConfigMEM2_64MB 0x90000000 length param
 #define PORT_ENABLEINSTSONMEM2LO16MB_INST 0x80769740 // EnableInstsOnMEM2Lo16MB 0x90000000 length param
+#define PORT_VISETMODE_LI_28 0x8077b2ac              // "li r28, 0x1" in VISetRevolutionModeSimple
+#define PORT_VISETMODE_STB_28 0x8077b2b4             // "stb r28, 0x21(r1)" in VISetRevolutionModeSimple
+#define PORT_VISETMODE_PATCH_CODE 0x800027a0         // stub area to insert the 480p fix code for VISetRevolutionModeSimple
+#define PORT_GXSETCOPYFILTER_BEQ 0x807464b0          // "beq 0x40" in GXSetCopyFilter
 
 // define logging functions
 #define RB3E_PRINT printf

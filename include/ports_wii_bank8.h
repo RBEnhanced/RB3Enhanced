@@ -127,6 +127,10 @@
 #define PORT_CONFIGMEM2_56MB_INST 0x80aac5c0         // ConfigMEM2_56MB 0x90000000 length param
 #define PORT_CONFIGMEM2_64MB_INST 0x80aac6a0         // ConfigMEM2_64MB 0x90000000 length param
 #define PORT_ENABLEINSTSONMEM2LO16MB_INST 0x80aac8e0 // EnableInstsOnMEM2Lo16MB 0x90000000 length param
+#define PORT_VISETMODE_LI_28 0x80abee6c              // "li r28, 0x1" in VISetRevolutionModeSimple
+#define PORT_VISETMODE_STB_28 0x80abee74             // "stb r28, 0x21(r1)" in VISetRevolutionModeSimple
+#define PORT_VISETMODE_PATCH_CODE 0x800027a0         // stub area to insert the 480p fix code for VISetRevolutionModeSimple
+#define PORT_GXSETCOPYFILTER_BEQ 0x80a89650          // "beq 0x40" in GXSetCopyFilter
 // bank8 specific stuff
 #define PORT_BANK8_MEM2_RSO_ASSERT1 0x804428e8
 #define PORT_BANK8_MEM2_RSO_ASSERT2 0x80442940

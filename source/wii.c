@@ -196,6 +196,20 @@ static void _startHook()
 {
     POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
     POKE_B(PORT_BIGSYMBOLFUNC_TAIL, InitGlobalSymbols);
+
+    // Extrems's 480p fix
+    POKE_B(PORT_VISETMODE_LI_28, PORT_VISETMODE_PATCH_CODE);
+    POKE_32(PORT_VISETMODE_PATCH_CODE + 0, LI(3, 3));
+    POKE_32(PORT_VISETMODE_PATCH_CODE + 4, LI(28, 1));
+    POKE_B(PORT_VISETMODE_PATCH_CODE + 8, PORT_VISETMODE_LI_28 + 4);
+    POKE_32(PORT_VISETMODE_STB_28, 0x98610021); // replace stb r28,0x21(r1) with stb r3,0x21(r1)
+
+#if 0
+    // TODO(Emma): can we somehow make this an optional toggle in the launcher?
+    // Remove the deflicker filter
+    POKE_32(PORT_GXSETCOPYFILTER_BEQ, 0x48000040); // replace beq with b
+#endif
+
 #ifdef RB3EDEBUG
     // for now we limit the ability to use more than intentional RAM to debug builds
     // just in case shit hits the fan
