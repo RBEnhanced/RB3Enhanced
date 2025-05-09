@@ -106,7 +106,7 @@ int RB3E_SetSendTimeout(int socket, int timeout_ms)
 int RB3E_SetTimeout(int socket, int timeout_ms)
 {
     int r = RB3E_SetRecvTimeout(socket, timeout_ms);
-    r = RB3E_SetRecvTimeout(socket, timeout_ms);
+    r = RB3E_SetSendTimeout(socket, timeout_ms);
     return r;
 }
 
