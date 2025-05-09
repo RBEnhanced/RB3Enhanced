@@ -112,7 +112,7 @@
 #define PORT_THESONGDB 0x80c8f048           // address of TheSongDB - TODO: check
 #define PORT_THEMUSICLIBRARY 0x80c904b8     // pointer to TheMusicLibrary
 #define PORT_THESONGSORTMGR 0x80c91248      // pointer to TheSongSortMgr
-#define PORT_THESONGMGR 0x80c8f780          // address of TheSongMgr
+#define PORT_THESONGMGR 0x80c8f61c          // address of gSongMgr
 #define PORT_THEMETAPERFORMER 0x80c90470    // address of TheMetaPerformer / MetaPerformer::sMetaPerformer
 #define PORT_THEBANDUSERMGR 0x80c8e9b8      // pointer to TheBandUserMgr
 #define PORT_THEGAME 0x80c8eb18             // pointer to TheGame (you lost)
