@@ -79,7 +79,7 @@
 #define PORT_GETMETADATA 0x80271de0              // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
 #define PORT_GETSONGID 0x8075af40                // DataArray::GetSongID ???, function used when adding songs to BandSongMgr
 #define PORT_SONGMGRGETRANKEDSONGS 0x802726a0    // BandSongMgr::GetRankedSongs(?) - not sure on the real name of the function
-#define PORT_GETSONGIDFROMSHORTNAME 0x801d0b44   // BandSongMgr::GetSongIDFromShortname
+#define PORT_GETSONGIDFROMSHORTNAME 0x80271ad0   // BandSongMgr::GetSongIDFromShortname
 #define PORT_RNDPROPANIMSETFRAME 0x80928020      // RndPropAnim::SetFrame
 #define PORT_DYNAMICCAST 0x80a38f54              // dynamic_cast
 // #define PORT_OBJECTFINDUIPANEL 0x80101d74      // FIXME Object::Find<UIPanel> - inlined on bank8?
