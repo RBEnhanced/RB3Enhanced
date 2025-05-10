@@ -129,6 +129,16 @@
 #define PORT_VISETMODE_STB_28 0x8077b2b4             // "stb r28, 0x21(r1)" in VISetRevolutionModeSimple
 #define PORT_VISETMODE_PATCH_CODE 0x800027a0         // stub area to insert the 480p fix code for VISetRevolutionModeSimple
 #define PORT_GXSETCOPYFILTER_BEQ 0x807464b0          // "beq 0x40" in GXSetCopyFilter
+#define PORT_OSFATAL_HALT_X_OFFSET 0x807673fc        // 'li r7, 48' for the X offset in Halt (OSFatal)
+#define PORT_OSFATAL_HALT_Y_OFFSET 0x80767404        // 'li r8, 100' for the Y offset in Halt (OSFatal)
+#define PORT_SCREENREPORT_X_NEWLINE 0x80766894       // 'subi rX, rX, 48' for the X newline cutoff in ScreenReport
+#define PORT_OSFATAL_HALT_OSREPORT 0x80767460        // call to OSReport in Halt (OSFatal)
+#define PORT_OSFATAL_HALT_PPCHALT 0x80767464         // call to PPCHalt in Halt (OSFatal)
+#define PORT_OSFATAL 0x80766cb0                      // OSFatal
+#define PORT_OSSETERRORHANDLER 0x80764b80            // OSSetErrorHandler
+#define PORT_PPCHALT 0x80706390                      // PPCHalt
+#define PORT_OSRETURNTOMENU 0x8076a610               // OSReturnToMenu
+#define PORT_OSREADROM 0x8076ae20                    // OSReadROM
 
 // define logging functions
 #define RB3E_PRINT printf

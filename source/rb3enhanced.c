@@ -314,8 +314,10 @@ void InitialiseFunctions()
     POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
 #endif
     POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
+#ifndef RB3E_WII_BANK8
     POKE_B(&PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
     POKE_B(&SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);
+#endif
     POKE_B(&ExecuteDTA, PORT_EXECUTEDTA);
     POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
     POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
@@ -356,7 +358,9 @@ void ApplyHooks()
 {
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
     POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
+#ifndef RB3E_WII_BANK8
     POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
+#endif
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);

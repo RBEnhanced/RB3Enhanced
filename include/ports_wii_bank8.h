@@ -63,14 +63,14 @@
 #define PORT_GAME_DT 0x8017dbd0                  // Game::__dt
 #define PORT_GAMEGETACTIVEPLAYER 0x8017fe40      // Game::GetActivePlayer
 #define PORT_WIINETINIT_DNSLOOKUP 0x8043f1c0     // WiiNetInit::StartDNSLookup
-#define PORT_BUILDINSTRUMENTSELECTION 0x802478a8 // BuildInstrumentSelectionList(?) - actual name not known
-#define PORT_PREPARESOMEVECTORMAYBE 0x80247c58   // Prepares some vector, used by BuildInstrumentSelectionList
-#define PORT_SOMEVECTORPUSHBACKMAYBE 0x802484a8  // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
+// #define PORT_BUILDINSTRUMENTSELECTION 0x802478a8 // FIXME BuildInstrumentSelectionList(?) - actual name not known
+// #define PORT_PREPARESOMEVECTORMAYBE 0x80247c58   // FIXME Prepares some vector, used by BuildInstrumentSelectionList
+// #define PORT_SOMEVECTORPUSHBACKMAYBE 0x802484a8  // FIXME vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
 #define PORT_POSTPROC_DOPOST 0x809ef2d0          // WiiPostProc::DoPost
 #define PORT_MUSICLIBRARYSELECTMAYBE 0x802ff140  // UNSURE MusicLibrary::TryToSetHighlight, Selects an entry in the Music Library screen - actual name not known
-#define PORT_GETSYMBOLBYGAMEORIGIN 0x80374910    // RecentCmp::RecentTypeToOrigin FIXME SongSortByRecent::GetSymbolByGameOrigin
-#define PORT_GETGAMEORIGINBYSYMBOL 0x80374870    // RecentCmp::OriginToRecentType FIXME SongSortByRecent::GetGameOriginBySymbol
-#define PORT_SONGSORTBYRECENT 0x803747d0         // FIXME RecentCmp::__ct
+#define PORT_GETSYMBOLBYGAMEORIGIN 0x80374910    // RecentCmp::RecentTypeToOrigin
+#define PORT_GETGAMEORIGINBYSYMBOL 0x80374870    // RecentCmp::OriginToRecentType
+#define PORT_SONGSORTBYRECENT 0x803747d0         // RecentCmp::__ct
 #define PORT_FILESTREAM_CT 0x80494fd0            // FileStream::__ct (the one that takes a char * path instead of a File object)
 #define PORT_CHUNKSTREAM_CT 0x804929a0           // ChunkStream::__ct
 #define PORT_GETBANDUSERFROMSLOT 0x80168010      // BandUserMgr::GetUserFromSlot
@@ -108,7 +108,7 @@
 #define PORT_GDATAFUNCS 0x80cab890          // address of gDataFuncs
 #define PORT_THEARCHIVE 0x80c92dd0          // address of TheArchive (main ARK)
 #define PORT_THEBANDUI 0x80c8f800           // address of TheBandUI
-#define PORT_NULLSYMBOL 0x80bb5d30          // FIXME address of gNullSymbol
+#define PORT_NULLSYMBOL 0x80bb5d30          // address of gNullSymbol
 #define PORT_THESONGDB 0x80c8f048           // address of TheSongDB - TODO: check
 #define PORT_THEMUSICLIBRARY 0x80c904b8     // pointer to TheMusicLibrary
 #define PORT_THESONGSORTMGR 0x80c91248      // pointer to TheSongSortMgr
@@ -131,6 +131,16 @@
 #define PORT_VISETMODE_STB_28 0x80abee74             // "stb r28, 0x21(r1)" in VISetRevolutionModeSimple
 #define PORT_VISETMODE_PATCH_CODE 0x800027a0         // stub area to insert the 480p fix code for VISetRevolutionModeSimple
 #define PORT_GXSETCOPYFILTER_BEQ 0x80a89650          // "beq 0x40" in GXSetCopyFilter
+#define PORT_OSFATAL_HALT_X_OFFSET 0x80aaa59c        // 'li r7, 48' for the X offset in Halt (OSFatal)
+#define PORT_OSFATAL_HALT_Y_OFFSET 0x80aaa59c        // 'li r8, 100' for the Y offset in Halt (OSFatal)
+#define PORT_SCREENREPORT_X_NEWLINE 0x80aaa5a4       // 'subi rX, rX, 48' for the X newline cutoff in ScreenReport
+#define PORT_OSFATAL_HALT_OSREPORT 0x80aaa600        // call to OSReport in Halt (OSFatal)
+#define PORT_OSFATAL_HALT_PPCHALT 0x80aaa604         // call to PPCHalt in Halt (OSFatal)
+#define PORT_OSFATAL 0x80aa9e50                      // OSFatal
+#define PORT_OSSETERRORHANDLER 0x80aa7d20            // OSSetErrorHandler
+#define PORT_PPCHALT 0x80a49600                      // PPCHalt
+#define PORT_OSRETURNTOMENU 0x80aad970               // OSReturnToMenu
+#define PORT_OSREADROM 0x80aae180                    // OSReadROM
 // bank8 specific stuff
 #define PORT_BANK8_MEM2_RSO_ASSERT1 0x804428e8
 #define PORT_BANK8_MEM2_RSO_ASSERT2 0x80442940

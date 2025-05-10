@@ -152,8 +152,12 @@ void ResolvedModuleKeyboardHook(void *keyboardRso)
 }
 #endif
 
+extern void RB3E_InstallWiiExceptionHandler(); // wii_exceptions.c
 static void CTHook(void *ThisApp, int argc, char **argv)
 {
+    // install an exception handler to show a graphical error when things go wrong
+    RB3E_InstallWiiExceptionHandler();
+    // print out if we're using a 256MB MEM2
     if (_has256MBMem2)
     {
         RB3E_MSG("Running with 256MB MEM2!", NULL);
