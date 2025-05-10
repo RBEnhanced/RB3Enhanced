@@ -522,7 +522,11 @@ void RB3E_ErrorOnException(uint8_t error, OSContext *ctx, uint32_t dsisr, uint32
 
     // build out the exception text
     RB3E_ExceptionText[0] = '\0';
+#ifndef RB3E_WII_BANK8
     strcat(RB3E_ExceptionText, "Rock Band 3 has crashed. Restarting in 30 seconds...\n" "If this happens again, report to the RB3Enhanced developers!\n\n");
+#else
+    strcat(RB3E_ExceptionText, "Rock Band 3 has crashed. (DEBUG BUILD)\n\n");
+#endif
 #define fmtExc(...) { sprintf(RB3E_ExceptionFormatBuffer, __VA_ARGS__); strcat(RB3E_ExceptionText, RB3E_ExceptionFormatBuffer); printf(RB3E_ExceptionFormatBuffer); }
     // print out the RB3E version and base address
     fmtExc("RB3Enhanced " RB3E_BUILDTAG " @ 0x%08X\n", (uint32_t)&RB3EBase);
@@ -615,8 +619,10 @@ void RB3E_InstallWiiExceptionHandler() {
     POKE_32(PORT_OSFATAL_HALT_X_OFFSET, LI(7, 30)); // x offset for text rendering
     POKE_32(PORT_OSFATAL_HALT_Y_OFFSET, LI(8, 20)); // y offset for text rendering
     POKE_32(PORT_SCREENREPORT_X_NEWLINE, 0x3bc4FFE1); // x offset for text rendering newline cutoff (-30)
+#ifndef RB3E_WII_BANK8
     POKE_32(PORT_OSFATAL_HALT_OSREPORT, NOP); // call to OSReport
     POKE_B(PORT_OSFATAL_HALT_PPCHALT, ReplaceHaltAfterFatal); // call to PPCHalt
+#endif
     // hook __OSReadROM
     POKE_B(PORT_OSREADROM, OSReadROMReplacement);
     RB3E_DEBUG("Installed exception handler!", NULL);
