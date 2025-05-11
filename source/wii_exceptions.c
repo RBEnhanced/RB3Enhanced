@@ -601,7 +601,7 @@ void RB3E_InstallWiiExceptionHandler() {
     POKE_B(PPCHalt, PORT_PPCHALT);
     POKE_B(OSReturnToMenu, PORT_OSRETURNTOMENU);
     // clear instruction cache probably
-    uint32_t addr = (((uint32_t)OSFatal) - 0x1f) & ~0x20;
+    uint32_t addr = (((uint32_t)OSFatal)) & ~0x1F;
     DCFlushRange((void *)(addr), 0x80);
     ICInvalidateRange((void *)(addr), 0x80);
     // install the exception handler

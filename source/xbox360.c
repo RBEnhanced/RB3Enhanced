@@ -70,9 +70,14 @@ int RB3E_CreateThread(void *address, void *arg, int stack_size)
 
 int RB3E_RelaunchGame()
 {
-    // no idea if this actually works
+    // we should probably get the current exec name from the kernel
     XLaunchNewImage("default.xex", 0);
     return 0;
+}
+
+void RB3E_FlushCache(void * address, unsigned int size)
+{
+    // TODO(Emma): clear dcache (and icache if possible) on xbox
 }
 
 static void CTHook(void *ThisApp, int argc, char **argv)

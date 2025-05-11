@@ -25,10 +25,7 @@
     }
 #endif
 
-#ifndef RB3E_XBOX
 RB3E_STUB(RB3EBase); // this will always be the start of .text
-// Xbox is loaded at a fixed address unlike Wii/PS3/PC
-#endif
 
 // function stub definitions
 #ifndef RB3E_WII
@@ -120,3 +117,5 @@ RB3E_STUB(OSSetErrorHandler)
 RB3E_STUB(PPCHalt)
 RB3E_STUB(OSReturnToMenu)
 #endif
+
+RB3E_STUB(RB3EStubEnd);

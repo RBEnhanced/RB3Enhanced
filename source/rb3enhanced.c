@@ -351,6 +351,7 @@ void InitialiseFunctions()
     POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
     POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
     POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
+    RB3E_FlushCache((void *)RB3EBase, (unsigned int)RB3EStubEnd - (unsigned int)RB3EBase);
     RB3E_MSG("Functions initialized!", NULL);
 }
 

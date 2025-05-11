@@ -83,6 +83,13 @@ int RB3E_CreateThread(void *address, void *arg, int stack_size)
     return -1;
 }
 
+void RB3E_FlushCache(void * address, unsigned int size) {
+    unsigned int alignedAddress = ((unsigned int)address & ~0x1F);
+    unsigned int alignedSize = ((unsigned int)address & ~0x1F) + 0x20;
+    DCFlushRange((void *)alignedAddress, alignedSize);
+    ICInvalidateRange((void *)alignedAddress, alignedSize);
+}
+
 int RB3E_RelaunchGame()
 {
     /*
