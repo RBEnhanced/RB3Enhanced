@@ -61,6 +61,7 @@ RB3E_STUB(MemPrint)
 RB3E_STUB(MemNumHeaps)
 RB3E_STUB(MemAlloc)
 RB3E_STUB(MemFree)
+RB3E_STUB(FileIsDLC)
 #ifndef RB3E_XBOX
 RB3E_STUB(DataRegisterFunc) // DataRegisterFunc is inlined on 360
 #endif

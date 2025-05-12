@@ -102,6 +102,8 @@
 #define PORT_DATAONELEM 0x80457bf0             // DataOnElem
 #define PORT_HEAPINIT 0x8049f030               // Heap::Init
 #define PORT_DATAREGISTERFUNC 0x804545e0       // DataRegisterFunc
+#define PORT_FILEISLOCAL 0x80422560            // FileIsLocal
+#define PORT_FILEISDLC 0x80422570              // FileIsDLC
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x80c904a8 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80c91818  // address of RockCentralGateway
