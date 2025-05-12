@@ -23,7 +23,14 @@ typedef char (*FileWriteDone_t)(File *thisFile, int *oBytes);
 
 typedef struct _File_vtable
 {
+#ifdef RB3E_WII
+    void *rtti;
+    void *null;
+#endif
     FileDestructor_t destructor;
+#ifdef RB3E_PS3
+    FileDestructor_t destructor2;
+#endif
     FileFilename_t Filename;
     FileRead_t Read;
     FileReadAsync_t ReadAsync;
@@ -40,12 +47,56 @@ typedef struct _File_vtable
     FileWriteDone_t WriteDone;
 } File_vtable;
 
-struct _File
+struct File
 {
     File_vtable *vtable;
 };
 
+typedef struct _AsyncFile AsyncFile;
+
+typedef void (*AsyncFile_OpenAsync_t)(AsyncFile *thisFile);
+typedef char (*AsyncFile_OpenDone_t)(AsyncFile *thisFile);
+typedef void (*AsyncFile_WriteAsync_t)(AsyncFile *thisFile, void *iData, int iBytes);
+typedef char (*AsyncFile_WriteDone_t)(AsyncFile *thisFile);
+typedef void (*AsyncFile_SeekToTell_t)(AsyncFile *thisFile);
+typedef void (*AsyncFile_ReadAsync_t)(AsyncFile *thisFile, void *iData, int iBytes);
+typedef char (*AsyncFile_ReadDone_t)(AsyncFile *thisFile);
+typedef void (*AsyncFile_Close_t)(AsyncFile *thisFile);
+
+typedef struct _AsyncFile_vtable
+{
+    File_vtable file;
+    AsyncFile_OpenAsync_t _OpenAsync;
+    AsyncFile_OpenDone_t _OpenDone;
+    AsyncFile_WriteAsync_t _WriteAsync;
+    AsyncFile_WriteDone_t _WriteDone;
+    AsyncFile_SeekToTell_t _SeekToTell;
+    AsyncFile_ReadAsync_t _ReadAsync;
+    AsyncFile_ReadDone_t _ReadDone;
+    AsyncFile_Close_t _Close;
+} AsyncFile_vtable;
+
+struct AsyncFile
+{
+    AsyncFile_vtable *vtable;
+    int mMode;
+    char mFail;
+    char unk9;
+    String mFilename;
+    unsigned int mTell;
+    int mOffset;
+    unsigned int mSize;
+    unsigned int mUCSize;
+    char *mBuffer;
+    char *mData;
+    int mBytesLeft;
+    int mBytesRead;
+};
+
 // flags can be used to check the existence of files both inside and outside the ARK, similar to how the NewFile flags work
 char FileExists(char *path, int flags);
+
+char FileIsDLC(char *path);
+char FileIsLocal(char *path);
 
 #endif // _FILE_H

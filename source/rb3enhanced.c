@@ -71,6 +71,13 @@ void *NewFileHook(char *fileName, int flags)
         fileName = new_path;
         flags = 0x10002; // tell the game to load this file raw
     }
+#ifdef RB3E_WII
+    // load the FileSD
+    if (RB3E_Mounted > 0 &&
+        (memcmp(fileName, "sd:/", 3) == 0 || new_path != NULL)) {
+        return FileSD_New(fileName, flags);
+    }
+#endif
 LOAD_ORIGINAL:
     if (config.LogFileAccess)
         RB3E_MSG("File: %s (%s)", fileName, (flags & 0x10000) ? "Raw" : "ARK");
@@ -300,6 +307,14 @@ void SymbolPreInitHook(int stringTableSize, int hashTableSize)
     InitGlobalSymbols();
 }
 
+#ifdef RB3E_WII
+char FileIsLocalHook(char *filepath) {
+    if (memcmp(filepath, "sd:/", 4) == 0)
+        return 1;
+    return FileIsDLC(filepath);
+}
+#endif
+
 void InitialiseFunctions()
 {
 #ifndef RB3E_WII
@@ -351,6 +366,9 @@ void InitialiseFunctions()
     POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
     POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
     POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
+#ifdef RB3E_WII
+    POKE_B(&FileIsDLC, PORT_FILEISDLC);
+#endif
     RB3E_FlushCache((void *)RB3EBase, (unsigned int)RB3EStubEnd - (unsigned int)RB3EBase);
     RB3E_MSG("Functions initialized!", NULL);
 }
@@ -394,6 +412,7 @@ void ApplyHooks()
 #ifdef RB3E_WII // wii exclusive hooks
     // HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
+    POKE_B(PORT_FILEISLOCAL, &FileIsLocalHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
