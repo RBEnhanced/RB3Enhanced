@@ -20,6 +20,11 @@ typedef struct _GlobalSymbols
     Symbol rb3e_relaunch_game;
     Symbol rb3e_get_song_count;
     Symbol rb3e_send_event_string;
+    Symbol rb3e_get_song_name;
+    Symbol rb3e_get_artist;
+    Symbol rb3e_get_album;
+    Symbol rb3e_get_origin;
+    Symbol rb3e_get_genre;
 
     // modifiers
     Symbol forceHopos;

@@ -11,6 +11,8 @@
 #include "config.h"
 #include "net_events.h"
 #include "rb3/Data.h"
+#include "rb3/SongMetadata.h"
+#include "rb3/BandSongMgr.h"
 #include "rb3enhanced.h"
 
 DataNode *PrintToDebugger(DataNode *node, DataArray *args)
@@ -168,6 +170,123 @@ DataNode *DTASendModData(DataNode *node, DataArray *args)
     return node;
 }
 
+DataNode *DTAGetSongName(DataNode *node, DataArray *args)
+{
+    // return "Darude Sandstorm";
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
+    Symbol rb3e_no_song_name;
+    SymbolConstruct(&rb3e_no_song_name, "rb3e_no_song_name");
+    node->type = SYMBOL;
+    node->value.string = rb3e_no_song_name.sym;
+    if (firstArg->type != INT_VALUE)
+        RB3E_MSG("Invalid types for arguments to rb3e_get_song_name! 1st: %i", firstArg->type);
+    else
+    {
+        SongMetadata *songmet = GetMetadata((BandSongMgr *)PORT_THESONGMGR, firstArg->value.intVal);
+        RB3E_DEBUG("rb3e_get_song_name %i", firstArg->value.intVal);
+        if (songmet == NULL) {
+            RB3E_MSG("!! FAILED TO GET SONG METADATA FOR %i !!", firstArg->value.intVal);
+        } else {
+            Symbol titleSym;
+            SymbolConstruct(&titleSym, songmet->title.buf);
+            node->value.string = titleSym.sym;
+        }
+    }
+    return node;
+}
+
+DataNode *DTAGetArtist(DataNode *node, DataArray *args)
+{
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
+    Symbol rb3e_no_artist;
+    SymbolConstruct(&rb3e_no_artist, "rb3e_no_artist");
+    node->type = SYMBOL;
+    node->value.string = rb3e_no_artist.sym;
+    if (firstArg->type != INT_VALUE)
+        RB3E_MSG("Invalid types for arguments to rb3e_get_artist! 1st: %i", firstArg->type);
+    else
+    {
+        SongMetadata *songmet = GetMetadata((BandSongMgr *)PORT_THESONGMGR, firstArg->value.intVal);
+        RB3E_DEBUG("rb3e_get_artist %i", firstArg->value.intVal);
+        if (songmet == NULL) {
+            RB3E_MSG("!! FAILED TO GET SONG METADATA FOR %i !!", firstArg->value.intVal);
+        } else {
+            Symbol artistSym;
+            SymbolConstruct(&artistSym, songmet->artist.buf);
+            node->value.string = artistSym.sym;
+        }
+    }
+    return node;
+}
+
+DataNode *DTAGetAlbum(DataNode *node, DataArray *args)
+{
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
+    Symbol rb3e_no_album;
+    SymbolConstruct(&rb3e_no_album, "rb3e_no_album");
+    node->type = SYMBOL;
+    node->value.string = rb3e_no_album.sym;
+    if (firstArg->type != INT_VALUE)
+        RB3E_MSG("Invalid types for arguments to rb3e_get_album! 1st: %i", firstArg->type);
+    else
+    {
+        SongMetadata *songmet = GetMetadata((BandSongMgr *)PORT_THESONGMGR, firstArg->value.intVal);
+        RB3E_DEBUG("rb3e_get_album %i", firstArg->value.intVal);
+        if (songmet == NULL) {
+            RB3E_MSG("!! FAILED TO GET SONG METADATA FOR %i !!", firstArg->value.intVal);
+        } else {
+            Symbol albumSym;
+            SymbolConstruct(&albumSym, songmet->artist.buf);
+            node->value.string = albumSym.sym;
+        }
+    }
+    return node;
+}
+
+DataNode *DTAGetGenre(DataNode *node, DataArray *args)
+{
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
+    Symbol rb3e_no_genre;
+    SymbolConstruct(&rb3e_no_genre, "rb3e_no_genre");
+    node->type = SYMBOL;
+    node->value.string = rb3e_no_genre.sym;
+    if (firstArg->type != INT_VALUE)
+        RB3E_MSG("Invalid types for arguments to rb3e_no_genre! 1st: %i", firstArg->type);
+    else
+    {
+        SongMetadata *songmet = GetMetadata((BandSongMgr *)PORT_THESONGMGR, firstArg->value.intVal);
+        RB3E_DEBUG("rb3e_no_genre %i", firstArg->value.intVal);
+        if (songmet == NULL) {
+            RB3E_MSG("!! FAILED TO GET SONG METADATA FOR %i !!", firstArg->value.intVal);
+        } else {
+            node->value.string = songmet->genre.sym;
+        }
+    }
+    return node;
+}
+
+DataNode *DTAGetOrigin(DataNode *node, DataArray *args)
+{
+    DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
+    Symbol rb3e_no_origin;
+    SymbolConstruct(&rb3e_no_origin, "rb3e_no_origin");
+    node->type = SYMBOL;
+    node->value.string = rb3e_no_origin.sym;
+    if (firstArg->type != INT_VALUE)
+        RB3E_MSG("Invalid types for arguments to rb3e_no_origin! 1st: %i", firstArg->type);
+    else
+    {
+        SongMetadata *songmet = GetMetadata((BandSongMgr *)PORT_THESONGMGR, firstArg->value.intVal);
+        RB3E_DEBUG("rb3e_no_origin %i", firstArg->value.intVal);
+        if (songmet == NULL) {
+            RB3E_MSG("!! FAILED TO GET SONG METADATA FOR %i !!", firstArg->value.intVal);
+        } else {
+            node->value.string = songmet->gameOrigin.sym;
+        }
+    }
+    return node;
+}
+
 #ifdef RB3E_XBOX
 // this function is inlined on the Xbox version, so we re-create it
 void DataRegisterFunc(Symbol name, DTAFunction_t func)
@@ -188,5 +307,10 @@ void AddDTAFunctions()
     DataRegisterFunc(globalSymbols.rb3e_relaunch_game, DTARelaunchGame);
     DataRegisterFunc(globalSymbols.rb3e_get_song_count, DTAGetSongCount);
     DataRegisterFunc(globalSymbols.rb3e_send_event_string, DTASendModData);
+    DataRegisterFunc(globalSymbols.rb3e_get_song_name, DTAGetSongName);
+    DataRegisterFunc(globalSymbols.rb3e_get_artist, DTAGetArtist);
+    DataRegisterFunc(globalSymbols.rb3e_get_album, DTAGetArtist);
+    DataRegisterFunc(globalSymbols.rb3e_get_origin, DTAGetOrigin);
+    DataRegisterFunc(globalSymbols.rb3e_get_genre, DTAGetGenre);
     RB3E_MSG("Added DTA functions!", NULL);
 }

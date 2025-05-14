@@ -2,6 +2,7 @@
 #define _SONGMETADATA_H
 
 #include "String.h"
+#include "Symbol.h"
 
 // technically BandSongMetadata?
 typedef struct _SongMetadata
@@ -12,10 +13,10 @@ typedef struct _SongMetadata
 #else
     char unknown[0x28];
 #endif
-    char *shortname;
+    Symbol shortname;
     int song_id;
     char unknown2[0x4];
-    char *gameOrigin;
+    Symbol gameOrigin;
     char unknown3[0x10];
     String title;
     String artist;
@@ -25,9 +26,9 @@ typedef struct _SongMetadata
 #else
     char unknown6[0x18];
 #endif
-    char *genre;
+    Symbol genre;
     int animTempo;
-    char *vocalGender;
+    Symbol vocalGender;
     int lengthMs;
 } SongMetadata;
 

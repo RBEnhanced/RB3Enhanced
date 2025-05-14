@@ -36,6 +36,11 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.rb3e_relaunch_game, "rb3e_relaunch_game");
     SymbolConstruct(&globalSymbols.rb3e_get_song_count, "rb3e_get_song_count");
     SymbolConstruct(&globalSymbols.rb3e_send_event_string, "rb3e_send_event_string");
+    SymbolConstruct(&globalSymbols.rb3e_get_song_name, "rb3e_get_song_name");
+    SymbolConstruct(&globalSymbols.rb3e_get_artist, "rb3e_get_artist");
+    SymbolConstruct(&globalSymbols.rb3e_get_album, "rb3e_get_album");
+    SymbolConstruct(&globalSymbols.rb3e_get_origin, "rb3e_get_origin");
+    SymbolConstruct(&globalSymbols.rb3e_get_genre, "rb3e_get_genre");
 
     SymbolConstruct(&globalSymbols.blackBackground, "mod_black_background");
     SymbolConstruct(&globalSymbols.colorShuffle, "mod_color_shuffle");
