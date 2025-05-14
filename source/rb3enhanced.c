@@ -347,8 +347,6 @@ void InitialiseFunctions()
     POKE_B(&HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
     // TODO(Emma): port to bank8
     POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
-#else
-    POKE_B(&DataRegisterFunc, PORT_DATAREGISTERFUNC);
 #endif
     POKE_B(&RandomInt, PORT_RANDOMINT);
     POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);
@@ -371,6 +369,9 @@ void InitialiseFunctions()
     POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
     POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
     POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
+#ifndef RB3E_XBOX
+    POKE_B(&DataRegisterFunc, PORT_DATAREGISTERFUNC);
+#endif
 #ifdef RB3E_WII
     POKE_B(&FileIsDLC, PORT_FILEISDLC);
 #endif

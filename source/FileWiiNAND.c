@@ -36,7 +36,7 @@ typedef struct _nand_file_stats_t {
 FileWiiNAND *FileWiiNAND_New(const char *filepath)
 {
     // never ever allow this on real hardware
-    if (RB3E_IsEmulator())
+    if (!RB3E_IsEmulator())
         return NULL;
 
     RB3E_DEBUG("FileWiiNAND_New(filepath='%s')", filepath);
