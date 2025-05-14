@@ -77,6 +77,11 @@ void *NewFileHook(char *fileName, int flags)
         (memcmp(fileName, "sd:/", 3) == 0 || new_path != NULL)) {
         return FileSD_New(fileName, flags);
     }
+#ifdef RB3EDEBUG
+    if (RB3E_IsEmulator() && memcmp(fileName, "nand/", 5) == 0) {
+        return FileWiiNAND_New(fileName + 4);
+    }
+#endif
 #endif
 LOAD_ORIGINAL:
     if (config.LogFileAccess)

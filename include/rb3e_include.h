@@ -7,6 +7,7 @@
 #include "DataDebug.h"
 #include "DTAFunctions.h"
 #include "FileSD.h"
+#include "FileWiiNAND.h"
 #include "GameHooks.h"
 #include "GemHooks.h"
 #include "GlobalSymbols.h"

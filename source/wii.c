@@ -21,7 +21,6 @@
 #include "GlobalSymbols.h"
 #include "config.h"
 #include "rb3/WiiMemMgr.h"
-#include "wii_ipc.h"
 #include "utilities.h"
 
 char _has256MBMem2 = 0;
