@@ -259,9 +259,7 @@ DataNode *DTAGetGenre(DataNode *node, DataArray *args)
         if (songmet == NULL) {
             RB3E_MSG("!! FAILED TO GET SONG METADATA FOR %i !!", firstArg->value.intVal);
         } else {
-            Symbol genreSym;
-            SymbolConstruct(&genreSym, songmet->genre.buf);
-            node->value.string = genreSym.sym;
+            node->value.string = songmet->genre.sym;
         }
     }
     return node;
