@@ -236,7 +236,7 @@ DataNode *DTAGetAlbum(DataNode *node, DataArray *args)
             RB3E_MSG("!! FAILED TO GET SONG METADATA FOR %i !!", firstArg->value.intVal);
         } else {
             Symbol albumSym;
-            SymbolConstruct(&albumSym, songmet->album.buf);
+            SymbolConstruct(&albumSym, songmet->album.buf); 
             node->value.string = albumSym.sym;
         }
     }
