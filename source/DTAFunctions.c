@@ -255,11 +255,13 @@ DataNode *DTAGetGenre(DataNode *node, DataArray *args)
     else
     {
         SongMetadata *songmet = GetMetadata((BandSongMgr *)PORT_THESONGMGR, firstArg->value.intVal);
-        RB3E_DEBUG("rb3e_no_genre %i", firstArg->value.intVal);
+        RB3E_DEBUG("rb3e_get_genre %i", firstArg->value.intVal);
         if (songmet == NULL) {
             RB3E_MSG("!! FAILED TO GET SONG METADATA FOR %i !!", firstArg->value.intVal);
         } else {
-            node->value.string = songmet->genre.sym;
+            Symbol genreSym;
+            SymbolConstruct(&genreSym, songmet->genre.buf);
+            node->value.string = genreSym.sym;
         }
     }
     return node;
@@ -309,7 +311,7 @@ void AddDTAFunctions()
     DataRegisterFunc(globalSymbols.rb3e_send_event_string, DTASendModData);
     DataRegisterFunc(globalSymbols.rb3e_get_song_name, DTAGetSongName);
     DataRegisterFunc(globalSymbols.rb3e_get_artist, DTAGetArtist);
-    DataRegisterFunc(globalSymbols.rb3e_get_album, DTAGetArtist);
+    DataRegisterFunc(globalSymbols.rb3e_get_album, DTAGetAlbum);
     DataRegisterFunc(globalSymbols.rb3e_get_origin, DTAGetOrigin);
     DataRegisterFunc(globalSymbols.rb3e_get_genre, DTAGetGenre);
     RB3E_MSG("Added DTA functions!", NULL);
