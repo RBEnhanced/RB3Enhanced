@@ -88,5 +88,6 @@ typedef struct _RndMat
 } RndMat;
 
 RndMat *RndMatNewObject();
+RndMat* RndMatSetDiffuseTex(RndMat *thisRndMat, RndTex *tex);
 
 #endif // _RNDMAT_H

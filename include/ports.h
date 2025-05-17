@@ -137,6 +137,7 @@
 #define PORT_RNDMATNEWOBJECT 0x8240f5d0                   // RndMat::NewObject
 #define PORT_RNDTEXSETBITMAP 0x823ff678                   // RndTex::SetBitmap
 #define PORT_RNDTEXSETBITMAP2 0x823ff240                  // RndTex::SetBitmap2
+#define PORT_RNDTEXSETBITMAP3 0x823ff510                  // RndTex::SetBitmap3
 #define PORT_FILEPATHCONSTRUCTOR 0x82270210               // FilePath::__ct
 #define PORT_MUSICLIBRARY_CT 0x825451c8                   // MusicLibrary::__ct
 #define PORT_MUSICLIBRARYMAT 0x8253b440                   // MusicLibrary::Mat
@@ -144,6 +145,8 @@
 #define PORT_GAMEGEMDB_CT 0x827931e0                      // GameGemDB::__ct
 #define PORT_ADDMULTIGEM 0x827930d8                       // GameGemDB::AddMultiGem
 #define PORT_SONGSORTMGRGETSORT 0x82595ff8                // SongSortMgr::GetSort
+#define PORT_DYNAMICTEX_CT 0x825f2318                     // DynamicTex::__ct
+#define PORT_RNDMATSETDIFFUSETEX 0x8238b130               // RndMat::SetDiffuseTex
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -275,6 +278,7 @@ void DbgPrint(const char *s, ...);
 #define PORT_RNDMATNEWOBJECT 0x8063996c                   // RndMat::NewObject
 #define PORT_RNDTEXSETBITMAP 0x8063fccc                   // RndTex::SetBitmap
 #define PORT_RNDTEXSETBITMAP2 0x8063f830                  // RndTex::SetBitmap2
+#define PORT_RNDTEXSETBITMAP3 0x8063fb2c                  // RndTex::SetBitmap3
 #define PORT_FILEPATHCONSTRUCTOR 0x8000ec5c               // FilePath::__ct
 #define PORT_MUSICLIBRARY_CT 0x8022d978                   // MusicLibrary::__ct
 #define PORT_MUSICLIBRARYMAT 0x80231c5c                   // MusicLibrary::Mat
@@ -282,7 +286,9 @@ void DbgPrint(const char *s, ...);
 #define PORT_GAMEGEMDB_CT 0x80460f64                      // GameGemDB::__ct
 #define PORT_ADDMULTIGEM 0x80461160                       // GameGemDB::AddMultiGem
 #define PORT_GETGAMELIST 0x8048553c                       // SongData::GetGameList
-#define PORT_SONGSORTMGRGETSORT 0x802310b8                // SongSortMgr::GetSort
+#define PORT_SONGSORTMGRGETSORT 0x80281b20                // SongSortMgr::GetSort
+#define PORT_RNDMATSETDIFFUSETEX 0x8025ab90               // RndMat::SetDiffuseTex
+#define PORT_DYNAMICTEX_CT 0x80292a70                     // DynamicTex::__ct
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

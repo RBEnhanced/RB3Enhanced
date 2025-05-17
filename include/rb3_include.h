@@ -44,6 +44,7 @@
 #include "quazal/QuazalSocket.h"
 
 // rnd headers
+#include "rb3/Rnd/DynamicTex.h"
 #include "rb3/Rnd/RndPropAnim.h"
 #include "rb3/Rnd/RndMat.h"
 #include "rb3/Rnd/RndTex.h"

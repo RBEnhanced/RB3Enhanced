@@ -14,11 +14,10 @@ typedef struct _SongMetadata
 #else
     char unknown[0x28];
 #endif
-    char *mShortName;
+    Symbol mShortName;
     int mSongID;
-    char mIsOnDisc;
-    char pad[3];
-    char *mGameOrigin;
+    char unknown2[0x4];
+    Symbol mGameOrigin;
     char unknown3[0x10];
     String title;
     String artist;

@@ -333,6 +333,9 @@ void InitialiseFunctions()
     POKE_B(&vector_push_back, PORT_VECTORPUSHBACK);
     POKE_B(&GameGemDBConstructor, PORT_GAMEGEMDB_CT);
     POKE_B(&SongSortMgrGetSort, PORT_SONGSORTMGRGETSORT);
+    POKE_B(&DynamicTexConstructor, PORT_DYNAMICTEX_CT);
+    POKE_B(&RndMatSetDiffuseTex, PORT_RNDMATSETDIFFUSETEX);
+    POKE_B(&RndTexSetBitmap3, PORT_RNDTEXSETBITMAP3);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -346,7 +349,6 @@ void ApplyHooks()
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
     HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
     HookFunction(PORT_ADDGAMEGEM, &AddGameGem, &AddGameGemHook);
-    HookFunction(PORT_SETSONGANDARTISTNAME, &SetSongAndArtistName, SetSongAndArtistNameHook);
     HookFunction(PORT_SETVENUE, &SetVenue, &SetVenueHook);
     HookFunction(PORT_MODIFIERMGR_CT, &ModifierManagerConstructor, &ModifierManagerConstructorHook);
     HookFunction(PORT_NEWFILE, &NewFile, &NewFileHook);
@@ -369,7 +371,6 @@ void ApplyHooks()
     HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
     HookFunction(PORT_MUSICLIBRARY_CT, &MusicLibraryConstructor, &MusicLibraryConstructorHook);
     HookFunction(PORT_MUSICLIBRARYMAT, &MusicLibraryMat, &MusicLibraryMatHook);
-    HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
 #ifdef RB3E_WII // wii exclusive hooks
     HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);

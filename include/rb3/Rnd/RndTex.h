@@ -46,8 +46,8 @@ typedef struct _ObjPtr_RndTex
 RndTex *RndTexNewObject();
 void RndTexSetBitmap(RndTex *thisRndTex, FilePath *path);
 void RndTexSetBitmap2(RndTex *thisRndTex, int width, int height, int bpp, int type, int useMips, char *path);
+void RndTexSetBitmap3(RndTex *thisRndTex, void* fileLoader);
 
 void RndBitmapGenerateMips(RndBitmap *thisBitmap);
 int RndBitmapNumMips(RndBitmap *thisBitmap);
-
 #endif // _RNDTEX_H

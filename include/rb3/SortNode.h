@@ -47,7 +47,7 @@ typedef struct _SongRecord
 {
     int *vtable;
 #ifdef RB3E_WII
-    char unknown[0xfc];
+    char unknown[0xf8];
 #else
     char unknown[0x104];
 #endif
