@@ -63,6 +63,7 @@ int RB3E_IsEmulator()
     if (HasRunDetection)
         return DetectionResult;
     DetectionResult = DetectDolphin();
+    HasRunDetection = 1;
     return DetectionResult;
 }
 
