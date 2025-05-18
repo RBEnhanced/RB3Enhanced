@@ -28,7 +28,7 @@ int contentInitHandleTitleNAND_hook(unsigned long long title_id, unsigned int co
     if (RB3E_FileExists(sdfilepath))
     {
         // open the bin file on the SD
-        RB3E_CNTFileSD *cntfilesd = RB3E_OpenCNTFileSD(sdfilepath);
+        RB3E_CNTFileSD *cntfilesd = RB3E_OpenCNTFileSD(sdfilepath, title_id, content_index);
         if (cntfilesd == NULL) {
             return -1; // TODO: what's the proper CNT error for "file not found"?
         }
@@ -125,8 +125,8 @@ int EC_GetContentInfos_hook(unsigned long long titleId, ec_content_info_t *conte
                                 contentInfos[contentIndex].flags = 3;
                                 contentInfos[contentIndex].index = contentIndex;
                                 contentInfos[contentIndex].type = 0x4001; // DLC
-                                // ROCK BAND HACK - the filesize of the DLC is checked to determine if something is a song or not
-                                contentInfos[contentIndex].size = (contentIndex & 1) == 0 ? 0x414141 : 1;
+                                // the filesize of the DLC is checked to determine if something is a song or not
+                                contentInfos[contentIndex].size = fs.st_size;
                             }
                             else
                             {

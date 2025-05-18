@@ -22,7 +22,31 @@
 #define PRINT_BLOCK(name, x) RB3E_DEBUG(name ": %08x%08x%08x%08x", *(uint32_t *)&x[0], *(uint32_t *)&x[4], *(uint32_t *)&x[8], *(uint32_t *)&x[12])
 
 // to be filled in by the brainslug launcher
-uint8_t RB3E_ConsolePRNGKey[0x10];
+uint8_t RB3E_ConsolePRNGKey[0x10] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+static uint8_t nullKey[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+// This is really slow apparently
+void IOS_AES_Decrypt(uint8_t *input, uint8_t *key, uint8_t *iv, uint8_t *output)
+{
+    static ios_fd_t aesFd = -1;
+    if (aesFd == -1)
+        aesFd = IOS_Open("/dev/aes", IPC_OPEN_NONE);
+    
+    ioctlv vec[4] __attribute__((align(32)));
+    // input vector
+    vec[0].data = input;
+    vec[0].len = 0x10;
+    vec[1].data = key;
+    vec[1].len = 0x10;
+    // output vector
+    vec[2].data = output;
+    vec[2].len = 0x10;
+    vec[3].data = iv;
+    vec[3].len = 0x10;
+    // decrypt
+    IOS_Ioctlv(aesFd, 0x3, 2, 2, vec);
+}
 
 uint64_t OSGetTime();
 uint64_t timeSpentInAES = 0;
@@ -78,13 +102,12 @@ void RB3E_CNTFileReadBlock(RB3E_CNTFileSD *file, int blockIndex)
         }
         time = OSGetTime();
         // read and decrypt the current block
-        SD_read(file->fd, file->lastBlock, 0x10);
+        SD_read(file->fd, file->lastBlockEnc, 0x10);
         timeSpentInSD += OSGetTime() - time;
         
         time = OSGetTime();
-        memcpy(file->lastBlockEnc, file->lastBlock, 0x10); // keep a copy of the encrypted last block to use as the next IV
-        // TODO(Emma): can we use the hardware AES engine to make this faster?
-        // TODO(Emma): can we 
+        //memcpy(file->lastBlockEnc, file->lastBlock, 0x10); // keep a copy of the encrypted last block to use as the next IV
+        memcpy(file->lastBlock, file->lastBlockEnc, 0x10);
         AES_CBC_decrypt_buffer(file->aesCtx, file->lastBlock, 0x10);
         timeSpentInAES += OSGetTime() - time;
         file->lastBlockIndex = blockIndex;
@@ -162,7 +185,7 @@ found:
     return index;
 }
 
-RB3E_CNTFileSD *RB3E_OpenCNTFileSD(const char *filepath)
+RB3E_CNTFileSD *RB3E_OpenCNTFileSD(const char *filepath, unsigned long long titleid, unsigned int index)
 {
     // open a handle to the file
     int fd = RB3E_OpenFile(filepath, 0);
@@ -235,9 +258,9 @@ RB3E_CNTFileSD *RB3E_OpenCNTFileSD(const char *filepath)
         file->startOffset = startOfData;
         // try to decrypt it with the NULL PRNG key (sZA-sZG)
         RB3E_DEBUG("Attempting to read with NULLed key", NULL);
-        static uint8_t nullKey[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         PRINT_BLOCK("Key", nullKey);
         AES_init_ctx(file->aesCtx, nullKey);
+        memcpy(file->aesKey, nullKey, 0x10);
         RB3E_CNTFileReadBlock(file, 0);
         if (*(uint32_t *)file->lastBlock != ARC_MAGIC)
         {
@@ -245,6 +268,7 @@ RB3E_CNTFileSD *RB3E_OpenCNTFileSD(const char *filepath)
             RB3E_DEBUG("Trying console specific PRNG key", NULL);
             PRINT_BLOCK("Key", RB3E_ConsolePRNGKey);
             AES_init_ctx(file->aesCtx, RB3E_ConsolePRNGKey);
+            memcpy(file->aesKey, RB3E_ConsolePRNGKey, 0x10);
             file->lastBlockIndex = -1;
             RB3E_CNTFileReadBlock(file, 0);
             if (*(uint32_t *)file->lastBlock != ARC_MAGIC)
@@ -278,10 +302,10 @@ RB3E_CNTFileSD *RB3E_OpenCNTFileSD(const char *filepath)
     {
         // untested, just try to handle the ARC file directly
         file->aesCtx = NULL;
-        file->contentIndex = 0xFFFF; // TODO(Emma): get this from the filename and a TMD file
+        file->contentIndex = index;
         file->contentLength = RB3E_FileSize(file->fd);
         file->startOffset = 0;
-        file->titleId = 0x72423345; // 'rB3E'
+        file->titleId = (uint32_t)titleid;
         // read the ARC file header into RAM
         u8_header_t archeader;
         RB3E_CNTFileRead(file, 0, (uint8_t *)&archeader, sizeof(u8_header_t));
@@ -302,6 +326,102 @@ RB3E_CNTFileSD *RB3E_OpenCNTFileSD(const char *filepath)
         RB3E_MSG("'%s' was not valid CNT file.", filepath);
         RB3E_CloseCNTFileSD(file);
         return NULL;
+    }
+}
+
+void ParseKeysFile(uint8_t *keys_data, size_t keys_len)
+{
+    RB3E_DEBUG("0x%x bytes key file", keys_len);
+    // check if its a BootMii-style keys.bin
+    if (keys_len >= 0x400 && *(uint32_t *)&keys_data[0x114] == 0xEBE42A22)
+    {   
+        memcpy(RB3E_ConsolePRNGKey, keys_data + 0x168, 0x10);
+    }
+    // check if its an OTP file dump
+    else if (keys_len >= 0x100 && *(uint32_t *)&keys_data[0x14] == 0xEBE42A22)
+    {
+        memcpy(RB3E_ConsolePRNGKey, keys_data + 0x68, 0x10);
+    }
+    // check if its a straight up key
+    else if (keys_len == 0x10)
+    {
+        memcpy(RB3E_ConsolePRNGKey, keys_data, 0x10);
+    }
+    else
+    {
+        RB3E_DEBUG("FAILED TO LOAD KEY!", NULL);
+        return;
+    }
+    PRINT_BLOCK("Loaded Key", RB3E_ConsolePRNGKey);
+}
+
+void TryToLoadPRNGKeyFromFile()
+{
+    uint8_t keys_buffer[0x400]; // size of keys.bin file
+
+    // check if the loader already loaded a prng key
+    if (memcmp(RB3E_ConsolePRNGKey, nullKey, 0x10) != 0)
+    {
+        RB3E_DEBUG("PRNG key loaded, not scanning for file", NULL);
+        return;
+    }
+
+    // DOLPHIN ONLY: try to load keys.bin from the NAND
+    if (RB3E_IsEmulator())
+    {
+        ios_fd_t nandfd = IOS_Open("/keys.bin", IPC_OPEN_READ);
+        if (nandfd >= 0)
+        {
+            RB3E_DEBUG("Loading keys from NAND", NULL);
+            ios_ret_t readret = IOS_Read(nandfd, keys_buffer, sizeof(keys_buffer));
+            IOS_Close(nandfd);
+            if (readret >= IPC_OK)
+            {
+                ParseKeysFile(keys_buffer, readret);
+            }
+            return;
+        }
+    }
+
+    // try a few files on SD
+    // PRNG key as binary
+    if (RB3E_FileExists("sd:/prng_key.bin"))
+    {
+        int keysfd = RB3E_OpenFile("sd:/prng_key.bin", 0);
+        if (keysfd != -1)
+        {
+            RB3E_DEBUG("Loading keys from prng_key.bin", NULL);
+            int r = RB3E_ReadFile(keysfd, 0, keys_buffer, 0x10);
+            RB3E_CloseFile(keysfd);
+            ParseKeysFile(keys_buffer, r == 0x10 ? 0x10 : 0);
+            return;
+        }
+    }
+    // vWii/xyzzy OTP backup
+    if (RB3E_FileExists("sd:/otp.bin"))
+    {
+        int otpfd = RB3E_OpenFile("sd:/otp.bin", 0);
+        if (otpfd != -1)
+        {
+            RB3E_DEBUG("Loading keys from otp.bin", NULL);
+            int r = RB3E_ReadFile(otpfd, 0, keys_buffer, sizeof(keys_buffer));
+            RB3E_CloseFile(otpfd);
+            ParseKeysFile(keys_buffer, r);
+            return;
+        }
+    }
+    // BootMii/xyzzy keys.bin backup
+    if (RB3E_FileExists("sd:/keys.bin"))
+    {
+        int keysfd = RB3E_OpenFile("sd:/keys.bin", 0);
+        if (keysfd != -1)
+        {
+            RB3E_DEBUG("Loading keys from keys.bin", NULL);
+            int r = RB3E_ReadFile(keysfd, 0, keys_buffer, sizeof(keys_buffer));
+            RB3E_CloseFile(keysfd);
+            ParseKeysFile(keys_buffer, r);
+            return;
+        }
     }
 }
 

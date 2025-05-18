@@ -435,6 +435,7 @@ void ApplyHooks()
 }
 
 void InitCNTHooks();
+void TryToLoadPRNGKeyFromFile();
 
 void StartupHook(void *ThisApp, int argc, char **argv)
 {
@@ -456,7 +457,10 @@ void StartupHook(void *ThisApp, int argc, char **argv)
 
 #ifdef RB3E_WII
     if (RB3E_Mounted && config.LegacySDMode == false)
+    {
+        TryToLoadPRNGKeyFromFile();
         InitCNTHooks();
+    }
 #endif
 
     // start the game by calling the proper app constructor
