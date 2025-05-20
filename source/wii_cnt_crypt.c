@@ -88,7 +88,7 @@ void RB3E_CNTFileReadBlock(RB3E_CNTFileSD *file, int blockIndex)
         {
             time = OSGetTime();
             // if we're reading in the next block, we don't need to seek backwards
-            memcpy(file->aesCtx->Iv, file->lastBlockEnc, 0x10);
+            //memcpy(file->aesCtx->Iv, file->lastBlockEnc, 0x10);
             timeSpentInSeek += OSGetTime() - time;
         }
         else
@@ -102,12 +102,12 @@ void RB3E_CNTFileReadBlock(RB3E_CNTFileSD *file, int blockIndex)
         }
         time = OSGetTime();
         // read and decrypt the current block
-        SD_read(file->fd, file->lastBlockEnc, 0x10);
+        SD_read(file->fd, file->lastBlock, 0x10);
         timeSpentInSD += OSGetTime() - time;
         
         time = OSGetTime();
         //memcpy(file->lastBlockEnc, file->lastBlock, 0x10); // keep a copy of the encrypted last block to use as the next IV
-        memcpy(file->lastBlock, file->lastBlockEnc, 0x10);
+        //memcpy(file->lastBlock, file->lastBlockEnc, 0x10);
         AES_CBC_decrypt_buffer(file->aesCtx, file->lastBlock, 0x10);
         timeSpentInAES += OSGetTime() - time;
         file->lastBlockIndex = blockIndex;

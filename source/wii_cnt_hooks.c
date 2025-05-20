@@ -107,14 +107,13 @@ int EC_GetContentInfos_hook(unsigned long long titleId, ec_content_info_t *conte
                 {
                     if (SD_dirnext(&ds, filename, &fs) == 0)
                     {
-                        // hacky check to see if the filename is some form of "000.BIN"
+                        // hacky check to see if the filename is some form of "000.BIN" or "000.APP"
                         if ((filename[0] >= '0' && filename[0] <= '9') &&
                             (filename[1] >= '0' && filename[1] <= '9') &&
                             (filename[2] >= '0' && filename[2] <= '9') &&
                             (filename[3] == '.') &&
-                            (filename[4] & ~0x20) == 'B' &&
-                            (filename[5] & ~0x20) == 'I' &&
-                            (filename[6] & ~0x20) == 'N')
+                            (((filename[4] & ~0x20) == 'B' && (filename[5] & ~0x20) == 'I' && (filename[6] & ~0x20) == 'N') ||
+                            ((filename[4] & ~0x20) == 'A' && (filename[5] & ~0x20) == 'P' && (filename[6] & ~0x20) == 'P')))
                         {
                             // make a content index out of the filename
                             int contentIndex =
