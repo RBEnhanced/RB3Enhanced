@@ -23,7 +23,26 @@
 #include "rb3/Rnd/RndMat.h"
 
 DynamicTex *textures[100] = {0};
-static int numOriginToIcon = sizeof(numOriginToIcon) / sizeof(numOriginToIcon[0]);
+static char *originToIcon[][2] = {
+    {"rb1", "<alt>Y</alt> "},
+    {"rb2", "<alt>2</alt> "},
+    {"rb3", "<alt>B</alt> "},
+    {"rb4", "<alt>1</alt> "},
+    {"rb_blitz", "<alt>X</alt> "},
+    {"ugc", "<alt>U</alt> "},
+    {"ugc_c3", "<alt>y</alt> "},
+    {"ugc_plus", "<alt>U</alt> "},
+    {"ugc1", "<alt>U</alt> "},
+    {"ugc2", "<alt>U</alt> "},
+    {"lego", "<alt>A</alt> "},
+    {"greenday", "<alt>0</alt> "},
+    {"beatles", "<alt>b</alt> "},
+    {"gh1", "<alt>R</alt> "},
+    {"gh2", "<alt>S</alt> "},
+    {"gh3", "<alt>s</alt> "},
+    {"onyxite", "<alt>G</alt> "},
+};
+static int numOriginToIcon = sizeof(originToIcon) / sizeof(originToIcon[0]);
 
 void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
 {
@@ -36,7 +55,7 @@ void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
         SetSongAndArtistName(label, sortNode);
         for (i = 0; i < numOriginToIcon; i++)
         {
-            if (strcmp(sortNode->ShortcutNodeVtable->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
+            if (strcmp(sortNode->vtable->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
             {
                 originLabel = originToIcon[i][1];
                 break;
@@ -64,7 +83,7 @@ void SetSongNameFromNodeHook(BandLabel *label, SortNode *sortNode)
         SetSongNameFromNode(label, sortNode);
         for (i = 0; i < numOriginToIcon; i++)
         {
-            if (strcmp(sortNode->ShortcutNodeVtable->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
+            if (strcmp(sortNode->vtable->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
             {
                 originLabel = originToIcon[i][1];
                 break;
