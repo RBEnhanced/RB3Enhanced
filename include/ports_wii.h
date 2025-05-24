@@ -28,6 +28,7 @@
 #define PORT_UPDATEPRESENCEBLOCK_B 0x80188194    // branch after the failure case in a function that calls UpdatePresence
 #define PORT_MULTIPLAYER_CRASH 0x80018a78        // branch to a function that can crash in online multiplayer
 #define PORT_MULTIPLAYER_FIX 0x806ec0e8          // the function that doesn't crash
+#define PORT_ADDTRACKVECTOR_BL 0x80480a88       // bl to vector_push_back inside of SongData::AddTrack
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError
@@ -42,6 +43,7 @@
 #define PORT_EXECUTEDTA 0x802cf7e0               // RockCentralGateway::ExecuteConfig
 #define PORT_BANDLABELSETDISPLAYTEXT 0x803b1858  // BandLabel::SetDisplayText
 #define PORT_SETSONGANDARTISTNAME 0x801b68a8     // BandLabel::SetSongAndArtistName
+#define PORT_SETSONGNAMEFROMNODE 0x801b6358               // BandLabel::SetSongNameFromNode
 #define PORT_KEYSONGUITAR 0x80242ab4             // function that checks "key_keys_on_guitar"
 #define PORT_HMXFACTORYFUNCAT 0x8031b2f8         // HmxObjectFactoryFunc::_at
 #define PORT_WILLBENOSTRUM 0x80463010            // GameGemList::WillBeNoStrum
@@ -51,6 +53,7 @@
 #define PORT_GETWIDGETBYNAME 0x800d59b0          // GemManager::GetWidgetByName
 #define PORT_DATANODEEVALUATE 0x80322e9c         // DataNode::Evaluate
 #define PORT_GETSLOTCOLOR 0x800e42a4             // TrackConfig::GetSlotColor
+#define PORT_ADDSMASHERPLATETOVECTOR 0x804316d4           // AddSmasherPlateToVector
 #define PORT_USBWIIGETTYPE 0x806c1a3c            // UsbWii::GetType
 #define PORT_FILE_EXISTS 0x802fa134              // FileExists
 #define PORT_QUEUEMESSAGE 0x80253c50             // PassiveMessagesPanel::QueueMessage
@@ -64,6 +67,7 @@
 #define PORT_BUILDINSTRUMENTSELECTION 0x802478a8 // BuildInstrumentSelectionList(?) - actual name not known
 #define PORT_PREPARESOMEVECTORMAYBE 0x80247c58   // Prepares some vector, used by BuildInstrumentSelectionList
 #define PORT_SOMEVECTORPUSHBACKMAYBE 0x802484a8  // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
+#define PORT_VECTORPUSHBACK 0x800a6ef4                    // vector_push_back
 #define PORT_POSTPROC_DOPOST 0x806b52b4          // WiiPostProc::DoPost
 #define PORT_MUSICLIBRARYSELECTMAYBE 0x80230d64  // Selects an entry in the Music Library screen - actual name not known
 #define PORT_GETSYMBOLBYGAMEORIGIN 0x8027dd3c    // SongSortByRecent::GetSymbolByGameOrigin
@@ -88,8 +92,25 @@
 #define PORT_QUEUINGSOCKET_BIND 0x800478d4       // Quazal::QueuingSocket::Bind
 #define PORT_QUAZALSOCKET_BIND 0x8001cd10        // Quazal::Socket::Bind
 #define PORT_INITSONGMETADATA 0x805147a4         // InitSongMetadata
+#define PORT_SONGMETADATACONSTRUCTOR 0x80514880           // SongMetadata::__ct
+#define PORT_SONGMETADATALOAD 0x801d2090                  // SongMetadata::Load
 #define PORT_UPDATEPRESENCE 0x801879d4           // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x80025364   // Quazal::StepSequenceJob::SetStep
+#define PORT_RNDTEXNEWOBJECT 0x80639904                   // RndTex::NewObject
+#define PORT_RNDMATNEWOBJECT 0x8063996c                   // RndMat::NewObject
+#define PORT_RNDTEXSETBITMAP 0x8063fccc                   // RndTex::SetBitmap
+#define PORT_RNDTEXSETBITMAP2 0x8063f830                  // RndTex::SetBitmap2
+#define PORT_RNDTEXSETBITMAP3 0x8063fb2c                  // RndTex::SetBitmap3
+#define PORT_FILEPATHCONSTRUCTOR 0x8000ec5c               // FilePath::__ct
+#define PORT_MUSICLIBRARY_CT 0x8022d978                   // MusicLibrary::__ct
+#define PORT_MUSICLIBRARYMAT 0x80231c5c                   // MusicLibrary::Mat
+#define PORT_NODESORTGETNODE 0x80279314                   // MusicLibrary::GetNodeByIndex
+#define PORT_GAMEGEMDB_CT 0x80460f64                      // GameGemDB::__ct
+#define PORT_ADDMULTIGEM 0x80461160                       // GameGemDB::AddMultiGem
+#define PORT_GETGAMELIST 0x8048553c                       // SongData::GetGameList
+#define PORT_SONGSORTMGRGETSORT 0x80281b20                // SongSortMgr::GetSort
+#define PORT_RNDMATSETDIFFUSETEX 0x8025ab90               // RndMat::SetDiffuseTex
+#define PORT_DYNAMICTEX_CT 0x80292a70                     // DynamicTex::__ct
 #define PORT_BINSTREAMWRITE 0x80342f48           // BinStream::Write
 #define PORT_BINSTREAMREAD 0x80342e7c            // BinStream::Read
 #define PORT_BINSTREAMREADENDIAN 0x803430bc      // BinStream::ReadEndian

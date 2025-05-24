@@ -48,6 +48,8 @@
 #define PORT_LOADOBJS_BCTRL 0x827562e4           // bctrl to Object::PreLoad insie of DirLoader::LoadObjs
 #define PORT_SONGMGR_ISDEMO_CHECK 0x82575f9c     // "bne" after IsUGC check inside SongMgr::IsDemo
 #define PORT_STAGEKIT_EXISTS 0x8228d03c          // StageKit check. nop over to allow for fog command without a physical StageKit connected.
+#define PORT_ADDTRACKVECTOR_BL 0x82777b70       // bl to vector_push_back inside of SongData::AddTrack
+#define PORT_GETGAMELIST 0x82770730             // SongData::GetGameList
 #define PORT_VERTEX_READ_1 0x82418704            // call to Vector3::operator>> to read vertex position
 #define PORT_VERTEX_READ_2 0x82418748            // call to Vector3::operator>> to read vertex normals
 #define PORT_MULTIPLAYER_CRASH 0x82ae6880        // branch to a function that can crash in online multiplayer
@@ -89,6 +91,7 @@
 #define PORT_RANDOMINT 0x824f2f90                    // RandomInt(min, max)
 #define PORT_GETWIDGETBYNAME 0x82b9b880              // GemManager::GetWidgetByName
 #define PORT_GETSLOTCOLOR 0x82baa308                 // TrackConfig::GetSlotColor
+#define PORT_ADDSMASHERPLATETOVECTOR 0x82356980      // AddSmasherPlateToVector
 #define PORT_ARCHIVE_CT 0x82514408                   // Archive::_ct
 #define PORT_ARCHIVE_SETLOCATIONHARDDRIVE 0x82512b00 // Archive::SetLocationHardDrive
 #define PORT_ARCHIVE_MERGE 0x82513ee8                // Archive::Merge
@@ -112,6 +115,7 @@
 #define PORT_BUILDINSTRUMENTSELECTION 0x82668c70     // BuildInstrumentSelectionList(?) - actual name not known
 #define PORT_PREPARESOMEVECTORMAYBE 0x82796d90       // Prepares some vector, used by BuildInstrumentSelectionList
 #define PORT_SOMEVECTORPUSHBACKMAYBE 0x82b6aa10      // vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
+#define PORT_VECTORPUSHBACK 0x82b5f808               // vector_push_back
 #define PORT_POSTPROC_DOPOST 0x82b89a08              // NgPostProc::DoPost
 #define PORT_MUSICLIBRARYSELECTMAYBE 0x8253EB00      // Selects an entry in the Music Library screen - actual name not known
 #define PORT_GETSYMBOLBYGAMEORIGIN 0x8265bb78        // SongSortByRecent::GetSymbolByGameOrigin
@@ -133,8 +137,24 @@
 #define PORT_MEMPRINT 0x827bc970                     // MemPrint
 #define PORT_MEMNUMHEAPS 0x827bb628                  // MemNumHeaps
 #define PORT_INITSONGMETADATA 0x827aa450             // InitSongMetadata
+#define PORT_SONGMETADATACONSTRUCTOR 0x827aa6e8           // SongMetadata::__ct
+#define PORT_SONGMETADATALOAD 0x825a3f58                  // SongMetadata::Load
 #define PORT_UPDATEPRESENCE 0x82680430               // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x82af92b8       // Quazal::StepSequenceJob::SetStep
+#define PORT_RNDTEXNEWOBJECT 0x82273de0                   // RndTex::NewObject
+#define PORT_RNDMATNEWOBJECT 0x8240f5d0                   // RndMat::NewObject
+#define PORT_RNDTEXSETBITMAP 0x823ff678                   // RndTex::SetBitmap
+#define PORT_RNDTEXSETBITMAP2 0x823ff240                  // RndTex::SetBitmap2
+#define PORT_RNDTEXSETBITMAP3 0x823ff510                  // RndTex::SetBitmap3
+#define PORT_FILEPATHCONSTRUCTOR 0x82270210               // FilePath::__ct
+#define PORT_MUSICLIBRARY_CT 0x825451c8                   // MusicLibrary::__ct
+#define PORT_MUSICLIBRARYMAT 0x8253b440                   // MusicLibrary::Mat
+#define PORT_NODESORTGETNODE 0x825bf708                   // MusicLibrary::GetNodeByIndex
+#define PORT_GAMEGEMDB_CT 0x827931e0                      // GameGemDB::__ct
+#define PORT_ADDMULTIGEM 0x827930d8                       // GameGemDB::AddMultiGem
+#define PORT_SONGSORTMGRGETSORT 0x82595ff8                // SongSortMgr::GetSort
+#define PORT_DYNAMICTEX_CT 0x825f2318                     // DynamicTex::__ct
+#define PORT_RNDMATSETDIFFUSETEX 0x8238b130               // RndMat::SetDiffuseTex
 #define PORT_BINSTREAMWRITE 0x827c4f58               // BinStream::Write
 #define PORT_BINSTREAMREAD 0x827c4ea8                // BinStream::Read
 #define PORT_BINSTREAMREADENDIAN 0x827c5058          // BinStream::ReadEndian
