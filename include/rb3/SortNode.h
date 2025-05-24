@@ -5,6 +5,10 @@
 #include "Symbol.h"
 #include "SongMetadata.h"
 
+typedef struct _SortNode SortNode;
+typedef struct _ShortcutNodeVtable ShortcutNodeVtable;
+typedef struct _SongRecord SongRecord;
+
 typedef enum _SongNodeType
 {
     kNodeNone = 0,
