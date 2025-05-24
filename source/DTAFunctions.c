@@ -6,6 +6,8 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include "ports.h"
 #include "GlobalSymbols.h"
 #include "config.h"
@@ -13,7 +15,17 @@
 #include "rb3/Data.h"
 #include "rb3/SongMetadata.h"
 #include "rb3/BandSongMgr.h"
+#include "MusicLibrary.h"
 #include "rb3enhanced.h"
+#include "rb3/RockCentralGateway.h"
+
+typedef struct _song_list_vector {
+    int *start;
+    int *end;
+    int unk1;
+} song_list_vector;
+
+static song_list_vector dta_song_list = { 0 };
 
 DataNode *PrintToDebugger(DataNode *node, DataArray *args)
 {
@@ -287,6 +299,90 @@ DataNode *DTAGetOrigin(DataNode *node, DataArray *args)
     return node;
 }
 
+static void sanitize_string(const char *input, char *output, size_t out_size)
+{
+    size_t j = 0;
+    size_t i;
+    for (i = 0; input[i] && j + 1 < out_size; ++i) {
+        unsigned char c = input[i];
+        if (isalnum(c) || isspace(c)) {
+            output[j++] = (char)tolower(c);
+        }
+    }
+    while (j > 0 && isspace((unsigned char)output[j - 1])) --j;
+    output[j] = '\0';
+}
+
+DataNode *DTA_SearchSongName(DataNode *node, DataArray *args) {
+    DataNode *firstArg;
+    Symbol sym_failed;
+    const char *needle;
+    int *list;
+    int count;
+    int i, j;
+    int matchedByTitle, allFound;
+    SongMetadata *md;
+    char cleanNeedle[64], cleanTitle[256], cleanArtist[256], tempBuf[64];
+    char *tokens[16], *tok;
+    int tokenCount;
+
+    SymbolConstruct(&sym_failed, "rb3e_search_failed");
+    node->type = SYMBOL; node->value.string = sym_failed.sym;
+
+    firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
+    if (firstArg->type != STRING_VALUE) return node;
+    needle = *((const char **)firstArg->value.object);
+
+    sanitize_string(needle, cleanNeedle, sizeof(cleanNeedle));
+
+    if (!dta_song_list.start)
+        SongMgrGetRankedSongs((BandSongMgr *)PORT_THESONGMGR, &dta_song_list, 0, 0);
+    list = dta_song_list.start;
+    count = (int)(dta_song_list.end - list);
+
+    tokenCount = 0;
+    strncpy(tempBuf, cleanNeedle, sizeof(tempBuf)); tempBuf[sizeof(tempBuf)-1] = '\0';
+    tok = strtok(tempBuf, " \t");
+    while (tok && tokenCount < 16) { tokens[tokenCount++] = tok; tok = strtok(NULL, " \t"); }
+
+    for (i = 0; i < count; ++i) {
+        md = GetMetadata((BandSongMgr *)PORT_THESONGMGR, list[i]);
+        if (!md) continue;
+
+        sanitize_string(md->title.buf, cleanTitle, sizeof(cleanTitle));
+        sanitize_string(md->artist.buf, cleanArtist, sizeof(cleanArtist));
+
+        if (strcmp(cleanTitle, cleanNeedle) == 0) matchedByTitle = 0;
+        else if (strcmp(cleanArtist, cleanNeedle) == 0) matchedByTitle = 1;
+        else {
+            allFound = 1;
+            for (j = 0; j < tokenCount; ++j) {
+                if (strstr(cleanTitle, tokens[j])) { if (j==0) matchedByTitle = 0; }
+                else if (strstr(cleanArtist, tokens[j])) { if (j==0) matchedByTitle = 1; }
+                else { allFound = 0; break; }
+            }
+            if (!allFound) continue;
+        }
+
+        ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{{music_library get view_settings_provider} refresh_all_settings}");
+        ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{song_select_filter_panel filter_enter}");
+        ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{{music_library get view_settings_provider} select_setting 1}");
+        {
+            char buf[64];
+            sprintf(buf, "{{music_library get view_settings_provider} select_setting_option %d}", matchedByTitle);
+            ExecuteDTA(PORT_ROCKCENTRALGATEWAY, buf);
+        }
+        ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{music_library report_sort_and_filters}");
+        ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{song_select_filter_panel filter_exit}");
+
+        MusicLibrarySelectSong(md->shortname.sym);
+        node->value.string = md->shortname.sym;
+        return node;
+    }
+
+    return node;
+}
+
 #ifdef RB3E_XBOX
 // this function is inlined on the Xbox version, so we re-create it
 void DataRegisterFunc(Symbol name, DTAFunction_t func)
@@ -312,5 +408,6 @@ void AddDTAFunctions()
     DataRegisterFunc(globalSymbols.rb3e_get_album, DTAGetAlbum);
     DataRegisterFunc(globalSymbols.rb3e_get_origin, DTAGetOrigin);
     DataRegisterFunc(globalSymbols.rb3e_get_genre, DTAGetGenre);
+    DataRegisterFunc(globalSymbols.rb3e_search_song_name, DTA_SearchSongName);
     RB3E_MSG("Added DTA functions!", NULL);
 }
