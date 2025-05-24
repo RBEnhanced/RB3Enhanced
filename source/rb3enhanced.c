@@ -354,7 +354,7 @@ void InitialiseFunctions()
     POKE_B(&SetAddress, PORT_SETADDRESS);
     POKE_B(&QueueMessage, PORT_QUEUEMESSAGE);
     POKE_B(&MusicLibrarySelect, PORT_MUSICLIBRARYSELECTMAYBE);
-    POKE_B(&GetSongSymbol, PORT_GETSONGSYMBOL);
+    POKE_B(&GetSongShortname, PORT_GETSONGSHORTNAME);
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
     POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
