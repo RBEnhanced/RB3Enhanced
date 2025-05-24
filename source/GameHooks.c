@@ -26,9 +26,9 @@ void *GameConstructHook(void *theGame) // You just lost
     RB3E_EventBandInfo bandevent = {0};
 #ifdef RB3E_XBOX
     Symbol song;
-    GetSongSymbol(&song, *(int *)PORT_THEMETAPERFORMER);
+    GetSongShortname(&song, *(int *)PORT_THEMETAPERFORMER);
 #else
-    Symbol song = GetSongSymbol(*(int *)PORT_THEMETAPERFORMER);
+    Symbol song = GetSongShortname(*(int *)PORT_THEMETAPERFORMER);
 #endif
     if (song.sym != NULL)
     {
@@ -49,10 +49,10 @@ void *GameConstructHook(void *theGame) // You just lost
         bandUser = GetBandUserFromSlot(*(int *)PORT_THEBANDUSERMGR, i);
         if (bandUser != NULL)
         {
-            RB3E_DEBUG("BandUser %i: %p - Track: %i, Controller: %i, Difficulty: %i", i, bandUser, bandUser->mTrackType, bandUser->mControllerType, bandUser->mDifficulty);
+            RB3E_DEBUG("BandUser %i: %p - Track: %i, Controller: %i, Difficulty: %i", i, bandUser, bandUser->trackType, bandUser->controllerType, bandUser->difficulty);
             bandevent.MemberExists[i] = 1;
-            bandevent.Difficulty[i] = bandUser->mDifficulty;
-            bandevent.TrackType[i] = bandUser->mTrackType;
+            bandevent.Difficulty[i] = bandUser->difficulty;
+            bandevent.TrackType[i] = bandUser->trackType;
         }
         else
         {
