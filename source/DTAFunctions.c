@@ -17,7 +17,7 @@
 #include "rb3/BandSongMgr.h"
 #include "MusicLibrary.h"
 #include "rb3enhanced.h"
-#include "rb3/RockCentralGateway.h" 
+#include "rb3/RockCentralGateway.h"
 
 typedef struct _song_list_vector {
     int *start;
