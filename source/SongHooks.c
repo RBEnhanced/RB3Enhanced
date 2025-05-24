@@ -11,10 +11,6 @@
 #include "GameOriginInfo.h"
 #include "rb3/BandLabel.h"
 #include "rb3/File.h"
-#include "rb3/PassiveMessagesPanel.h"
-#include "rb3/SongMetadata.h"
-#include "rb3/Data.h"
-#include "rb3/Random.h"
 #include "rb3/FilePath.h"
 #include "rb3/MusicLibrary.h"
 #include "rb3/NodeSort.h"
@@ -26,11 +22,7 @@
 #include "rb3/Rnd/DynamicTex.h"
 #include "rb3/Rnd/RndMat.h"
 
-int RB3E_LoadedSongCount = 0;
-
 DynamicTex *textures[100] = {0};
-static int HasShownCorrectionError = 0;
-static int CorrectSongID(DataNode *id_node, int ct_metadata)
 
 void CreateMaterial(GameOriginInfo *info)
 {
@@ -78,25 +70,8 @@ int *MusicLibraryConstructorHook(MusicLibrary *thisMusicLibrary, int *songPrevie
 
 RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, UIListSlot *listSlot)
 {
-    unsigned int checksum = 0;
-    // shouldn't be possible to get here
-    if (id_node->type == INT_VALUE || id_node->value.string == NULL)
-        return id_node->value.intVal;
-    // run a CRC32 sum over the whole length of the string
-    crc32(id_node->value.string, strlen(id_node->value.string), &checksum);
-    // move it around a bit just to make things more consistent
-    // risks introducing more collisions, BAD CUSTOMS ARE STILL BAD!!
-    checksum %= 9999999;
-    checksum += 2130000000;
-    // output to the log whenever things are corrected when crafting SongMetadata
-    if (ct_metadata)
-        RB3E_MSG("Corrected song_id '%s' into ID: %i", id_node->value.string, checksum);
-    // display a warning message on screen for the first bad song found
-    if (HasShownCorrectionError == 0)
     if (listSlot != NULL && thisMusicLibrary != NULL)
     {
-        HasShownCorrectionError = 1;
-        DisplayMessage("One (or more) of your songs has been corrected.");
         if (strcmp(listSlot->mMatchName.buf, "game_origin_icon") == 0)
         {
             int *ret = 0;
@@ -148,13 +123,11 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
     return MusicLibraryMat(thisMusicLibrary, data, idx, listSlot);
 }
 
-int MetadataSongIDHook(DataNode *song_id)
 int numGameOrigins;
 GameOriginInfo originInfo[100] = {0};
 
 void AddGameOriginToIconList(char *gameOrigin)
 {
-    DataNode *eval = DataNodeEvaluate(song_id);
     if(gameOrigin != NULL && strcmp(gameOrigin, "") != 0)
     {
     int i = 0;
@@ -185,37 +158,12 @@ void AddGameOriginToIconList(char *gameOrigin)
      {
         RB3E_DEBUG("Game origin is NULL or empty, not adding to icon list", NULL);
     }
-    // if our song id isn't an int, correct it with crc32 over the string
-    if (eval->type != INT_VALUE)
-        eval->value.intVal = CorrectSongID(eval, 1);
-    return eval->value.intVal;
 }
 
 // this will be called any time a song is loaded from DTA (on disc or when loading into the cache)
 SongMetadata *SongMetadataConstructorHook(SongMetadata *thisSongMetadata, DataArray *data, DataArray *backupData, char isOnDisc)
 {
-    Symbol song_id;
-    DataNode *found = NULL;
-    DataArray *array = NULL;
-    SymbolConstruct(&song_id, "song_id");
     thisSongMetadata = SongMetadataConstructor(thisSongMetadata, data, backupData, isOnDisc);
-    if (song == NULL)
-        return 0;
-    // check missing song data first if we have it
-    if (missing_data_maybe != NULL)
-        array = DataFindArray(missing_data_maybe, song_id);
-    // if there's nothing in missing song data, check song array
-    if (array == NULL)
-        array = DataFindArray(song, song_id);
-    // no song_id? idk man
-    if (array == NULL)
-        return 0;
-    // get the value from song_id
-    found = DataNodeEvaluate(&array->mNodes->n[1]);
-    if (found == NULL)
-        return 0;
-    if (found->type != INT_VALUE)
-        return CorrectSongID(found, 0);
 
     // make sure the game origin isn't null
     if (thisSongMetadata->gameOrigin.sym != 0)
@@ -230,13 +178,11 @@ SongMetadata *SongMetadataConstructorHook(SongMetadata *thisSongMetadata, DataAr
 // this will be called when a song is loaded from cache
 char SongMetadataLoadHook(SongMetadata *thisSongMetadata, BinStream *stream)
 {
-    // increment the loaded song count based on how many songmetadata objects there are
     char ret = SongMetadataLoad(thisSongMetadata, stream);
 
     // make sure the game origin isn't null
     if (thisSongMetadata->gameOrigin.sym != 0)
     {
-        RB3E_LoadedSongCount++;
         AddGameOriginToIconList(thisSongMetadata->gameOrigin.sym);
         return ret;
     }
