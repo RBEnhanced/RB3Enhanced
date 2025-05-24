@@ -1,9 +1,6 @@
 #ifndef _FILESTREAM_H
 #define _FILESTREAM_H
 
-#include "rb3/BinStream.h"
-#include "rb3/File.h"
-
 typedef struct _FileStream FileStream;
 
 typedef int (*FileStreamDestructor_t)(FileStream *thisFileStream, int unk);
@@ -14,7 +11,7 @@ typedef int (*FileStreamFail_t)(FileStream *thisFileStream);
 typedef char *(*FileStreamName_t)(FileStream *thisFileStream);
 typedef char *(*FileStreamReadImpl_t)(FileStream *thisFileStream, void *data, int bytes);
 typedef char *(*FileStreamWriteImpl_t)(FileStream *thisFileStream, void *data, int bytes);
-typedef char *(*FileStreamSeekImpl_t)(FileStream *thisFileStream, int offset, SeekType seekType);
+typedef char *(*FileStreamSeekImpl_t)(FileStream *thisFileStream, int offset, int seekType);
 typedef int (*FileStreamReturnsZero_t)();
 
 typedef struct _FileStream_vtable
@@ -39,6 +36,6 @@ struct _FileStream
     char unk[0x256];
 };
 
-FileStream *FileStreamConstructor(FileStream *thisFileStream, char *fileName, FileType fileType, char littleEndian);
+FileStream *FileStreamConstructor(FileStream *thisFileStream, char *fileName, int fileType, char littleEndian);
 
 #endif // _FILESTREAM_H
