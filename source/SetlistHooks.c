@@ -22,8 +22,8 @@
 #include "rb3/Rnd/DynamicTex.h"
 #include "rb3/Rnd/RndMat.h"
 
-void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
 DynamicTex *textures[100] = {0};
+void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
 
 void CreateMaterial(GameOriginInfo *info)
 {
