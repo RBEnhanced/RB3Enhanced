@@ -358,6 +358,8 @@ void InitialiseFunctions()
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
     POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
+    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
+    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
     POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
     POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
     POKE_B(&Dynamic_Cast, PORT_DYNAMICCAST);

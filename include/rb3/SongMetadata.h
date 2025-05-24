@@ -1,6 +1,8 @@
 #ifndef _SONGMETADATA_H
 #define _SONGMETADATA_H
 
+#include "rb3/BinStream.h"
+#include "rb3/Data.h"
 #include "String.h"
 #include "Symbol.h"
 
@@ -33,5 +35,7 @@ typedef struct _SongMetadata
 } SongMetadata;
 
 extern SongMetadata *InitSongMetadata(SongMetadata *data);
+extern SongMetadata *SongMetadataConstructor(SongMetadata *thisSongMetadata, DataArray *data, DataArray *backupData, char isOnDisc);
+extern char SongMetadataLoad(SongMetadata *thisSongMetadata, BinStream *stream);
 
 #endif // _SONGMETADATA_H

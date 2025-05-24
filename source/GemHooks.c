@@ -1,11 +1,13 @@
 #include "GlobalSymbols.h"
 #include "ports.h"
+#include "rb3/Mem.h"
 #include "rb3/ModifierManager.h"
 #include "rb3/GameGem.h"
 #include "rb3/Random.h"
 #include "rb3/Symbol.h"
+#include "rb3/Vector.h"
 
-int WillBeNoStrumHook(int *gameGemListPtr, int *multiGemInfoPtr)
+int WillBeNoStrumHook(GameGemList *thisGameGemList, int *gem)
 {
     Modifier *forceHoposModifier;
 
@@ -16,7 +18,7 @@ int WillBeNoStrumHook(int *gameGemListPtr, int *multiGemInfoPtr)
     }
     else
     {
-        return WillBeNoStrum(gameGemListPtr, multiGemInfoPtr);
+        return WillBeNoStrum(thisGameGemList, gem);
     }
 }
 
@@ -62,12 +64,12 @@ int *GetWidgetByNameHook(int *gemManager, Symbol sym)
     }
 }
 
-Symbol GetSlotColorHook(int *bandUser)
+Symbol GetSlotColorHook(int *bandUser, int slot)
 {
     Modifier *colorShuffleModifier;
     Symbol *colors[5] = {&globalSymbols.green, &globalSymbols.red, &globalSymbols.yellow, &globalSymbols.blue, &globalSymbols.orange};
 
-    Symbol slotColor = GetSlotColor(bandUser);
+    Symbol slotColor = GetSlotColor(bandUser, slot);
 
     colorShuffleModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.colorShuffle, 0);
 
@@ -120,7 +122,7 @@ void shuffleColors(GameGem *gem)
     gem->orange = colors[4];
 }
 
-int AddGameGemHook(void *gameGemList, GameGem *gem, NoStrumState gemType)
+int AddGameGemHook(GameGemList *gameGemList, GameGem *gem, NoStrumState gemType)
 {
     Modifier *mirrorModeModifier;
     Modifier *gemShuffleModifier;

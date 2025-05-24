@@ -28,7 +28,7 @@ typedef struct _OvershellListEntry
     char icon;
 } OvershellListEntry;
 
-void BuildInstrumentSelectionList(OvershellSlot *thisOvershellSlot, ControllerType controllerType, BandUser *bandUser);
+void OvershellPartSelectProviderReload(OvershellSlot *thisOvershellSlot, ControllerType controllerType, BandUser *bandUser);
 
 // Not overshell related but this is the only place we use them and IDK how to correctly organise code
 void PrepareSomeVectorMaybe(int *r3, int r4, int r5);
