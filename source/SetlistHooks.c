@@ -68,7 +68,7 @@ int *MusicLibraryConstructorHook(int *thisMusicLibrary, int *songPreview)
     return MusicLibraryConstructor(thisMusicLibrary, songPreview);
 }
 
-RndMat *MusicLibraryMatHook(int *thisMusicLibrary, int data, int idx, UIListSlot *listSlot)
+RndMat *MusicLibraryMatHook(int *thisMusicLibrary, int data, int idx, int *listSlot)
 {
     if (listSlot != NULL && thisMusicLibrary != NULL)
     {
