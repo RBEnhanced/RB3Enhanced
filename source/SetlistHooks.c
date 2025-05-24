@@ -23,7 +23,7 @@
 #include "rb3/Rnd/RndMat.h"
 
 DynamicTex *textures[100] = {0};
-static int numOriginToIcon = sizeof(numOriginToIcon) / sizeof(originToIcon[0]);
+static int numOriginToIcon = sizeof(numOriginToIcon) / sizeof(numOriginToIcon[0]);
 
 void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
 {
@@ -36,7 +36,7 @@ void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
         SetSongAndArtistName(label, sortNode);
         for (i = 0; i < numOriginToIcon; i++)
         {
-            if (strcmp(sortNode->something->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
+            if (strcmp(sortNode->ShortcutNodeVtable->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
             {
                 originLabel = originToIcon[i][1];
                 break;
@@ -64,7 +64,7 @@ void SetSongNameFromNodeHook(BandLabel *label, SortNode *sortNode)
         SetSongNameFromNode(label, sortNode);
         for (i = 0; i < numOriginToIcon; i++)
         {
-            if (strcmp(sortNode->something->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
+            if (strcmp(sortNode->ShortcutNodeVtable->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
             {
                 originLabel = originToIcon[i][1];
                 break;
@@ -118,12 +118,12 @@ void CreateMaterial(GameOriginInfo *info)
     
 }
 
-int *MusicLibraryConstructorHook(MusicLibrary *thisMusicLibrary, int *songPreview)
+int *MusicLibraryConstructorHook(int *thisMusicLibrary, int *songPreview)
 {
     return MusicLibraryConstructor(thisMusicLibrary, songPreview);
 }
 
-RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, UIListSlot *listSlot)
+RndMat *MusicLibraryMatHook(int *thisMusicLibrary, int data, int idx, UIListSlot *listSlot)
 {
     if (listSlot != NULL && thisMusicLibrary != NULL)
     {
