@@ -26,6 +26,8 @@ typedef struct _song_list_vector {
 } song_list_vector;
 
 static song_list_vector dta_song_list = { 0 };
+extern char *strtok(char *s, const char *delim);
+extern char *strstr(const char *haystack, const char *needle);
 
 DataNode *PrintToDebugger(DataNode *node, DataArray *args)
 {
