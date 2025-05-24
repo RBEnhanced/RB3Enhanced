@@ -17,6 +17,6 @@ typedef struct _NodeSort
     Symbol mSortName;
 } NodeSort;
 
-SortNode *NodeSortGetNode(NodeSort *thisNodeSort, int idx);
+SortNode *NodeSortGetNode(int *thisNodeSort, int idx);
 
 #endif // _NODESORT_H
