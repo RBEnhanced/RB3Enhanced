@@ -33,7 +33,7 @@ void SetVenueHook(int *thisMetaPerformer, Symbol venue)
     Modifier *blackBackgroundModifier;
 
     SymbolConstruct(&blackBackground, "mod_black_background");
-    blackBackgroundModifier = ModifierIsActive(*(int *)PORT_MODIFIERMGR_POINTER, blackBackground, 0);
+    blackBackgroundModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, blackBackground, 0);
     if (blackBackgroundModifier->enabled)
         venue.sym = "none";
 
