@@ -27,16 +27,6 @@ typedef struct _Unknown2
     SongMetadata *metaData;
 } Unknown2;
 
-typedef struct _SortNode
-{
-#ifdef RB3E_WII
-    char something[0x34];
-#else
-    char something[0x40];
-#endif
-    Unknown2 *somethingElse;
-} SortNode;
-
 typedef int (*ReturnsZero_t)();
 typedef void (*OnlyReturns_t)();
 typedef SongNodeType (*GetNodeType_t)();
