@@ -23,6 +23,7 @@
 #include "rb3/Rnd/RndMat.h"
 
 DynamicTex *textures[100] = {0};
+static int numOriginToIcon = sizeof(originToIcon) / sizeof(originToIcon[0]);
 
 void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
 {
