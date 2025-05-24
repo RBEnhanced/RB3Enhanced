@@ -108,6 +108,7 @@
 #define PORT_GAME_CT 0x8267bf30                      // Game::__ct
 #define PORT_GAME_DT 0x8267b1f0                      // Game::__dt
 #define PORT_GAMEGETACTIVEPLAYER 0x82678e88          // Game::GetActivePlayer
+#define PORT_OVERSHELLPARTSELECTPROVIDERRELOAD 0x82668c70 // OvershellPartSelectProvider::Reload
 #define PORT_GETBANDUSERS 0x82683b78                 // BandUserMgr::GetBandUsers
 #define PORT_GETBANDUSERFROMSLOT 0x82682b60          // BandUserMgr::GetBandUserFromSlot
 #define PORT_GETSONGID 0x827a87f0                    // GetSongID, function used when adding songs to BandSongMgr

@@ -76,6 +76,7 @@
 #define PORT_FILESTREAM_CT 0x8034c9f8            // FileStream::__ct (the one that takes a char * path instead of a File object)
 #define PORT_CHUNKSTREAM_CT 0x8034aa90           // ChunkStream::__ct
 #define PORT_GETBANDUSERFROMSLOT 0x8010021c      // BandUserMgr::GetBandUserFromSlot
+#define PORT_OVERSHELLPARTSELECTPROVIDERRELOAD 0x802478a8 // OvershellPartSelectProvider::Reload
 #define PORT_GETBANDUSERS 0x80100558             // BandUserMgr::GetBandUsers
 #define PORT_GETSONGSHORTNAME 0x80224edc         // MetaPerformer::GetSongShortname(?) - actual name not known
 #define PORT_GETMETADATA 0x80515510              // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
