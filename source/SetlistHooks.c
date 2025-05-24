@@ -93,12 +93,12 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
                         // do a basic null check here, sometimes it can be null
                         if (node != NULL && node->record != NULL &&
                             node->record->metaData != NULL &&
-                            node->record->metaData->mGameOrigin.sym != NULL)
+                            node->record->metaData->gameOrigin.sym != NULL)
                         {
                             // this shit fucking sucks lol
                             for (curInfo = 0; curInfo < numGameOrigins; curInfo++)
                             {
-                                if (strcmp(node->record->metaData->mGameOrigin.sym, originInfo[curInfo].gameOrigin) == 0)
+                                if (strcmp(node->record->metaData->gameOrigin.sym, originInfo[curInfo].gameOrigin) == 0)
                                 {
                                     if (textures[originInfo[curInfo].num] != NULL && textures[originInfo[curInfo].num]->mMat != NULL)
                                     {
@@ -166,9 +166,9 @@ SongMetadata *SongMetadataConstructorHook(SongMetadata *thisSongMetadata, DataAr
     thisSongMetadata = SongMetadataConstructor(thisSongMetadata, data, backupData, isOnDisc);
 
     // make sure the game origin isn't null
-    if (thisSongMetadata->mGameOrigin.sym != 0)
+    if (thisSongMetadata->gameOrigin.sym != 0)
     {
-        AddGameOriginToIconList(thisSongMetadata->mGameOrigin.sym);
+        AddGameOriginToIconList(thisSongMetadata->gameOrigin.sym);
         return thisSongMetadata;
     }
 
@@ -181,9 +181,9 @@ char SongMetadataLoadHook(SongMetadata *thisSongMetadata, BinStream *stream)
     char ret = SongMetadataLoad(thisSongMetadata, stream);
 
     // make sure the game origin isn't null
-    if (thisSongMetadata->mGameOrigin.sym != 0)
+    if (thisSongMetadata->gameOrigin.sym != 0)
     {
-        AddGameOriginToIconList(thisSongMetadata->mGameOrigin.sym);
+        AddGameOriginToIconList(thisSongMetadata->gameOrigin.sym);
         return ret;
     }
 
