@@ -39,7 +39,7 @@ void *GameConstructHook(void *theGame) // You just lost
         if (metadata != NULL)
         {
             RB3E_DEBUG("Metadata: %p", metadata);
-            RB3E_DEBUG("Started song: '%s' - %s (ID: %i, %s)", metadata->title.buf, metadata->artist.buf, metadata->mSongID, metadata->mShortName);
+            RB3E_DEBUG("Started song: '%s' - %s (ID: %i, %s)", metadata->title.buf, metadata->artist.buf, metadata->song_id, metadata->shortname);
             RB3E_SendEvent(RB3E_EVENT_SONG_NAME, metadata->title.buf, metadata->title.length);
             RB3E_SendEvent(RB3E_EVENT_SONG_ARTIST, metadata->artist.buf, metadata->artist.length);
         }
