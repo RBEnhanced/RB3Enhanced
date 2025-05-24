@@ -7,7 +7,7 @@ typedef union _DataNode_Value
 {
     int intVal;
     float floatVal;
-    int *dataArray;
+    void *dataArray;
     int *object;
     char *string;
 } DataNode_Value;
