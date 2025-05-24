@@ -1,9 +1,8 @@
 #ifndef _SONGMETADATA_H
 #define _SONGMETADATA_H
 
-#include "rb3/BinStream.h"
-#include "rb3/Data.h"
 #include "String.h"
+#include "Symbol.h"
 
 // technically BandSongMetadata?
 typedef struct _SongMetadata
@@ -14,10 +13,10 @@ typedef struct _SongMetadata
 #else
     char unknown[0x28];
 #endif
-    Symbol mShortName;
-    int mSongID;
+    Symbol shortname;
+    int song_id;
     char unknown2[0x4];
-    Symbol mGameOrigin;
+    Symbol gameOrigin;
     char unknown3[0x10];
     String title;
     String artist;
@@ -25,16 +24,14 @@ typedef struct _SongMetadata
 #ifdef RB3E_WII
     char unknown6[0x10];
 #else
-    char unknown6[0x18];
+    char unknown6[0x14];
 #endif
-    char *genre;
+    Symbol genre;
     int animTempo;
-    char *vocalGender;
+    Symbol vocalGender;
     int lengthMs;
 } SongMetadata;
 
 extern SongMetadata *InitSongMetadata(SongMetadata *data);
-extern SongMetadata *SongMetadataConstructor(SongMetadata *thisSongMetadata, DataArray *data, DataArray *backupData, char isOnDisc);
-extern char SongMetadataLoad(SongMetadata *thisSongMetadata, BinStream *stream);
 
 #endif // _SONGMETADATA_H

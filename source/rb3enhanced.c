@@ -60,6 +60,8 @@ void UpdatePresenceHook(void *thisPresenceMgr)
 void *NewFileHook(char *iFilename, int iMode)
 {
     char *new_path = NULL;
+    if (strlen(fileName) > 250)
+        return NULL;
     if (config.DisableRawfiles)
         goto LOAD_ORIGINAL;
     // checks the platform-specific APIs for the file
@@ -69,6 +71,18 @@ void *NewFileHook(char *iFilename, int iMode)
         iFilename = new_path;
         iMode = 0x10002; // tell the game to load this file raw
     }
+#ifdef RB3E_WII
+    // load the FileSD
+    if (RB3E_Mounted > 0 &&
+        (memcmp(fileName, "sd:/", 3) == 0 || new_path != NULL)) {
+        return FileSD_New(fileName, flags);
+    }
+#ifdef RB3EDEBUG
+    if (RB3E_IsEmulator() && memcmp(fileName, "nand/", 5) == 0) {
+        return FileWiiNAND_New(fileName + 4);
+    }
+#endif
+#endif
 LOAD_ORIGINAL:
     if (config.LogFileAccess)
         RB3E_MSG("File: %s (%s)", iFilename, (iMode & 0x10000) ? "Raw" : "ARK");
@@ -112,15 +126,16 @@ void *ModifierManagerConstructorHook(int thisModifierManager, int unk)
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_mirror_mode)}}");
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_color_shuffle)}}");
     ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_gem_shuffle)}}");
+    ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{do{push_back {find $syscfg modifiers modifiers} (mod_double_bass)}}");
     return ModifierManagerConstructor(thisModifierManager, unk);
 }
 
 // a TextStream object that prints straight to RB3E_DEBUG
-void DebugTextStreamDestructor(void *thisTextStream)
+void DebugTextStreamDestructor(TextStream *thisTextStream)
 {
     // not dynamically allocating anything, can't be a destructor
 }
-void DebugTextStreamPrint(void *thisTextStream, char *text)
+void DebugTextStreamPrint(TextStream *thisTextStream, char *text)
 {
 #ifdef RB3E_XBOX
     // HACK(Emma): retail xbdm doesn't like newlines.
@@ -206,16 +221,28 @@ void ApplyPatches()
     POKE_32(PORT_STRAPSCREEN_2, NOP);
     // Patch out erroneous second host header
     POKE_32(PORT_NASWII_HOST, NOP);
-    // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
-    POKE_32(PORT_MICCHECK, 0x42800140);
     // always fire the UpdatePresence function. TODO(Emma): look into it, still not firing when screen is changed :/
     POKE_32(PORT_UPDATEPRESENCEBLOCK_B, NOP);
+#ifndef RB3E_WII_BANK8
+    // always take the branch to 0x8024a628 so vocals can be selected without a mic plugged in
+    // bank 8 does not have the mic check
+    POKE_32(PORT_MICCHECK, 0x42800140);
+#endif
 #elif RB3E_XBOX
     if (RB3E_IsEmulator())
         POKE_32(PORT_SONGMGR_ISDEMO_CHECK, NOP);
 
     // skips check for stagekit to allow for fog commands to be issued without a stagekit plugged in
     POKE_32(PORT_STAGEKIT_EXISTS, NOP);
+
+    // just blr instead of actually triggering the breakpoint
+    POKE_32(PORT_QUAZAL_BREAKPOINT, BLR);
+#endif
+    // fixes a crash in online multiplayer
+#ifdef RB3E_WII
+    POKE_B(PORT_MULTIPLAYER_CRASH, PORT_MULTIPLAYER_FIX);
+#else
+    POKE_BL(PORT_MULTIPLAYER_CRASH, PORT_MULTIPLAYER_FIX);
 #endif
     RB3E_MSG("Patches applied!", NULL);
 }
@@ -236,11 +263,12 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_RENDER_RES_Y_PATCH1, LI(11, config.RenderResY));
     }
 #endif
+
     if (config.UnlockClothing == 1)
     {
         // Unlocks all clothing, tattoos, face paint, and video venues
-        // TODO: Figure out what marks items as locked in the UI and patch that as well, right now it still shows them as locked
-        POKE_32(PORT_CHARACTER_CLOTHES_CHECK, NOP);
+        POKE_32(PORT_CHARACTER_CLOTHES_CHECK, LI(3, 1));
+        POKE_32(PORT_CHARACTER_CLOTHES_CHECK2, BLR);
         POKE_32(PORT_TATTOO_CHECK, LI(3, 1));
         POKE_32(PORT_FACE_PAINT_CHECK, LI(3, 1));
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
@@ -284,6 +312,14 @@ void SymbolPreInitHook(int stringTableSize, int hashTableSize)
     InitGlobalSymbols();
 }
 
+#ifdef RB3E_WII
+char FileIsLocalHook(char *filepath) {
+    if (memcmp(filepath, "sd:/", 4) == 0)
+        return 1;
+    return FileIsDLC(filepath);
+}
+#endif
+
 void InitialiseFunctions()
 {
 #ifndef RB3E_WII
@@ -298,13 +334,20 @@ void InitialiseFunctions()
     POKE_B(&DataFindData, PORT_DATAARRAYFINDDATA);
 #endif
     POKE_B(&SongMgrGetRankedSongs, PORT_SONGMGRGETRANKEDSONGS);
+#ifndef RB3E_WII_BANK8
     POKE_B(&PrepareSomeVectorMaybe, PORT_PREPARESOMEVECTORMAYBE);
     POKE_B(&SomeVectorPushBackMaybe, PORT_SOMEVECTORPUSHBACKMAYBE);
+#endif
     POKE_B(&ExecuteDTA, PORT_EXECUTEDTA);
     POKE_B(&BandLabelSetDisplayText, PORT_BANDLABELSETDISPLAYTEXT);
     POKE_B(&SymbolConstruct, PORT_SYMBOL_CT);
-    POKE_B(&ModifierIsActive, PORT_MODIFIERMGR_ACTIVE);
+    POKE_B(&ModifierActive, PORT_MODIFIERMGR_ACTIVE);
+    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
+#ifndef RB3E_WII_BANK8
     POKE_B(&HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
+    // TODO(Emma): port to bank8
+    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
+#endif
     POKE_B(&RandomInt, PORT_RANDOMINT);
     POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);
     POKE_B(&FileExists, PORT_FILE_EXISTS);
@@ -315,12 +358,10 @@ void InitialiseFunctions()
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
     POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
-    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
     POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
     POKE_B(&Dynamic_Cast, PORT_DYNAMICCAST);
     POKE_B(&GameGetActivePlayer, PORT_GAMEGETACTIVEPLAYER);
-    POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
     POKE_B(&JoypadGetPadData, PORT_JOYPADGETPADDATA);
     POKE_B(&MemAlloc, PORT_MEMALLOC);
     POKE_B(&MemFree, PORT_MEMFREE);
@@ -336,6 +377,17 @@ void InitialiseFunctions()
     POKE_B(&DynamicTexConstructor, PORT_DYNAMICTEX_CT);
     POKE_B(&RndMatSetDiffuseTex, PORT_RNDMATSETDIFFUSETEX);
     POKE_B(&RndTexSetBitmap3, PORT_RNDTEXSETBITMAP3);
+    POKE_B(&BinstreamWrite, PORT_BINSTREAMWRITE);
+    POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
+    POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
+    POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
+#ifndef RB3E_XBOX
+    POKE_B(&DataRegisterFunc, PORT_DATAREGISTERFUNC);
+#endif
+#ifdef RB3E_WII
+    POKE_B(&FileIsDLC, PORT_FILEISDLC);
+#endif
+    RB3E_FlushCache((void *)RB3EBase, (unsigned int)RB3EStubEnd - (unsigned int)RB3EBase);
     RB3E_MSG("Functions initialized!", NULL);
 }
 
@@ -344,6 +396,9 @@ void ApplyHooks()
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
     POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
     POKE_B(PORT_OVERSHELLPARTSELECTPROVIDERRELOAD, &OvershellPartSelectProviderReload);
+#ifndef RB3E_WII_BANK8
+    POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
+#endif
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
@@ -371,16 +426,25 @@ void ApplyHooks()
     HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
     HookFunction(PORT_MUSICLIBRARY_CT, &MusicLibraryConstructor, &MusicLibraryConstructorHook);
     HookFunction(PORT_MUSICLIBRARYMAT, &MusicLibraryMat, &MusicLibraryMatHook);
+    HookFunction(PORT_SONGPARSERPITCHTOSLOT, &SongParserPitchToSlot, &SongParserPitchToSlotHook);
+    HookFunction(PORT_DATASET, &DataSet, &DataSetHook);
+    HookFunction(PORT_DATASETELEM, &DataSetElem, &DataSetElemHook);
+    HookFunction(PORT_DATAONELEM, &DataOnElem, &DataOnElemHook);
 #ifdef RB3E_WII // wii exclusive hooks
-    HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
+    // HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
+    POKE_B(PORT_FILEISLOCAL, &FileIsLocalHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
-
     //  TODO: port these to Wii
+    HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
+    // TODO: port these to Wii
+    HookFunction(PORT_DATANODEGETOBJ, &DataNodeGetObj, &DataNodeGetObjHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
     POKE_BL(PORT_SONG_ID_EVALUATE, &MetadataSongIDHook);
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
+    POKE_BL(PORT_VERTEX_READ_1, &VertexReadHook);
+    POKE_BL(PORT_VERTEX_READ_2, &VertexReadHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }

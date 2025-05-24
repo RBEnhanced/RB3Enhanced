@@ -32,6 +32,7 @@
 #include "rb3/Random.h"
 #include "rb3/RockCentralGateway.h"
 #include "rb3/SongMetadata.h"
+#include "rb3/SongParser.h"
 #include "rb3/SongSortByRecentEntry.h"
 #include "rb3/SongSortMgr.h"
 #include "rb3/SortNode.h"
@@ -40,6 +41,7 @@
 #include "rb3/TextStream.h"
 #include "rb3/TrackPanelDirBase.h"
 #include "rb3/UsbWii.h"
+#include "rb3/Vector.h"
 #include "quazal/InetAddress.h"
 #include "quazal/QuazalSocket.h"
 

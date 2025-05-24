@@ -53,21 +53,21 @@ int MetadataSongIDHook(DataNode *song_id)
 int GetSongIDHook(DataArray *song, DataArray *missing_data_maybe)
 {
     Symbol song_id;
-    DataNode *found;
-    DataArray *array;
+    DataNode *found = NULL;
+    DataArray *array = NULL;
     SymbolConstruct(&song_id, "song_id");
     if (song == NULL)
         return 0;
-    array = DataFindArray(song, song_id);
+    // check missing song data first if we have it
+    if (missing_data_maybe != NULL)
+        array = DataFindArray(missing_data_maybe, song_id);
+    // if there's nothing in missing song data, check song array
     if (array == NULL)
-    {
-        if (missing_data_maybe == NULL)
-            return 0;
-        else
-            array = DataFindArray(missing_data_maybe, song_id);
-    }
+        array = DataFindArray(song, song_id);
+    // no song_id? idk man
     if (array == NULL)
         return 0;
+    // get the value from song_id
     found = DataNodeEvaluate(&array->mNodes->n[1]);
     if (found == NULL)
         return 0;

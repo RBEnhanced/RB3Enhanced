@@ -1,0 +1,646 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>RB3Enhanced</title>
+    <style>
+        /* font choice */
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+        }
+        /* it's all light mode until we get to the dark theme palette */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            font-size: 16px;
+        }
+
+        /* header (light mode) */
+        .header {
+            background-color: #517497;
+            color: #ecf0f1;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .header img {
+            max-width: 25%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .header .input-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 400px;
+            align-items: center;
+        }
+
+        /* Song search box styling */
+        .header .input-container #searchbox {
+            padding: 15px;
+            width: 100%;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            margin-bottom: 15px;
+            font-size: 18px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .header .input-container #searchbox:focus {
+            border-color: #2980b9;
+            background-color: #ffffff;
+        }
+
+        /* API key field styling */
+        .header .input-container #apiKeyInput {
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: border-color 0.2s ease-in-out;
+            margin-bottom: 10px;
+            font-size: 14px;
+            background-color: #f4f4f4;
+            color: #555;
+            -webkit-text-security: disc;
+            text-security: disc;
+        }
+
+        .header .input-container #apiKeyInput:focus {
+            border-color: #3498db;
+        }
+
+        .header .input-container button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .header .input-container button:hover {
+            background-color: #2980b9;
+        }
+
+        .header .input-container .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Song list table styling */
+        .songlist {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .songlist td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sinfo {
+            padding: 15px;
+            color: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sname {
+            font-size: 20px;
+            margin: 0;
+            color: #3498db;
+        }
+
+        .artist {
+            color: #888;
+            font-size: 16px;
+        }
+
+        .song-details {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+        }
+
+        /*messages that should be displayed horizontally in the center*/
+        .centered-message {
+            display: block;
+            margin-top: 10px;
+            color: #2c3e50;
+            text-align: center;
+            width: 100%;
+        }
+
+        .sbuttons {
+            margin-left: auto;
+        }
+
+        /* Album art styling */
+        .album-art {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        /* Buttons styling */
+        .button {
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bmain {
+            color: white;
+            background-color: #3498db;
+            border: 1px solid #3498db;
+        }
+
+        .bmain:hover {
+            background-color: #2980b9;
+        }
+
+        .balt {
+            color: #3498db;
+            background-color: white;
+            border: 1px solid #3498db;
+        }
+
+        .balt:hover {
+            color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        /* Centering the load song button horizontally */
+        #songlistbutton td {
+            text-align: center;
+            padding: 20px;
+        }
+
+        #songlistbutton {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .reset-api-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid #3498db;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #3498db;
+            background-color: white;
+        }
+
+        .reset-api-button:hover {
+            color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                color: #ecf0f1;
+                background-color: #2c3e50;
+            }
+
+            .header {
+                background-color: #1a252f;
+            }
+
+            .header .input-container #searchbox,
+            .header .input-container #apiKeyInput {
+                background-color: #333;
+                color: #ecf0f1;
+                border: 2px solid #444;
+            }
+
+            .header .input-container #searchbox:focus,
+            .header .input-container #apiKeyInput:focus {
+                border-color: #2980b9;
+                background-color: #444;
+            }
+
+            .header .input-container .error-message {
+                color: #ff7675;
+            }
+
+            .songlist {
+                background-color: #49627A;
+            }
+
+            .songlist td {
+                border-bottom: 1px solid #444;
+            }
+
+            .sname {
+                color: #ecf0f1;
+            }
+
+            .artist {
+                color: #aaa;
+            }
+
+            .button {
+                color: #ecf0f1;
+            }
+
+            .bmain {
+                background-color: #3498db;
+            }
+
+            .balt {
+                background-color: #333;
+                border-color: #3498db;
+            }
+
+            .balt:hover {
+                border-color: #ecf0f1;
+                color: #ecf0f1;
+            }
+
+            .centered-message {
+                color: #ecf0f1;
+            }
+        }
+    </style>
+    <script>
+        let lastfmApiKey = localStorage.getItem('lastfmApiKey') || '';
+        let searchTimeout = null;
+        let currentFetchController = null;
+        const apiCallDelay = 300;
+        const placeholderArtUrl = 'https://github.com/hmxmilohax/rock-band-3-deluxe/blob/main/_ark/dx/custom_textures/_additional_textures/blank_album_art_keep.png?raw=true';
+        let albumArtQueue = [];
+        let albumArtFetchInProgress = false;
+        let albumArtCache = {};
+        let unfilteredQueuePaused = false;
+        let unfilteredAlbumArtQueue = [];
+
+        function saveApiKey() {
+            const apiKeyInput = document.getElementById("apiKeyInput").value;
+            const errorMessage = document.getElementById("error-message");
+
+            if (!apiKeyInput) {
+                errorMessage.textContent = "API Key cannot be empty!";
+                errorMessage.style.display = "block";
+                return;
+            }
+
+            lastfmApiKey = apiKeyInput;
+            localStorage.setItem('lastfmApiKey', lastfmApiKey);
+            alert("API Key saved. You can now load the song list.");
+            toggleApiFieldVisibility(false);
+        }
+
+        function ParseListINI(data) {
+            const regex = {
+                section: /^\s*\[\s*([^\]]*)\s*\]\s*$/,
+                param: /^\s*([^=]+?)\s*=\s*(.*?)\s*$/,
+            };
+            const song_list_parsed = [];
+            const lines = data.split(/[\r\n]+/);
+            let song_num = -1;
+
+            for (const line of lines) {
+                if (regex.param.test(line)) {
+                    const match = line.match(regex.param);
+                    song_list_parsed[song_num][match[1]] = match[2];
+                } else if (regex.section.test(line)) {
+                    song_list_parsed.push({});
+                    song_num++;
+                }
+            }
+            return song_list_parsed;
+        }
+
+        let song_list = [];
+
+        function ClearList() {
+            document.getElementById('songlisttable').innerHTML = '';
+        }
+
+        function AddSongCountToList(num) {
+            const row = document.createElement('tr');
+            const sinfo = document.createElement('td');
+            sinfo.innerHTML = `<center>Showing ${num} songs!</center>`;
+            sinfo.className = 'sinfo';
+            row.className = 'stb';
+            row.appendChild(sinfo);
+            document.getElementById('songlisttable').prepend(row);
+        }
+
+        function AddSongToList(song, index) {
+            const row = document.createElement('tr');
+            const sinfo = document.createElement('td');
+            sinfo.className = 'sinfo';
+
+            const songDetails = document.createElement('div');
+            songDetails.className = 'song-details';
+            songDetails.innerHTML = `<h3 class="sname">${song.title}</h3><span class="artist">${song.artist}</span>`;
+
+            const sbuttons = document.createElement('div');
+            sbuttons.className = 'sbuttons';
+            const playButton = document.createElement('button');
+            playButton.className = 'button bmain';
+            playButton.textContent = 'Play';
+            playButton.onclick = () => JumpToSong(song.shortname);
+            sbuttons.appendChild(playButton);
+
+            const albumArt = document.createElement('img');
+            const cacheKey = `${song.title}-${song.artist}-${song.album}`;
+
+            if (lastfmApiKey) {
+                albumArt.src = albumArtCache[cacheKey] || placeholderArtUrl;
+                albumArt.className = 'album-art';
+                albumArt.alt = 'Loading...';
+                albumArt.dataset.cacheKey = cacheKey;
+                albumArt.dataset.songIndex = index;
+            } else {
+                albumArt.style.display = 'none';
+            }
+
+            sinfo.appendChild(albumArt);
+            sinfo.appendChild(songDetails);
+            sinfo.appendChild(sbuttons);
+            row.className = 'stb';
+            row.appendChild(sinfo);
+            document.getElementById('songlisttable').appendChild(row);
+
+            if (lastfmApiKey && !albumArtCache[cacheKey]) {
+                if (unfilteredQueuePaused) {
+                    unfilteredAlbumArtQueue.push({ album: song.album, artist: song.artist, imgElement: albumArt, cacheKey: cacheKey, songIndex: index });
+                } else {
+                    albumArtQueue.push({ album: song.album, artist: song.artist, imgElement: albumArt, cacheKey: cacheKey, songIndex: index });
+                    if (!albumArtFetchInProgress) {
+                        processAlbumArtQueue();
+                    }
+                }
+            }
+        }
+
+
+        function ParseSongList(listini) {
+            song_list = ParseListINI(listini);
+            ClearList();
+            song_list.forEach((song, index) => AddSongToList(song, index));
+            AddSongCountToList(song_list.length);
+        }
+
+        function FetchSongList() {
+            document.getElementById('songlistbutton').style.display = 'none';
+            document.getElementById('songloadingbox').style.display = 'block';
+            fetch('/list_songs')
+                .then(response => response.text())
+                .then(data => {
+                    originalSongListINI = data;
+                    ParseSongList(data);
+                });
+        }
+
+        function JumpToSong(shortname) {
+            fetch(`/jump?shortname=${shortname}`);
+        }
+
+        function DoSearch() {
+            const search_term = document.getElementById('searchbox').value.toLowerCase();
+
+            // Check if the search term is empty
+            if (search_term === '') {
+                // If the search term is empty, display the unfiltered list
+                unfilteredQueuePaused = false;
+                albumArtQueue = [...unfilteredAlbumArtQueue];
+                unfilteredAlbumArtQueue = [];
+                ClearList();
+                ParseSongList(originalSongListINI);
+                if (albumArtQueue.length === 0) {
+                    albumArtFetchInProgress = false;
+                    return;
+                }
+                if (!albumArtFetchInProgress) {
+                    processAlbumArtQueue();
+                }
+                return;
+            }
+
+            // If there is a search term, filter the list
+            unfilteredQueuePaused = true;
+            albumArtQueue = []; // Clear the current queue since we are performing a search
+
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+
+            searchTimeout = setTimeout(async () => {
+                if (currentFetchController) {
+                    currentFetchController.abort();
+                }
+                currentFetchController = new AbortController();
+                const { signal } = currentFetchController;
+
+                ClearList(); // Clear the list before displaying the filtered results
+                let loaded_songs = 0;
+                const batchSize = 5;
+                const delay = 300;
+
+                // Filter the song list based on the search term
+                const searchResults = song_list.filter(song => 
+                    song.title.toLowerCase().includes(search_term) ||
+                    song.artist.toLowerCase().includes(search_term) ||
+                    (song.album && song.album.toLowerCase().includes(search_term))
+                );
+
+                // Display the filtered list
+                for (let i = 0; i < searchResults.length; i++) {
+                    const song = searchResults[i];
+                    AddSongToList(song, loaded_songs);
+
+                    // Immediately start fetching album art for each song as it is added
+                    const albumArt = document.querySelectorAll('.album-art')[loaded_songs];
+                    const cacheKey = albumArt.dataset.cacheKey;
+                    if (!albumArtCache[cacheKey]) {
+                        albumArt.src = placeholderArtUrl; // Reset image to placeholder
+                        albumArtQueue.push({ album: song.album, artist: song.artist, imgElement: albumArt, cacheKey: cacheKey, songIndex: loaded_songs });
+                    }
+
+                    loaded_songs++;
+
+                    if (loaded_songs % batchSize === 0) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+
+                    // Start processing the queue as soon as there's something to fetch
+                    if (!albumArtFetchInProgress && albumArtQueue.length > 0) {
+                        processAlbumArtQueue();
+                    }
+                }
+
+                AddSongCountToList(loaded_songs);
+            }, 300);
+        }
+
+        function resetApiKey() {
+            localStorage.removeItem('lastfmApiKey');
+            lastfmApiKey = '';
+            toggleApiFieldVisibility(true);
+        }
+
+        function toggleApiFieldVisibility(show) {
+            const apiKeyInput = document.getElementById('apiKeyInput');
+            const saveButton = document.querySelector('.input-container button');
+            const resetButton = document.querySelector('.reset-api-button');
+            
+            if (show) {
+                apiKeyInput.style.display = 'block';
+                saveButton.style.display = 'block';
+                resetButton.textContent = 'Hide API Field';
+                resetButton.onclick = () => toggleApiFieldVisibility(false);
+            } else {
+                apiKeyInput.style.display = 'none';
+                saveButton.style.display = 'none';
+                resetButton.textContent = 'Show API Field';
+                resetButton.onclick = () => toggleApiFieldVisibility(true);
+            }
+
+            if (lastfmApiKey) {
+                resetButton.textContent = 'Reset API Key';
+                resetButton.onclick = resetApiKey;
+            }
+        }
+
+        let originalSongListINI = '';
+
+        function FetchAlbumArt(album, artist, imgElement, cacheKey, signal) {
+            if (!lastfmApiKey) {
+                console.warn('Last.fm API key is not set.');
+                return;
+            }
+
+            const apiUrl = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${lastfmApiKey}&artist=${encodeURIComponent(artist)}&album=${encodeURIComponent(album)}&format=json`;
+
+            fetch(apiUrl, { signal })
+                .then(response => response.json())
+                .then(data => {
+                    const albumArtUrl = data.album?.image?.find(img => img.size === 'large')?.['#text'] || placeholderArtUrl;
+                    imgElement.src = albumArtUrl;
+                    imgElement.alt = album ? `${album} album art` : 'Album art not available';
+                    albumArtCache[cacheKey] = albumArtUrl; // Cache the album art
+                })
+                .catch(error => {
+                    if (error.name !== 'AbortError') {
+                        console.error('Error fetching album art:', error);
+                    }
+                    imgElement.src = placeholderArtUrl;
+                    imgElement.alt = 'Album art not available';
+                });
+        }
+
+        function processAlbumArtQueue() {
+            if (albumArtQueue.length === 0) {
+                albumArtFetchInProgress = false;
+                return;
+            }
+
+            albumArtFetchInProgress = true;
+            const { album, artist, imgElement, cacheKey, songIndex } = albumArtQueue.shift();
+
+            // Verify that the imgElement is still in the correct position before applying the fetched image
+            const currentImgElement = document.querySelectorAll('.album-art')[songIndex];
+            if (currentImgElement && currentImgElement.dataset.cacheKey === cacheKey) {
+                if (albumArtCache[cacheKey]) {
+                    imgElement.src = albumArtCache[cacheKey];
+                } else {
+                    FetchAlbumArt(album, artist, imgElement, cacheKey, currentFetchController ? currentFetchController.signal : null);
+                }
+            }
+
+            setTimeout(processAlbumArtQueue, apiCallDelay);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('searchbox').addEventListener('input', DoSearch);
+
+            const apiKeyInput = document.createElement('input');
+            apiKeyInput.type = 'password';
+            apiKeyInput.id = 'apiKeyInput';
+            apiKeyInput.placeholder = 'Enter Last.fm API Key';
+            apiKeyInput.style.display = 'none'; // Start hidden
+
+            const saveButton = document.createElement('button');
+            saveButton.textContent = 'Save API Key';
+            saveButton.style.display = 'none'; // Start hidden
+            saveButton.onclick = saveApiKey;
+
+            const errorMessage = document.createElement('div');
+            errorMessage.id = 'error-message';
+            errorMessage.className = 'error-message';
+
+            const apiKeyContainer = document.querySelector('.header .input-container');
+            apiKeyContainer.appendChild(apiKeyInput);
+            apiKeyContainer.appendChild(saveButton);
+            apiKeyContainer.appendChild(errorMessage);
+
+            if (!lastfmApiKey) {
+                toggleApiFieldVisibility(true);
+            } else {
+                toggleApiFieldVisibility(false);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="header">
+        <button class="reset-api-button button balt" onclick="resetApiKey()">Reset API Key</button>
+        <img src="https://github.com/hmxmilohax/rock-band-3-deluxe/blob/main/_ark/dx/custom_textures/_additional_textures/rb3enhanced_logo.png?raw=true" alt="RB3Enhanced Logo" class="logo" />
+        <div class="input-container">
+            <input id="searchbox" type="text" placeholder="Search songs, artists, albums..." />
+        </div>
+    </div>
+    <table id="songlisttable" class="songlist" cellspacing="0">
+        <tr id="songlistbutton">
+            <td class="sinfo">
+                <div style="text-align: center;">
+                    <button class="button bmain" onclick="FetchSongList()">Load Song List</button>
+                    <br>
+                    <span class="centered-message">(Don't press this until you're in the Music Library!)</span>
+                </div>
+            </td>
+        </tr>
+        <tr id="songloadingbox" style="display: none;">
+            <td class="sinfo">
+                <span class="centered-message">Loading... this may take a while!</span>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
