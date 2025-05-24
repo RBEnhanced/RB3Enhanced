@@ -57,7 +57,7 @@ void UpdatePresenceHook(void *thisPresenceMgr)
 }
 
 // New file hook, for ARKless file loading
-void *NewFileHook(char *iFilename, int iMode)
+void *NewFileHook(char *fileName, int flags)
 {
     char *new_path = NULL;
     if (strlen(fileName) > 250)
@@ -65,11 +65,11 @@ void *NewFileHook(char *iFilename, int iMode)
     if (config.DisableRawfiles)
         goto LOAD_ORIGINAL;
     // checks the platform-specific APIs for the file
-    new_path = RB3E_GetRawfilePath(iFilename, 0);
+    new_path = RB3E_GetRawfilePath(fileName, 0);
     if (new_path != NULL)
     {
-        iFilename = new_path;
-        iMode = 0x10002; // tell the game to load this file raw
+        fileName = new_path;
+        flags = 0x10002; // tell the game to load this file raw
     }
 #ifdef RB3E_WII
     // load the FileSD
@@ -85,8 +85,8 @@ void *NewFileHook(char *iFilename, int iMode)
 #endif
 LOAD_ORIGINAL:
     if (config.LogFileAccess)
-        RB3E_MSG("File: %s (%s)", iFilename, (iMode & 0x10000) ? "Raw" : "ARK");
-    return NewFile(iFilename, iMode);
+        RB3E_MSG("File: %s (%s)", fileName, (flags & 0x10000) ? "Raw" : "ARK");
+    return NewFile(fileName, flags);
 }
 
 DataArray *DataReadFileHook(char *path, int dtb)
@@ -404,6 +404,7 @@ void ApplyHooks()
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
     HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
     HookFunction(PORT_ADDGAMEGEM, &AddGameGem, &AddGameGemHook);
+    HookFunction(PORT_SETSONGANDARTISTNAME, &SetSongAndArtistName, SetSongAndArtistNameHook);
     HookFunction(PORT_SETVENUE, &SetVenue, &SetVenueHook);
     HookFunction(PORT_MODIFIERMGR_CT, &ModifierManagerConstructor, &ModifierManagerConstructorHook);
     HookFunction(PORT_NEWFILE, &NewFile, &NewFileHook);
@@ -436,7 +437,6 @@ void ApplyHooks()
     POKE_B(PORT_FILEISLOCAL, &FileIsLocalHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
-    //  TODO: port these to Wii
     HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
     // TODO: port these to Wii
     HookFunction(PORT_DATANODEGETOBJ, &DataNodeGetObj, &DataNodeGetObjHook);

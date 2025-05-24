@@ -14,18 +14,15 @@
 #include "rb3/Data.h"
 #include "rb3/DirLoader.h"
 #include "rb3/File.h"
-#include "rb3/FilePath.h"
 #include "rb3/FileStream.h"
 #include "rb3/Game.h"
 #include "rb3/GameGem.h"
-#include "rb3/GemTrackResrcManager.h"
 #include "rb3/Joypad.h"
 #include "rb3/Locale.h"
 #include "rb3/Mem.h"
 #include "rb3/MetaPerformer.h"
 #include "rb3/ModifierManager.h"
 #include "rb3/MusicLibrary.h"
-#include "rb3/NodeSort.h"
 #include "rb3/Object.h"
 #include "rb3/PassiveMessagesPanel.h"
 #include "rb3/PresenceMgr.h"
@@ -34,7 +31,6 @@
 #include "rb3/SongMetadata.h"
 #include "rb3/SongParser.h"
 #include "rb3/SongSortByRecentEntry.h"
-#include "rb3/SongSortMgr.h"
 #include "rb3/SortNode.h"
 #include "rb3/String.h"
 #include "rb3/Symbol.h"
@@ -46,10 +42,7 @@
 #include "quazal/QuazalSocket.h"
 
 // rnd headers
-#include "rb3/Rnd/DynamicTex.h"
 #include "rb3/Rnd/RndPropAnim.h"
-#include "rb3/Rnd/RndMat.h"
-#include "rb3/Rnd/RndTex.h"
 
 // UI headers
 #include "rb3/UI/UIPanel.h"
