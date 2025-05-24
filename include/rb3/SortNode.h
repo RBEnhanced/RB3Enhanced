@@ -27,6 +27,17 @@ typedef struct _Unknown2
     SongMetadata *metaData;
 } Unknown2;
 
+struct _SortNode
+{
+    ShortcutNodeVtable *vtable;
+#ifdef RB3E_WII
+    char something[0x30];
+#else
+    char something[0x3c];
+#endif
+    SongRecord *record;
+};
+
 typedef int (*ReturnsZero_t)();
 typedef void (*OnlyReturns_t)();
 typedef SongNodeType (*GetNodeType_t)();
@@ -61,16 +72,5 @@ typedef struct _SongRecord
 #endif
     SongMetadata *metaData;
 } SongRecord;
-
-struct _SortNode
-{
-    ShortcutNodeVtable *vtable;
-#ifdef RB3E_WII
-    char something[0x30];
-#else
-    char something[0x3c];
-#endif
-    SongRecord *record;
-};
 
 #endif // _SORTNODE_H
