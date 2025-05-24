@@ -377,7 +377,11 @@ DataNode *DTA_SearchSongName(DataNode *node, DataArray *args) {
         ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{music_library report_sort_and_filters}");
         ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{song_select_filter_panel filter_exit}");
 
-        MusicLibrarySelectSong(md->shortname.sym);
+        if (matchedByTitle) {
+            MusicLibrarySelectHeading(md->artist.buf);
+        } else {
+            MusicLibrarySelectSong(md->shortname.sym);
+        }
         node->value.string = md->shortname.sym;
         return node;
     }
