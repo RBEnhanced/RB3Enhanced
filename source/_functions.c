@@ -33,7 +33,7 @@ RB3E_STUB(AppConstructor) // AppConstructor is handled by the BrainSlug engine
 #endif
 RB3E_STUB(ExecuteDTA)
 RB3E_STUB(SymbolConstruct)
-RB3E_STUB(ModifierIsActive)
+RB3E_STUB(ModifierActive)
 RB3E_STUB(HmxFactoryFuncAt)
 RB3E_STUB(BandLabelSetDisplayText)
 RB3E_STUB(RandomInt)
