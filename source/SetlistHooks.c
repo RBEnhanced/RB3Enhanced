@@ -36,7 +36,7 @@ void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode)
         SetSongAndArtistName(label, sortNode);
         for (i = 0; i < numOriginToIcon; i++)
         {
-            if (strcmp(sortNode->somethingElse->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
+            if (strcmp(sortNode->something->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
             {
                 originLabel = originToIcon[i][1];
                 break;
@@ -64,7 +64,7 @@ void SetSongNameFromNodeHook(BandLabel *label, SortNode *sortNode)
         SetSongNameFromNode(label, sortNode);
         for (i = 0; i < numOriginToIcon; i++)
         {
-            if (strcmp(sortNode->somethingElse->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
+            if (strcmp(sortNode->something->metaData->gameOrigin.sym, originToIcon[i][0]) == 0)
             {
                 originLabel = originToIcon[i][1];
                 break;
@@ -137,7 +137,7 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
             ret = SongSortMgrGetSort(*(SongSortMgr **)PORT_THESONGSORTMGR, thisMusicLibrary->mSortType);
             if (ret != NULL)
             {
-                node = NodeSortGetNode(ret, idx);
+                node = NodeSortGetNode(int, idx);
                 if (node != NULL)
                 {
                     nodeType = node->vtable->getNodeType();
@@ -175,7 +175,7 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
         }
     }
 
-    return MusicLibraryMat(thisMusicLibrary, data, idx, listSlot);
+    return MusicLibraryMat(thisMusicLibrary, data, idx, UIListSlot);
 }
 
 int numGameOrigins;

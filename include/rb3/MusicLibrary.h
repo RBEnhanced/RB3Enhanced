@@ -16,6 +16,6 @@ typedef struct _MusicLibrary
 // Jumps to a given entry in the music library
 void MusicLibrarySelect(int theMusicLibrary, Symbol entryName, int sortType, int unk_r6);
 int *MusicLibraryConstructor(int *thisMusicLibrary, int *songPreview);
-int *MusicLibraryConstructorHook(MusicLibrary *thisMusicLibrary, int *songPreview);
+int *MusicLibraryConstructorHook(int *thisMusicLibrary, int *songPreview);
 
 #endif // _MUSICLIBRARY_H_
