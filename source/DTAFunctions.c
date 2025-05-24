@@ -370,7 +370,7 @@ DataNode *DTA_SearchSongName(DataNode *node, DataArray *args) {
         ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{song_select_filter_panel filter_enter}");
         ExecuteDTA(PORT_ROCKCENTRALGATEWAY, "{{music_library get view_settings_provider} select_setting 1}");
         {
-            char buf[64];
+            char buf[80];
             sprintf(buf, "{{music_library get view_settings_provider} select_setting_option %d}", matchedByTitle);
             ExecuteDTA(PORT_ROCKCENTRALGATEWAY, buf);
         }
