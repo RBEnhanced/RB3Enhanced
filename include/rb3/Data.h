@@ -14,13 +14,21 @@ typedef union _DataNode_Value
 
 typedef enum _DataNode_Type
 {
+#ifndef RB3E_WII
     INT_VALUE = 0,
+#else
+    EMPTY = 0,
+#endif
     FLOAT_VALUE = 1,
     VAR = 2,
     FUNC = 3,
     OBJECT = 4,
     SYMBOL = 5,
+#ifndef RB3E_WII
     EMPTY = 6,
+#else
+    INT_VALUE = 6,
+#endif
     IFDEF = 7,
     ELSE = 8,
     ENDIF = 9,
