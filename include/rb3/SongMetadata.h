@@ -24,7 +24,7 @@ typedef struct _SongMetadata
 #ifdef RB3E_WII
     char unknown6[0x10];
 #else
-    char unknown6[0x18];
+    char unknown6[0x14];
 #endif
     Symbol genre;
     int animTempo;
