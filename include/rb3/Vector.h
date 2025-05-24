@@ -26,13 +26,6 @@ typedef struct _Vector2
     float y;
 } Vector2;
 
-typedef struct _Vector3
-{
-    float x;
-    float y;
-    float z;
-} Vector3;
-
 typedef struct _Vector4
 {
     float x;
