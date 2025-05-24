@@ -322,7 +322,7 @@ DataNode *DTA_SearchSongName(DataNode *node, DataArray *args) {
     int *list;
     int count;
     int i, j;
-    int matchedByTitle, allFound;
+    int matchedByTitle = 0, allFound = 0;
     SongMetadata *md;
     char cleanNeedle[64], cleanTitle[256], cleanArtist[256], tempBuf[64];
     char *tokens[16], *tok;
