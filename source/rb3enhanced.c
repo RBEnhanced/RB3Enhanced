@@ -398,9 +398,9 @@ void ApplyHooks()
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
     POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
     POKE_B(PORT_OVERSHELLPARTSELECTPROVIDERRELOAD, &OvershellPartSelectProviderReload);
-#ifndef RB3E_WII_BANK8
-    POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
-#endif
+//#ifndef RB3E_WII_BANK8
+//    POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
+//#endif
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
