@@ -83,7 +83,7 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
             ret = SongSortMgrGetSort(*(SongSortMgr **)PORT_THESONGSORTMGR, thisMusicLibrary->mSortType);
             if (ret != NULL)
             {
-                node = NodeSortGetNode(int, idx);
+                node = NodeSortGetNode(ret, idx);
                 if (node != NULL)
                 {
                     nodeType = node->vtable->getNodeType();
