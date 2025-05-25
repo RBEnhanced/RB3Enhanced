@@ -75,7 +75,7 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
     {
         if (strcmp(listSlot->mMatchName.buf, "game_origin_icon") == 0)
         {
-            int *ret = 0;
+            NodeSort *ret = 0;
             SortNode *node = 0;
             SongNodeType nodeType = kNodeNone;
             int curInfo = 0;
