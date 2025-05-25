@@ -5,6 +5,10 @@
 #include "Symbol.h"
 #include "SongMetadata.h"
 
+typedef struct _SortNode SortNode;
+typedef struct _ShortcutNodeVtable ShortcutNodeVtable;
+typedef struct _SongRecord SongRecord;
+
 typedef enum _SongNodeType
 {
     kNodeNone = 0,
@@ -17,7 +21,26 @@ typedef enum _SongNodeType
     kNodeStoreSong = 7
 } SongNodeType;
 
-typedef struct _SortNode SortNode;
+typedef struct _Unknown2
+{
+#ifdef RB3E_WII
+    char unknown[0xfc];
+#else
+    char unknown[0x108];
+#endif
+    SongMetadata *metaData;
+} Unknown2;
+
+struct _SortNode
+{
+    ShortcutNodeVtable *vtable;
+#ifdef RB3E_WII
+    char something[0x30];
+#else
+    char something[0x3c];
+#endif
+    SongRecord *record;
+};
 
 typedef int (*ReturnsZero_t)();
 typedef void (*OnlyReturns_t)();
@@ -53,16 +76,5 @@ typedef struct _SongRecord
 #endif
     SongMetadata *metaData;
 } SongRecord;
-
-struct _SortNode
-{
-    ShortcutNodeVtable *vtable;
-#ifdef RB3E_WII
-    char something[0x30];
-#else
-    char something[0x3c];
-#endif
-    SongRecord *record;
-};
 
 #endif // _SORTNODE_H

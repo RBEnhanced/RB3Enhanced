@@ -60,11 +60,11 @@ typedef struct _BandUser
     // BandUser members
     int unknown_0x0;
     int unknown_0x4;
-    Difficulty mDifficulty;
+    Difficulty difficulty;
     char mUnknown;
     char pad[3];
-    TrackType mTrackType;
-    ControllerType mControllerType;
+    TrackType trackType;
+    ControllerType controllerType;
     char mTrackSelected;
     char mUnknown2;
     char pad2[2];

@@ -80,7 +80,7 @@ static int INIHandler(void *user, const char *section, const char *name, const c
         if (strcmp(name, "EnableGoCentral") == 0)
             config.EnableGoCentral = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "GoCentralAddress") == 0)
-            strncpy(config.GoCentralAddress, value, RB3E_MAX_CONFIG_LEN);
+            strncpy(config.GoCentralAddress, value, RB3E_MAX_DOMAIN);
     }
     if (strcmp(section, "HTTP") == 0)
     {
@@ -88,6 +88,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.EnableHTTPServer = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "AllowCORS") == 0)
             config.AllowCORS = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "AllowScripts") == 0)
+            config.AllowScripts = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "Network") == 0)
     {

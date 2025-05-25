@@ -11,7 +11,7 @@ int WillBeNoStrumHook(GameGemList *thisGameGemList, int *gem)
 {
     Modifier *forceHoposModifier;
 
-    forceHoposModifier = ModifierIsActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.forceHopos, 0);
+    forceHoposModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.forceHopos, 0);
     if (forceHoposModifier->enabled)
     {
         return 1;
@@ -31,7 +31,7 @@ int *GetWidgetByNameHook(int *gemManager, Symbol sym)
     Symbol *drumCymbalColors[4] = {&globalSymbols.redCymbalGem, &globalSymbols.yellowCymbalGem, &globalSymbols.blueCymbalGem, &globalSymbols.greenCymbalGem};
     int i = 0;
 
-    colorShuffleModifier = ModifierIsActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.colorShuffle, 0);
+    colorShuffleModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.colorShuffle, 0);
 
     if (colorShuffleModifier->enabled)
     {
@@ -71,7 +71,7 @@ Symbol GetSlotColorHook(int *bandUser, int slot)
 
     Symbol slotColor = GetSlotColor(bandUser, slot);
 
-    colorShuffleModifier = ModifierIsActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.colorShuffle, 0);
+    colorShuffleModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.colorShuffle, 0);
 
     if (colorShuffleModifier->enabled)
     {
@@ -131,8 +131,8 @@ int AddGameGemHook(GameGemList *gameGemList, GameGem *gem, NoStrumState gemType)
     char origBlue = gem->blue;
     char origOrange = gem->orange;
 
-    mirrorModeModifier = ModifierIsActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.mirrorMode, 0);
-    gemShuffleModifier = ModifierIsActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.gemShuffle, 0);
+    mirrorModeModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.mirrorMode, 0);
+    gemShuffleModifier = ModifierActive(*(int *)PORT_MODIFIERMGR_POINTER, globalSymbols.gemShuffle, 0);
 
     if (gemShuffleModifier->enabled)
     {

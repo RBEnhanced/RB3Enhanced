@@ -18,6 +18,11 @@ ifeq ($(strip $(DEBUG)),1)
     DEFINES += RB3EDEBUG
 endif
 
+# if BANK8=1 then compile builds for bank 8 dev build
+ifeq ($(strip $(BANK8)),1) 
+    DEFINES += RB3E_WII_BANK8
+endif
+
 # Wii variables
 # =================
 # build directory for Wii compilation

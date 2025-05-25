@@ -16,3 +16,4 @@ build_wii/
 *.o
 # automatically generated files
 version.h
+.DS_Store
