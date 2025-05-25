@@ -21,7 +21,7 @@ int SongParserPitchToSlotHook(SongParser *thisSongParser, int pitch, int *diffic
     if (doubleBassModifier->enabled)
     {
         // make sure the current track type is drums
-        if (thisSongParser->mTrackType == DRUMS)
+        if (thisSongParser->mTrackType == kTrackDrum)
         {
             // check for MIDI note pitch 95 (which is the 2x bass pedal note)
             if (pitch == 95)
