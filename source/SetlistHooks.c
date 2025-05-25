@@ -5,6 +5,7 @@
 
 #include <stddef.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include "config.h"
 #include "ports.h"
@@ -33,7 +34,7 @@ void CreateMaterial(GameOriginInfo *info)
     // TODO: we should identify and hook some function that runs when you leave the song select screen to call DynamicTex's destructor
     // it will free the dynamic tex itself, the material it created, and the texture too, so it nicely wraps it all up for you
     // this way there is not a chunk of memory permanently dedicated to game origin icons (even if it is not a large amount)
-    tex = MemAlloc(0x20, 0);
+    tex = (DynamicTex*)MemAlloc(0x20, 0);
 
     // build the ark path (so dont include /gen/ or the _platform extension etc.)
     RB3E_DEBUG("Creating dynamic tex for game origin '%s'", info->gameOrigin);
@@ -68,7 +69,7 @@ int *MusicLibraryConstructorHook(int *thisMusicLibrary, int *songPreview)
     return MusicLibraryConstructor(thisMusicLibrary, songPreview);
 }
 
-RndMat *MusicLibraryMatHook(int *thisMusicLibrary, int data, int idx, int *listSlot)
+RndMat *MusicLibraryMatHook(int *thisMusicLibrary, int data, int idx, UIListSlot *listSlot)
 {
     if (listSlot != NULL && thisMusicLibrary != NULL)
     {
@@ -120,7 +121,7 @@ RndMat *MusicLibraryMatHook(int *thisMusicLibrary, int data, int idx, int *listS
         }
     }
 
-    return MusicLibraryMat(thisMusicLibrary, data, idx, listSlot);
+    return (RndMat*)(intptr_t)MusicLibraryMat((void*)thisMusicLibrary, data, idx, (int*)listSlot);
 }
 
 int numGameOrigins;
