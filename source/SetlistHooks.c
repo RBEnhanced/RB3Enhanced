@@ -5,7 +5,6 @@
 
 #include <stddef.h>
 #include <stdio.h>
-#include <stdint.h>
 #include <string.h>
 #include "config.h"
 #include "ports.h"
@@ -13,6 +12,7 @@
 #include "rb3/BandLabel.h"
 #include "rb3/File.h"
 #include "rb3/FilePath.h"
+#include "rb3/Mem.h"
 #include "rb3/MusicLibrary.h"
 #include "rb3/NodeSort.h"
 #include "rb3/UI/UIListSlot.h"
