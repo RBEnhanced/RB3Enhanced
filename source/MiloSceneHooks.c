@@ -69,7 +69,6 @@ object_pre_load:
     return;
 }
 
-
 // This hook allows for GH2-360/RB1/RB2 meshes to load correctly in RB3
 void VertexReadHook(BinStream *thisBinStream, Vector3 *vec3)
 {

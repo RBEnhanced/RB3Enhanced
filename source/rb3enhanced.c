@@ -432,6 +432,7 @@ void ApplyHooks()
     HookFunction(PORT_DATASET, &DataSet, &DataSetHook);
     HookFunction(PORT_DATASETELEM, &DataSetElem, &DataSetElemHook);
     HookFunction(PORT_DATAONELEM, &DataOnElem, &DataOnElemHook);
+
 #ifdef RB3E_WII // wii exclusive hooks
     // HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);

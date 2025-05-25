@@ -1,11 +1,9 @@
 #include "GlobalSymbols.h"
 #include "ports.h"
-#include "rb3/Mem.h"
 #include "rb3/ModifierManager.h"
 #include "rb3/GameGem.h"
 #include "rb3/Random.h"
 #include "rb3/Symbol.h"
-#include "rb3/Vector.h"
 
 int WillBeNoStrumHook(GameGemList *thisGameGemList, int *gem)
 {
