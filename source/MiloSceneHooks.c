@@ -68,3 +68,28 @@ object_pre_load:
     object->table->preLoad(object, stream);
     return;
 }
+
+
+// This hook allows for GH2-360/RB1/RB2 meshes to load correctly in RB3
+void VertexReadHook(BinStream *thisBinStream, Vector3 *vec3)
+{
+#ifdef RB3E_XBOX
+    // the gRev of the current mesh
+    int gRev = *(int *)PORT_MESH_GREV;
+    char empty[4] = {0};
+
+    BinstreamReadEndian(thisBinStream, (void *)&vec3->x, 4);
+    BinstreamReadEndian(thisBinStream, (void *)&vec3->y, 4);
+    BinstreamReadEndian(thisBinStream, (void *)&vec3->z, 4);
+
+    // if the current RndMesh being read is the GH2-360/RB1/RB2 format, we need to skip over the W component
+    // RB3 (for whatever reason) expects vertices in these versions of meshes to not include W
+    // even though they *do* in actual GH2-360/RB1/RB2 meshes
+    if (gRev == 34)
+    {
+        BinstreamReadEndian(thisBinStream, (void *)&empty, 4);
+    }
+
+    return;
+#endif
+}
