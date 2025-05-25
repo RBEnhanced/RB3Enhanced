@@ -75,7 +75,7 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
     {
         if (strcmp(listSlot->mMatchName.buf, "game_origin_icon") == 0)
         {
-            NodeSort *ret = 0;
+            int *ret = 0;
             SortNode *node = 0;
             SongNodeType nodeType = kNodeNone;
             int curInfo = 0;
@@ -83,7 +83,7 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
             ret = SongSortMgrGetSort(*(SongSortMgr **)PORT_THESONGSORTMGR, thisMusicLibrary->mSortType);
             if (ret != NULL)
             {
-                node = NodeSortGetNode(ret, idx);
+                node = NodeSortGetNode(int, idx);
                 if (node != NULL)
                 {
                     nodeType = node->vtable->getNodeType();
