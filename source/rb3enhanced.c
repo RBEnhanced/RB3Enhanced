@@ -456,7 +456,7 @@ void StartupHook(void *ThisApp, int argc, char **argv)
     ApplyConfigurablePatches();
 
 #ifdef RB3E_WII
-    if (RB3E_Mounted && config.LegacySDMode == false)
+    if (RB3E_Mounted && config.LegacySDMode == false && config.ModernSDMode == true)
     {
         TryToLoadPRNGKeyFromFile();
         InitCNTHooks();
