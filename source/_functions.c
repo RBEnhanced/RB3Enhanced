@@ -139,6 +139,12 @@ RB3E_STUB(OSFatal)
 RB3E_STUB(OSSetErrorHandler)
 RB3E_STUB(PPCHalt)
 RB3E_STUB(OSReturnToMenu)
+RB3E_STUB(ARCInitHandle)
+RB3E_STUB(contentInitHandleTitleNAND)
+RB3E_STUB(CNTReleaseHandle)
+RB3E_STUB(CNTRead)
+RB3E_STUB(EC_GetContentInfos)
+RB3E_STUB(CNTOpen)
 #endif
 
 RB3E_STUB(RB3EStubEnd);

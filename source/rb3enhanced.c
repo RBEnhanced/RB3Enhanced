@@ -78,6 +78,7 @@ void *NewFileHook(char *fileName, int flags)
         return FileSD_New(fileName, flags);
     }
 #ifdef RB3EDEBUG
+    // only on debug builds and only on Dolphin, we can read from NAND
     if (RB3E_IsEmulator() && memcmp(fileName, "nand/", 5) == 0) {
         return FileWiiNAND_New(fileName + 4);
     }
@@ -450,6 +451,9 @@ void ApplyHooks()
     RB3E_MSG("Hooks applied!", NULL);
 }
 
+void InitCNTHooks();
+void TryToLoadPRNGKeyFromFile();
+
 void StartupHook(void *ThisApp, int argc, char **argv)
 {
     RB3E_MSG("Loaded! Version " RB3E_BUILDTAG " (" RB3E_BUILDCOMMIT ")", NULL);
@@ -467,6 +471,14 @@ void StartupHook(void *ThisApp, int argc, char **argv)
     LoadConfig();
     // apply any patches that are only added after config loads
     ApplyConfigurablePatches();
+
+#ifdef RB3E_WII
+    if (RB3E_Mounted && config.LegacySDMode == false && config.ModernSDMode == true)
+    {
+        TryToLoadPRNGKeyFromFile();
+        InitCNTHooks();
+    }
+#endif
 
     // start the game by calling the proper app constructor
     RB3E_MSG("Starting Rock Band 3...", NULL);

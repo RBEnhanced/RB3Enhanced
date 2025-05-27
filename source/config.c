@@ -27,8 +27,8 @@ void InitDefaultConfig()
     memset(&config, 0, sizeof(config));
     strcpy(config.RawfilesDir, "rb3");
 #ifdef RB3E_WII
-    // uncomment when GoCentral has a default instance that uses naswii auth
-    // strcpy(config.NASServer, "naswii.rbenhanced.rocks");
+    strcpy(config.NASServer, "naswii.rbenhanced.rocks");
+    config.ModernSDMode = 1;
 #endif
     config.SongSpeedMultiplier = 1.0;
     config.TrackSpeedMultiplier = 1.0;
@@ -105,6 +105,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.NASServer, value, RB3E_MAX_DOMAIN);
         if (strcmp(name, "LegacySDMode") == 0)
             config.LegacySDMode = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "ModernSDMode") == 0)
+            config.ModernSDMode = RB3E_CONFIG_BOOL(value);
     }
 #elif RB3E_XBOX
     if (strcmp(section, "Xbox360") == 0)

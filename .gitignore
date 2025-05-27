@@ -11,9 +11,17 @@ build_xbox/
 # wii build artifacts
 build_wii/
 *.mod
+# ps3 build artifacts
+build_ps3/
+*.sprx
+*.prx
+# gcc build artifacts
 *.elf
 *.map
 *.o
 # automatically generated files
 version.h
+# OS artifacts
+Thumbs.db
+desktop.ini
 .DS_Store
