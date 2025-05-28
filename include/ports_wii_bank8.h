@@ -28,6 +28,8 @@
 // #define PORT_MICCHECK 0x8024a4e8              // NOT NEEDED? a bne that throws an error on the song select screen if the mic is not connected
 #define PORT_BIGSYMBOLFUNC_TAIL 0x804d3bac    // blr after a function that initialises a bunch of symbols
 #define PORT_UPDATEPRESENCEBLOCK_B 0x8021cbd0 // branch after the failure case in a function that calls UpdatePresence
+// FIX ME INLINED? #define PORT_ADDTRACKVECTOR_BL 0x8064e288       // bl to vector_push_back inside of SongData::AddTrack // actually SongDB::AddTrack
+#define PORT_GETGAMELIST 0x801dbfa0             // SongData::GetGameList // actually SongDB::GetGems
 #define PORT_MULTIPLAYER_CRASH 0x80023fec     // branch to a function that can crash in online multiplayer
 #define PORT_MULTIPLAYER_FIX 0x80a2f0c4       // the function that doesn't crash
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
@@ -44,6 +46,7 @@
 #define PORT_EXECUTEDTA 0x803edbd0              // RockCentralGateway::ExecuteConfig
 #define PORT_BANDLABELSETDISPLAYTEXT 0x80518360 // BandLabel::SetDisplayText
 #define PORT_SETSONGANDARTISTNAME 0x80254650    // BandLabel::SetSongAndArtistName
+#define PORT_SETSONGNAMEFROMNODE 0x80253ec0     // BandLabel::SetSongNameFromNode
 #define PORT_KEYSONGUITAR 0x8031c1b0            // OvershellPanel::CanGuitarPlayKeys
 // #define PORT_HMXFACTORYFUNCAT 0x8031b2f8         // FIXME HmxObjectFactoryFunc::_at - inlined in bank8?
 #define PORT_WILLBENOSTRUM 0x8062b2d0            // GameGemList::WillBeNoStrum
@@ -53,6 +56,7 @@
 #define PORT_GETWIDGETBYNAME 0x80135f30          // GemManager::GetWidgetByName
 #define PORT_DATANODEEVALUATE 0x8045e030         // DataNode::Evaluate
 #define PORT_GETSLOTCOLOR 0x801484d0             // TrackConfig::GetSlotColor
+// FIX ME INLINED? #define PORT_ADDSMASHERPLATETOVECTOR 0x80bf0828      // AddSmasherPlateToVector
 #define PORT_USBWIIGETTYPE 0x809fd840            // UsbWii::GetType
 #define PORT_FILE_EXISTS 0x804207c0              // FileExists
 #define PORT_QUEUEMESSAGE 0x80333140             // PassiveMessagesPanel::QueueMessage
@@ -66,6 +70,7 @@
 // #define PORT_BUILDINSTRUMENTSELECTION 0x802478a8 // FIXME BuildInstrumentSelectionList(?) - actual name not known
 // #define PORT_PREPARESOMEVECTORMAYBE 0x80247c58   // FIXME Prepares some vector, used by BuildInstrumentSelectionList
 // #define PORT_SOMEVECTORPUSHBACKMAYBE 0x802484a8  // FIXME vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
+// FIX ME (?) #define PORT_VECTORPUSHBACK 0x801dced0               // vector_push_back
 #define PORT_POSTPROC_DOPOST 0x809ef2d0          // WiiPostProc::DoPost
 #define PORT_MUSICLIBRARYSELECTMAYBE 0x802ff140  // UNSURE MusicLibrary::TryToSetHighlight, Selects an entry in the Music Library screen - actual name not known
 #define PORT_GETSYMBOLBYGAMEORIGIN 0x80374910    // RecentCmp::RecentTypeToOrigin
@@ -74,6 +79,7 @@
 #define PORT_FILESTREAM_CT 0x80494fd0            // FileStream::__ct (the one that takes a char * path instead of a File object)
 #define PORT_CHUNKSTREAM_CT 0x804929a0           // ChunkStream::__ct
 #define PORT_GETBANDUSERFROMSLOT 0x80168010      // BandUserMgr::GetUserFromSlot
+#define PORT_OVERSHELLPARTSELECTPROVIDERRELOAD 0x80322620 // OvershellPartSelectProvider::Reload
 #define PORT_GETBANDUSERS 0x801683e0             // BandUserMgr::GetBandUsers
 #define PORT_GETSONGSHORTNAME 0x802f5dd0         // MetaPerformer::GetSongSymbol
 #define PORT_GETMETADATA 0x80271de0              // BandSongMgr::Data (function renamed from the original name to avoid any confusion with Data.h)
@@ -90,8 +96,24 @@
 #define PORT_QUEUINGSOCKET_BIND 0x80068820     // Quazal::QueuingSocket::Bind
 #define PORT_QUAZALSOCKET_BIND 0x80029dc0      // Quazal::Socket::Bind
 #define PORT_INITSONGMETADATA 0x8075a0c0       // InitSongMetadata
+#define PORT_SONGMETADATACONSTRUCTOR 0x8075a1a0       // SongMetadata::__ct
+#define PORT_SONGMETADATALOAD 0x8075a910                  // SongMetadata::Load
 #define PORT_UPDATEPRESENCE 0x8021c3d0         // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x80035cf0 // Quazal::StepSequenceJob::SetStep
+#define PORT_RNDTEXNEWOBJECT 0x80931050                   // RndTex::NewObject
+#define PORT_RNDMATNEWOBJECT 0x80931010                   // RndMat::NewObject
+#define PORT_RNDTEXSETBITMAP 0x8093b810                   // RndTex::SetBitmap
+#define PORT_RNDTEXSETBITMAP2 0x8093b430                  // RndTex::SetBitmap2
+#define PORT_RNDTEXSETBITMAP3 0x8093b5b0                  // RndTex::SetBitmap3
+#define PORT_FILEPATHCONSTRUCTOR 0x80462460               // FilePath::__ct
+#define PORT_MUSICLIBRARY_CT 0x802f9e10                   // MusicLibrary::__ct
+#define PORT_MUSICLIBRARYMAT 0x80300390                   // MusicLibrary::Mat
+#define PORT_NODESORTGETNODE 0x8036f5e0                   // MusicLibrary::GetNodeByIndex //actually NodeSort::GetNode
+#define PORT_GAMEGEMDB_CT 0x80628230                      // GameGemDB::__ct
+#define PORT_ADDMULTIGEM 0x806284e0                       // GameGemDB::AddMultiGem
+#define PORT_SONGSORTMGRGETSORT 0x8037a510                // SongSortMgr::GetSort
+#define PORT_DYNAMICTEX_CT 0x80393bd0                     // DynamicTex::__ct
+#define PORT_RNDMATSETDIFFUSETEX 0x808d36b0               // RndMat::SetDiffuseTex
 #define PORT_BINSTREAMWRITE 0x804892b0         // BinStream::Write
 #define PORT_BINSTREAMREAD 0x80489140          // BinStream::Read
 #define PORT_BINSTREAMREADENDIAN 0x804894f0    // BinStream::ReadEndian
