@@ -28,7 +28,7 @@
 // #define PORT_MICCHECK 0x8024a4e8              // NOT NEEDED? a bne that throws an error on the song select screen if the mic is not connected
 #define PORT_BIGSYMBOLFUNC_TAIL 0x804d3bac    // blr after a function that initialises a bunch of symbols
 #define PORT_UPDATEPRESENCEBLOCK_B 0x8021cbd0 // branch after the failure case in a function that calls UpdatePresence
-#define PORT_ADDTRACKVECTOR_BL 0x8064e288       // FIX ME // bl to vector_push_back inside of SongData::AddTrack // actually SongDB::AddTrack
+// FIX ME INLINED? #define PORT_ADDTRACKVECTOR_BL 0x8064e288       // bl to vector_push_back inside of SongData::AddTrack // actually SongDB::AddTrack
 #define PORT_GETGAMELIST 0x801dbfa0             // SongData::GetGameList // actually SongDB::GetGems
 #define PORT_MULTIPLAYER_CRASH 0x80023fec     // branch to a function that can crash in online multiplayer
 #define PORT_MULTIPLAYER_FIX 0x80a2f0c4       // the function that doesn't crash
@@ -56,7 +56,7 @@
 #define PORT_GETWIDGETBYNAME 0x80135f30          // GemManager::GetWidgetByName
 #define PORT_DATANODEEVALUATE 0x8045e030         // DataNode::Evaluate
 #define PORT_GETSLOTCOLOR 0x801484d0             // TrackConfig::GetSlotColor
-#define PORT_ADDSMASHERPLATETOVECTOR 0x80bf0828  // FIX ME INLINED?     // AddSmasherPlateToVector
+// FIX ME INLINED? #define PORT_ADDSMASHERPLATETOVECTOR 0x80bf0828      // AddSmasherPlateToVector
 #define PORT_USBWIIGETTYPE 0x809fd840            // UsbWii::GetType
 #define PORT_FILE_EXISTS 0x804207c0              // FileExists
 #define PORT_QUEUEMESSAGE 0x80333140             // PassiveMessagesPanel::QueueMessage
@@ -70,7 +70,7 @@
 // #define PORT_BUILDINSTRUMENTSELECTION 0x802478a8 // FIXME BuildInstrumentSelectionList(?) - actual name not known
 // #define PORT_PREPARESOMEVECTORMAYBE 0x80247c58   // FIXME Prepares some vector, used by BuildInstrumentSelectionList
 // #define PORT_SOMEVECTORPUSHBACKMAYBE 0x802484a8  // FIXME vector<class_Key<class_Vector2>,class_stlpmtx_std::StlNodeAlloc<class_Key<class_Vector2>_>_>::push_back
-#define PORT_VECTORPUSHBACK 0x801dced0           // FIX ME (?)     // vector_push_back
+// FIX ME (?) #define PORT_VECTORPUSHBACK 0x801dced0               // vector_push_back
 #define PORT_POSTPROC_DOPOST 0x809ef2d0          // WiiPostProc::DoPost
 #define PORT_MUSICLIBRARYSELECTMAYBE 0x802ff140  // UNSURE MusicLibrary::TryToSetHighlight, Selects an entry in the Music Library screen - actual name not known
 #define PORT_GETSYMBOLBYGAMEORIGIN 0x80374910    // RecentCmp::RecentTypeToOrigin

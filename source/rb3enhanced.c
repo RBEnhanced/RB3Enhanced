@@ -348,6 +348,7 @@ void InitialiseFunctions()
     POKE_B(&HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
     // TODO(Emma): port to bank8
     POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
+    POKE_B(&vector_push_back, PORT_VECTORPUSHBACK); // otherwise unused it seems?
 #endif
     POKE_B(&RandomInt, PORT_RANDOMINT);
     POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);
@@ -373,7 +374,6 @@ void InitialiseFunctions()
     POKE_B(&RndTexSetBitmap2, PORT_RNDTEXSETBITMAP2);
     POKE_B(&FilePathConstructor, PORT_FILEPATHCONSTRUCTOR);
     POKE_B(&NodeSortGetNode, PORT_NODESORTGETNODE);
-    POKE_B(&vector_push_back, PORT_VECTORPUSHBACK);
     POKE_B(&GameGemDBConstructor, PORT_GAMEGEMDB_CT);
     POKE_B(&SongSortMgrGetSort, PORT_SONGSORTMGRGETSORT);
     POKE_B(&DynamicTexConstructor, PORT_DYNAMICTEX_CT);
