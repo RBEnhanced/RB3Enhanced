@@ -27,9 +27,21 @@ void RB3E_CloseFile(int file);
 int RB3E_CreateThread(void *address, void *arg, int stack_size);
 void RB3E_Sleep(int ms);
 int RB3E_RelaunchGame();
+void RB3E_FlushCache(void * address, unsigned int size);
+
+// stub function at the start of the .text segment - doubles as the start of _functions.c
+void RB3EBase();
+
+// stub function at the end of _functions.c after all stubs are made
+void RB3EStubEnd();
 
 // loaded song count - done in SongHooks.c
 extern int RB3E_LoadedSongCount;
 
 // Emulator detection
 int RB3E_IsEmulator();
+
+// StageKit set state, needed for fixing LED bug.
+#ifdef RB3E_XBOX
+  void StagekitSetStateHook(int state1, int state2);
+#endif

@@ -34,16 +34,17 @@ void LoadObj(Object *object, BinStream *stream)
     if (strlen(origPath) + strlen(object->name) - 20 > sizeof(newPath))
         goto object_pre_load;
     strncpy(newPath, origPath, strlen(origPath) - 10);
-    strncat(newPath, "/", 1);
-    strncat(newPath, object->name, strlen(object->name));
+    // HACK(Emma): we don't have strncat on Wii so just strcat. THIS IS NOT SAFE!
+    strcat(newPath, "/");          //, 1);
+    strcat(newPath, object->name); //, strlen(object->name));
 
     replacementPath = RB3E_GetRawfilePath(newPath, 0);
     if (replacementPath != NULL)
     {
         RB3E_DEBUG("Replacing Milo scene asset %s with file at %s", object->name, replacementPath);
 
-        // create FileStream with kReadNoArk so it looks outside of the ARK for the file
-        fileStream = *FileStreamConstructor(&fileStream, replacementPath, kReadNoArk, 0);
+        // create FileStream with filetype 2 so it looks outside of the ARK for the file
+        fileStream = *FileStreamConstructor(&fileStream, replacementPath, 2, 0);
 
         // attempt to detect endianness of replacement asset
         // this allows assets from GH2 and earlier to work
@@ -56,7 +57,7 @@ void LoadObj(Object *object, BinStream *stream)
         // not sure if this is 100% necessary, but cannot hurt
         fileStream.vtable->seekImpl(&fileStream, 0, 0);
 
-        object->table->preLoad(object, &fileStream);
+        object->table->preLoad(object, (BinStream *)&fileStream);
 
         // destroy the FileStream so we do not leak memory
         fileStream.vtable->destructor(&fileStream, 0);
@@ -66,4 +67,28 @@ void LoadObj(Object *object, BinStream *stream)
 object_pre_load:
     object->table->preLoad(object, stream);
     return;
+}
+
+// This hook allows for GH2-360/RB1/RB2 meshes to load correctly in RB3
+void VertexReadHook(BinStream *thisBinStream, Vector3 *vec3)
+{
+#ifdef RB3E_XBOX
+    // the gRev of the current mesh
+    int gRev = *(int *)PORT_MESH_GREV;
+    char empty[4] = {0};
+
+    BinstreamReadEndian(thisBinStream, (void *)&vec3->x, 4);
+    BinstreamReadEndian(thisBinStream, (void *)&vec3->y, 4);
+    BinstreamReadEndian(thisBinStream, (void *)&vec3->z, 4);
+
+    // if the current RndMesh being read is the GH2-360/RB1/RB2 format, we need to skip over the W component
+    // RB3 (for whatever reason) expects vertices in these versions of meshes to not include W
+    // even though they *do* in actual GH2-360/RB1/RB2 meshes
+    if (gRev == 34)
+    {
+        BinstreamReadEndian(thisBinStream, (void *)&empty, 4);
+    }
+
+    return;
+#endif
 }

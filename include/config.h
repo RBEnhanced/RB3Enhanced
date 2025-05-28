@@ -44,6 +44,7 @@ typedef struct _RB3E_Config
     // [HTTP]
     char EnableHTTPServer;
     char AllowCORS;
+    char AllowScripts;
 #ifdef RB3E_XBOX
     // [Xbox360]
     char EnableLiveless;
@@ -56,6 +57,7 @@ typedef struct _RB3E_Config
     // [Wii]
     char NASServer[RB3E_MAX_DOMAIN];
     char LegacySDMode;
+    char ModernSDMode;
 #endif
 #ifdef RB3EDEBUG
     // [Debug]
