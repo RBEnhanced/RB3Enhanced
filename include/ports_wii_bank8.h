@@ -108,7 +108,7 @@
 #define PORT_FILEPATHCONSTRUCTOR 0x80462460               // FilePath::__ct
 #define PORT_MUSICLIBRARY_CT 0x802f9e10                   // MusicLibrary::__ct
 #define PORT_MUSICLIBRARYMAT 0x80300390                   // MusicLibrary::Mat
-#define PORT_NODESORTGETNODE 0x825bf708                   // MusicLibrary::GetNodeByIndex //actually NodeSort::GetNode
+#define PORT_NODESORTGETNODE 0x8036f5e0                   // MusicLibrary::GetNodeByIndex //actually NodeSort::GetNode
 #define PORT_GAMEGEMDB_CT 0x80628230                      // GameGemDB::__ct
 #define PORT_ADDMULTIGEM 0x806284e0                       // GameGemDB::AddMultiGem
 #define PORT_SONGSORTMGRGETSORT 0x8037a510                // SongSortMgr::GetSort
