@@ -53,6 +53,7 @@
 #define PORT_MULTIPLAYER_CRASH 0x82ae6880        // branch to a function that can crash in online multiplayer
 #define PORT_MULTIPLAYER_FIX 0x8282b238          // the function that doesn't crash
 #define PORT_QUAZAL_BREAKPOINT 0x828410c0        // address to DbgBreakPoint in Quazal::Platform::Breakpoint
+#define PORT_MAINSEH 0x82272e60                  // address to __CxxFrameHandler above the main() function
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
@@ -148,6 +149,7 @@
 #define PORT_DATASETELEM 0x82760b38                  // DataSetElem
 #define PORT_DATAONELEM 0x8275ff50                   // DataOnElem
 #define PORT_DATANODEGETOBJ 0x8274b088               // DataNode::GetObj
+#define PORT_DXRND_SUSPEND 0x8273A370                // DxRnd::Suspend
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -164,6 +166,7 @@
 #define PORT_THEGAME 0x82e02128             // pointer to TheGame (you lost)
 #define PORT_OBJECTDIRMAINDIR 0x82e054b8    // ObjectDir::sMainDir
 #define PORT_MESH_GREV 0x82cc2638           // address of RndMesh::gRev
+#define PORT_DXRND 0x82e04b38               // address of TheDxRnd
 // import function stubs
 #define PORT_XEKEYSSETKEY_STUB 0x82c4c47c
 #define PORT_XEKEYSAESCBC_STUB 0x82c4c48c
@@ -180,6 +183,7 @@
 #define PORT_XAMUSERGETSIGNINSTATE 0x82c4bcfc
 #define PORT_XAMUSERCHECKPRIVILEGE 0x82c4bd1c
 #define PORT_XAMSHOWFRIENDSUI 0x8283d710
+#define PORT_XAMLOADERTERMINATETITLE 0x82c4bccc
 
 // define logging functions
 void DbgPrint(const char *s, ...);

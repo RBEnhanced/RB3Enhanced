@@ -10,6 +10,7 @@
 #include "ports.h"
 #include "rb3enhanced.h"
 #include "xbox360.h"
+#include "version.h"
 
 static int HasRunDetection = 0;
 static int DetectionResult = 0;
@@ -132,11 +133,15 @@ static void EnableSockpatch()
     }
 }
 
+// defined in xbox360_exceptions.c
+int RB3E_ExceptionHandler(EXCEPTION_RECORD *ExceptionRecord, void *EstablisherFrame, CONTEXT *ContextRecord, struct _DISPATCHER_CONTEXT *DispatcherContext);
+
 BOOL APIENTRY DllMain(HANDLE hInstDLL, DWORD reason, LPVOID lpReserved)
 {
     if (reason == DLL_PROCESS_ATTACH)
     {
-        RB3E_DEBUG("DLL has been loaded");
+        RB3E_DEBUG("DLL has been loaded", NULL);
+        POKE_32(PORT_MAINSEH, (DWORD)RB3E_ExceptionHandler);
         // Replace App::Run with App::RunWithoutDebugging
         POKE_BL(PORT_APP_RUN, PORT_APP_RUNNODEBUG);
         // Apply our hook
