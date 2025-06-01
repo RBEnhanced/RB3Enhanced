@@ -11,6 +11,7 @@
 #include <rvl/vi.h>
 #include <rvl/ipc.h>
 #include <rvl/cache.h>
+#include "exceptions.h"
 #include "version.h"
 #include "ppcasm.h"
 #include "ports.h"
@@ -431,23 +432,6 @@ static unsigned char dolphin_osfatal_font[] = {
 typedef struct _GXColor {
     uint8_t r, g, b, a;
 } GXColor;
-typedef struct OSContext {
-    uint32_t gprs[32];  // at 0x0
-    uint32_t cr;        // at 0x80
-    uint32_t lr;        // at 0x84
-    uint32_t ctr;       // at 0x88
-    uint32_t xer;       // at 0x8C
-    double fprs[32];  // at 0x90
-    uint32_t fpscr_pad; // at 0x190
-    uint32_t fpscr;     // at 0x194
-    uint32_t srr0;      // at 0x198
-    uint32_t srr1;      // at 0x19C
-    uint16_t mode;      // at 0x1A0
-    uint16_t state;     // at 0x1A2
-    uint32_t gqrs[8];   // at 0x1A4
-    uint32_t psf_pad;   // at 0x1C4
-    double psfs[32];  // at 0x1C8
-} OSContext;
 typedef enum _OSErrorType {
     OS_ERR_SYSTEM_RESET,
     OS_ERR_MACHINE_CHECK,

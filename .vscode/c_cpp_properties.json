@@ -9,6 +9,7 @@
             "defines": [
                 "_DEBUG",
                 "_XBOX",
+                "_PPC_",
                 "RB3E",
                 "RB3E_XBOX",
                 "RB3EDEBUG"

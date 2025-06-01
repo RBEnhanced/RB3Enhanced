@@ -28,6 +28,8 @@ DWORD XexGetProcedureAddress(HANDLE ModuleHandle, DWORD Ordinal, PVOID OutAddres
 int XeCryptSha(void *input_1, int input_1_size, void *input_2, int input_2_size, void *input_3, int input_3_size, void *output, int output_size);
 int XeCryptHmacSha(void *key, int key_size, void *input_1, int input_1_size, void *input_2, int input_2_size, void *input_3, int input_3_size, void *output, int output_size);
 int XeKeysConsolePrivateKeySign(unsigned char hash[0x14], unsigned char output_cert_sig[0x228]);
+// memory management
+int MmIsAddressValid(DWORD address);
 
 // structure for xnet
 typedef struct _XnpRouteEntry_t
