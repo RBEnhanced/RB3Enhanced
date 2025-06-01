@@ -132,6 +132,10 @@
 #define PORT_MEMPRINTOVERVIEW 0x827bc838             // MemPrintOverview
 #define PORT_MEMPRINT 0x827bc970                     // MemPrint
 #define PORT_MEMNUMHEAPS 0x827bb628                  // MemNumHeaps
+#define PORT_METAMUSICISLOADED 0x8270fab8            // MetaMusic::Loaded
+#define PORT_METAMUSICLOAD 0x82710ab0                // MetaMusic::Load
+#define PORT_METAMUSICPOLL 0x82711438                // MetaMusic::Poll
+#define PORT_METAMUSICSTART 0x82711a00               // MetaMusic::Start
 #define PORT_INITSONGMETADATA 0x827aa450             // InitSongMetadata
 #define PORT_UPDATEPRESENCE 0x82680430               // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x82af92b8       // Quazal::StepSequenceJob::SetStep

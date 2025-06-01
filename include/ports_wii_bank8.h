@@ -89,6 +89,10 @@
 #define PORT_SYMBOLPREINIT 0x804be150          // Symbol::PreInit
 #define PORT_QUEUINGSOCKET_BIND 0x80068820     // Quazal::QueuingSocket::Bind
 #define PORT_QUAZALSOCKET_BIND 0x80029dc0      // Quazal::Socket::Bind
+#define PORT_METAMUSICISLOADED 0x809975d0      // MetaMusic::Loaded
+#define PORT_METAMUSICLOAD 0x809970d0          // MetaMusic::Load
+#define PORT_METAMUSICPOLL 0x80997610          // MetaMusic::Poll
+#define PORT_METAMUSICSTART 0x80997990         // MetaMusic::Start
 #define PORT_INITSONGMETADATA 0x8075a0c0       // InitSongMetadata
 #define PORT_UPDATEPRESENCE 0x8021c3d0         // PresenceMgr::UpdatePresence
 #define PORT_STEPSEQUENCEJOBSETSTEP 0x80035cf0 // Quazal::StepSequenceJob::SetStep
