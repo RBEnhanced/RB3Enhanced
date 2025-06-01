@@ -29,6 +29,7 @@ int RB3E_CreateThread(void *address, void *arg, int stack_size);
 void RB3E_Sleep(int ms);
 int RB3E_RelaunchGame();
 void RB3E_FlushCache(void * address, unsigned int size);
+int RB3E_DeleteSongCache();
 
 // stub function at the start of the .text segment - doubles as the start of _functions.c
 void RB3EBase();

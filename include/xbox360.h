@@ -53,4 +53,5 @@ void XNetLogonGetExtendedStatus(unsigned int *login_status, unsigned int *login_
 void InitCryptoHooks();
 void InitLivelessHooks();
 void InitInputHooks();
+void InitContentHooks();
 #endif // RB3E_XBOX

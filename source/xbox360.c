@@ -6,8 +6,10 @@
 #ifdef RB3E_XBOX
 
 #include <xtl.h>
+#include "rb3/XboxContent.h"
 #include "ppcasm.h"
 #include "ports.h"
+#include "utilities.h"
 #include "rb3enhanced.h"
 #include "xbox360.h"
 #include "version.h"
@@ -87,6 +89,8 @@ static void CTHook(void *ThisApp, int argc, char **argv)
     InitCryptoHooks();
     // initialise hooks for input
     InitInputHooks();
+    // initialise hooks for content
+    InitContentHooks();
     // initialise hooks for liveless - this has to be done *after* systeminit
     POKE_BL(PORT_SYSTEMINIT_BLANK, &InitLivelessHooks);
     // launch game

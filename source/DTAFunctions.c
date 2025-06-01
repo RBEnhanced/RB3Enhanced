@@ -287,6 +287,13 @@ DataNode *DTAGetOrigin(DataNode *node, DataArray *args)
     return node;
 }
 
+DataNode *DTADeleteSongCache(DataNode *node, DataArray *args)
+{
+    node->type = INT_VALUE;
+    node->value.intVal = RB3E_DeleteSongCache();
+    return node;
+}
+
 #ifdef RB3E_XBOX
 // this function is inlined on the Xbox version, so we re-create it
 void DataRegisterFunc(Symbol name, DTAFunction_t func)
@@ -312,5 +319,6 @@ void AddDTAFunctions()
     DataRegisterFunc(globalSymbols.rb3e_get_album, DTAGetAlbum);
     DataRegisterFunc(globalSymbols.rb3e_get_origin, DTAGetOrigin);
     DataRegisterFunc(globalSymbols.rb3e_get_genre, DTAGetGenre);
+    DataRegisterFunc(globalSymbols.rb3e_delete_songcache, DTADeleteSongCache);
     RB3E_MSG("Added DTA functions!", NULL);
 }
