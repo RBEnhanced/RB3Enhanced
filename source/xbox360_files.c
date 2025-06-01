@@ -105,7 +105,10 @@ int RB3E_FileExists(char *filename)
 }
 int RB3E_OpenFile(char *filename, char readWrite)
 {
-    HANDLE handle = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+    DWORD desiredAccess = readWrite ? (GENERIC_READ | GENERIC_WRITE) : GENERIC_READ;
+    DWORD shareMode = readWrite ? (FILE_SHARE_READ | FILE_SHARE_WRITE) : FILE_SHARE_READ;
+    DWORD creationDisposition = readWrite ? OPEN_ALWAYS : OPEN_EXISTING;
+    HANDLE handle = CreateFile(filename, desiredAccess, shareMode, NULL, creationDisposition, 0, NULL);
     if (handle == INVALID_HANDLE_VALUE)
         return -1;
     return (int)handle;
@@ -121,6 +124,14 @@ int RB3E_ReadFile(int file, int offset, void *buffer, int size)
     if (ReadFile((HANDLE)file, buffer, size, &readBytes, NULL) == FALSE)
         return -1;
     return readBytes;
+}
+int RB3E_WriteFile(int file, int offset, void *buffer, int size)
+{
+    DWORD wroteBytes;
+    SetFilePointer((HANDLE)file, offset, NULL, FILE_BEGIN);
+    if (WriteFile((HANDLE)file, buffer, size, &wroteBytes, NULL) == FALSE)
+        return -1;
+    return wroteBytes;
 }
 void RB3E_CloseFile(int file)
 {

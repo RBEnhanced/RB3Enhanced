@@ -67,7 +67,7 @@ unsigned int RB3E_GetGatewayIP()
     XnpRouteEntry routes[2] = {0};
     int size = sizeof(routes);
     // XNET_OPTID_ROUTE_ENTRY
-    int ret = XNetGetOpt(0x1392, routes, &size);
+    int ret = XNetGetOpt(0x1392, (BYTE *)routes, &size);
     if (ret == 0)
     {
         return routes[1].interface_addr;
@@ -106,7 +106,7 @@ int RB3E_SetSendTimeout(int socket, int timeout_ms)
 int RB3E_SetTimeout(int socket, int timeout_ms)
 {
     int r = RB3E_SetRecvTimeout(socket, timeout_ms);
-    r = RB3E_SetRecvTimeout(socket, timeout_ms);
+    r = RB3E_SetSendTimeout(socket, timeout_ms);
     return r;
 }
 

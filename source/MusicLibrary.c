@@ -7,12 +7,16 @@
 
 void CheckForPanelAndJump(Symbol entryName, int sortType)
 {
+#ifndef RB3E_WII_BANK8
     // check if the song select panel is "up" (displayed on screen) before attempting a jump
-    UIPanel *songSelectPanel = ObjectFindUIPanel(*(int *)PORT_OBJECTDIRMAINDIR, "song_select_panel", 1);
-    if (songSelectPanel != NULL && songSelectPanel->mState == kPanelUp)
+    UIPanel *songSelectPanel = ObjectFindUIPanel(*(int **)PORT_OBJECTDIRMAINDIR, "song_select_panel", 1);
+    if (songSelectPanel != NULL && songSelectPanel->is_up == 1)
     {
         MusicLibrarySelect(*(int *)PORT_THEMUSICLIBRARY, entryName, sortType, 1);
     }
+#else
+    RB3E_MSG("CheckForPanelAndJump not implemented on Bank 8!", NULL);
+#endif
 }
 
 // selects any entry based on the full artist name or the game origin

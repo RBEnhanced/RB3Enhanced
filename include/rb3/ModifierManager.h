@@ -11,7 +11,7 @@ typedef struct _Modifier
     bool enabled;
 } Modifier;
 
-extern Modifier *ModifierIsActive(int thisModifierManager, Symbol symbol, bool defaultValue);
+extern Modifier *ModifierActive(int thisModifierManager, Symbol symbol, bool defaultValue);
 extern void *ModifierManagerConstructor(int thisModifierManager, int unk);
 
 #endif // _MODIFIERMANAGER_H

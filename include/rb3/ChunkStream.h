@@ -38,6 +38,6 @@ struct _ChunkStream
     ChunkStream_vtable *vtable;
 };
 
-ChunkStream *ChunkStreamConstructor(ChunkStream *thisChunkStream, char *fileName, FileType fileType, int chunkSize, char compress, Platform platform, char cached);
+ChunkStream *ChunkStreamConstructor(ChunkStream *thisChunkStream, char *fileName, int fileType, int chunkSize, char compress, Platform platform, char cached);
 
 #endif // _CHUNKSTREAM_H

@@ -11,10 +11,10 @@ typedef struct _MetaPerformer
 
 extern void SetVenue(int *thisMetaPerformer, Symbol venue);
 #ifdef RB3E_XBOX
-extern void GetSongSymbol(Symbol *symOut, int metaPerformer);
+extern void GetSongShortname(Symbol *symOut, int metaPerformer);
 #else
 // this calling convention makes more sense? wtf microsoft
-extern Symbol GetSongSymbol(int metaPerformer);
+extern Symbol GetSongShortname(int metaPerformer);
 #endif
 
 #endif // _METAPERFORMER_H

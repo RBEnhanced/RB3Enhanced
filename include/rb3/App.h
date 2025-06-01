@@ -2,6 +2,6 @@
 #define _APP_H
 
 extern void AppConstructor(void *thisApp, int argc, char **argv);
-extern void *NewFile(char *iFilename, int iMode); // doesn't belong to a namespace?
+extern void *NewFile(char *fileName, int flags); // doesn't belong to a namespace?
 
 #endif // _APP_H
