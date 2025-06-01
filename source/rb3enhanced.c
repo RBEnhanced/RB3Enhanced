@@ -279,6 +279,17 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
     }
 
+    if (config.DisableMenuMusic == 1)
+    {
+        // Disables MetaMusic from loading, saves space on the heap
+        POKE_32(PORT_METAMUSICLOAD, BLR);
+        POKE_32(PORT_METAMUSICSTART, BLR);
+        POKE_32(PORT_METAMUSICPOLL, BLR);
+        // Always return 1 from MetaMusic::Loaded, in MetaPanel::IsLoaded
+        POKE_32(PORT_METAMUSICISLOADED, LI(3, 1));
+        POKE_32(PORT_METAMUSICISLOADED + 4, BLR);
+    }
+
 #ifdef RB3EDEBUG
     if (config.QuazalLogging == 1)
     {
