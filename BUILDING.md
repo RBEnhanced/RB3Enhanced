@@ -2,7 +2,7 @@
 
 RB3Enhanced is a cross-platform mod for both Xbox 360 and Wii. It's designed to
 be compiled on a Windows system, however both versions are able to compile on
-macOS and Linux.
+macOS and Linux via Wine.
 
 ## Prerequisites
 

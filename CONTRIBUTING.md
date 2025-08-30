@@ -33,8 +33,8 @@ existing features or adding new ones.
     * Emulators may mask fault behaviour, or return different results compared
     to a real console, so it's advised to use real hardware if possible.
     * Let us know what platform you've tested on.
-* If possible, try to include port addresses for both Xbox 360, Wii, PS3
-  and Bank 8 in your contribution.
+* If possible, try to include port addresses for Xbox 360, Wii, PS3 and Bank 8
+  in your contribution.
     * If you can't do this, guard the implementation behind
     `#ifdef RB3E_{PLATFORM}`.
 * It's recommended that you enable "Allow contributors to edit code" in your
