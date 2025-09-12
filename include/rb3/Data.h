@@ -82,6 +82,8 @@ extern DataNode *DataSet(DataNode *ret, DataArray *array);
 extern DataNode *DataSetElem(DataNode *ret, DataArray *array);
 extern DataNode *DataOnElem(DataNode *ret, DataArray *array);
 
+extern DataNode *DataArrayExecute(DataNode *ret, DataArray *thisArr);
+
 extern void *DataNodeGetObj(DataNode *node);
 
 // inlined on 360

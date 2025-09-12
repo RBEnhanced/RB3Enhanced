@@ -112,6 +112,7 @@ RB3E_STUB(HeapInit)
 RB3E_STUB(ResolvedModuleKeyboard)
 RB3E_STUB(XboxContentConstruct)
 RB3E_STUB(CacheMgrXbox_MountAsync)
+RB3E_STUB(DataArrayExecute)
 
 #ifdef RB3E_WII
 // Wii-specific functions
