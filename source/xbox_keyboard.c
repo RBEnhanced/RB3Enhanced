@@ -3,85 +3,68 @@
 #include "rb3/Data.h"
 #include "ports.h"
 
-// Copy-pasted from DC3 ghidra decompile output
+// Reimplementation of DC3's TranslateVK
 // This function translates the system XInput VirtualKey value into Harmonix's keycode values
-int TranslateVK(unsigned short virtualKey, char shift)
+int TranslateVK(DWORD virtualKey, char shift)
 {
-  unsigned int _C;
-  unsigned int uVar1;
-  
-  _C = (unsigned int)virtualKey;
-  if ((((0x2f < _C) && (_C < 0x3a)) || ((uVar1 = 0, 0x40 < _C && (_C < 0x5b)))) &&
-     (uVar1 = _C, !shift)) {
-    uVar1 = tolower(_C);
-  }
-  if ((0x6f < _C) && (_C < 0x7c)) {
-    uVar1 = _C + 0x121;
-  }
-  if (virtualKey < 0x25) {
-    if (_C == 0x24) {
-      uVar1 = 0x138;
+    // ASCII range
+    // Honestly not sure why this range is even mapped, at these ranges the Unicode translation should be handling it
+    if (virtualKey >= 0x41 && virtualKey <= 0x5a) {
+        if (!shift) {
+            return virtualKey;
+        } else {
+            return tolower(virtualKey);
+        }
     }
-    else if (virtualKey < 0x15) {
-      if (_C == 0x14) {
-        uVar1 = 0x122;
-      }
-      else if (_C == 8) {
-        uVar1 = 8;
-      }
-      else if (_C == 9) {
-        uVar1 = 9;
-      }
-      else if (_C == 0xd) {
-        uVar1 = 10;
-      }
-      else if (_C == 0x13) {
-        uVar1 = 0x12d;
-      }
+
+    // Function key range
+    if (virtualKey >= VK_F1 && virtualKey <= VK_F12) {
+        return virtualKey + 0x121;
     }
-    else if (_C == 0x1b) {
-      uVar1 = 0x12e;
+
+    // Other keycode mappings
+    switch (virtualKey) {
+    case VK_HOME:
+        return 0x138;
+    case VK_CAPITAL:
+        return 0x122;
+    case VK_BACK:
+        return 0x08;
+    case VK_TAB:
+        return 0x09;
+    case VK_RETURN:
+        return 0x0a;
+    case VK_PAUSE:
+        return 0x12d;
+    case VK_ESCAPE:
+        return 0x12e;
+    case VK_PRIOR:
+        return 0x13a;
+    case VK_NEXT:
+        return 0x13b;
+    case VK_END:
+        return 0x139;
+    case VK_PRINT:
+        return 0x12c;
+    case VK_LEFT:
+        return 0x140;
+    case VK_UP:
+        return 0x142;
+    case VK_RIGHT:
+        return 0x141;
+    case VK_DOWN:
+        return 0x143;
+    case VK_INSERT:
+        return 0x136;
+    case VK_DELETE:
+        return 0x137;
+    case VK_NUMLOCK:
+        return 0x123;
+    case VK_SCROLL:
+        return 0x124;
     }
-    else if (_C == 0x21) {
-      uVar1 = 0x13a;
-    }
-    else if (_C == 0x22) {
-      uVar1 = 0x13b;
-    }
-    else if (_C == 0x23) {
-      uVar1 = 0x139;
-    }
-  }
-  else if (virtualKey < 0x2b) {
-    if (_C == 0x2a) {
-      uVar1 = 300;
-    }
-    else if (_C == 0x25) {
-      uVar1 = 0x140;
-    }
-    else if (_C == 0x26) {
-      uVar1 = 0x142;
-    }
-    else if (_C == 0x27) {
-      uVar1 = 0x141;
-    }
-    else if (_C == 0x28) {
-      uVar1 = 0x143;
-    }
-  }
-  else if (_C == 0x2d) {
-    uVar1 = 0x136;
-  }
-  else if (_C == 0x2e) {
-    uVar1 = 0x137;
-  }
-  else if (_C == 0x90) {
-    uVar1 = 0x123;
-  }
-  else if (_C == 0x91) {
-    uVar1 = 0x124;
-  }
-  return uVar1;
+
+    return virtualKey;
 }
 
 
