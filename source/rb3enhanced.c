@@ -171,6 +171,7 @@ static unsigned int framecount = 0;
 // STUFF YOU DO HERE WILL **DIRECTLY** IMPACT THE GAME'S FRAMERATE!
 void HTTP_Server_RunLoop();
 void Liveless_Poll();
+void KeyboardPoll();
 void RB3E_RunLoop()
 {
     if (config.EnableNATPMP)
@@ -182,6 +183,7 @@ void RB3E_RunLoop()
         Liveless_Poll();
     if (config.EnableUPnP)
         UPNP_Poll();
+    KeyboardPoll();
 #endif
 #ifdef RB3EDEBUG
     // print out memory every 5 seconds
@@ -385,6 +387,9 @@ void InitialiseFunctions()
     POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
     POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
     POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
+#ifdef RB3E_XBOX
+    POKE_B(&DataArrayExecute, PORT_DATAARRAYEXECUTE);
+#endif
 #ifndef RB3E_XBOX
     POKE_B(&DataRegisterFunc, PORT_DATAREGISTERFUNC);
 #endif
