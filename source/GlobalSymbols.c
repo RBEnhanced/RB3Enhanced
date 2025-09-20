@@ -41,6 +41,7 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.rb3e_get_album, "rb3e_get_album");
     SymbolConstruct(&globalSymbols.rb3e_get_origin, "rb3e_get_origin");
     SymbolConstruct(&globalSymbols.rb3e_get_genre, "rb3e_get_genre");
+    SymbolConstruct(&globalSymbols.rb3e_delete_songcache, "rb3e_delete_songcache");
 
     SymbolConstruct(&globalSymbols.blackBackground, "mod_black_background");
     SymbolConstruct(&globalSymbols.colorShuffle, "mod_color_shuffle");

@@ -487,10 +487,12 @@
 
                     // Immediately start fetching album art for each song as it is added
                     const albumArt = document.querySelectorAll('.album-art')[loaded_songs];
-                    const cacheKey = albumArt.dataset.cacheKey;
-                    if (!albumArtCache[cacheKey]) {
-                        albumArt.src = placeholderArtUrl; // Reset image to placeholder
-                        albumArtQueue.push({ album: song.album, artist: song.artist, imgElement: albumArt, cacheKey: cacheKey, songIndex: loaded_songs });
+                    if (albumArt && albumArt.dataset && albumArt.dataset.cacheKey) {
+                        const cacheKey = albumArt.dataset.cacheKey;
+                        if (!albumArtCache[cacheKey]) {
+                            albumArt.src = placeholderArtUrl // Reset image to placeholder
+                            albumArtQueue.push({ album: song.album, artist: song.artist, imgElement: albumArt, cacheKey, songIndex: loaded_songs});
+                        }
                     }
 
                     loaded_songs++;
@@ -621,7 +623,7 @@
 <body>
     <div class="header">
         <button class="reset-api-button button balt" onclick="resetApiKey()">Reset API Key</button>
-        <img src="https://github.com/hmxmilohax/rock-band-3-deluxe/blob/main/_ark/dx/custom_textures/_additional_textures/rb3enhanced_logo.png?raw=true" alt="RB3Enhanced Logo" class="logo" />
+        <img src="https://github.com/hmxmilohax/rock-band-3-deluxe/blob/develop/_ark/dx/custom_textures/_additional_textures/rb3enhanced_logo.png?raw=true" alt="RB3Enhanced Logo" class="logo" />
         <div class="input-container">
             <input id="searchbox" type="text" placeholder="Search songs, artists, albums..." />
         </div>

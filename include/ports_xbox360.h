@@ -170,7 +170,10 @@
 #define PORT_DATASETELEM 0x82760b38                  // DataSetElem
 #define PORT_DATAONELEM 0x8275ff50                   // DataOnElem
 #define PORT_DATANODEGETOBJ 0x8274b088               // DataNode::GetObj
+#define PORT_DATAARRAYEXECUTE 0x8274d198             // DataArray::Execute
 #define PORT_DXRND_SUSPEND 0x8273A370                // DxRnd::Suspend
+#define PORT_XBOXCONTENT_CONSTRUCTOR 0x8251fb40      // XboxContent::__ct
+#define PORT_CACHEMGRXBOX_MOUNTASYNC 0x827d7b38      // CacheMgrXbox::MountAsync
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway

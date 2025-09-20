@@ -28,6 +28,7 @@ typedef struct _RB3E_Config
     char RawfilesDir[RB3E_MAX_CONFIG_LEN];
     char DisableRawfiles;
     char QuazalLogging;
+    char ContentLogging;
     // [Graphics]
     int RenderResX;
     int RenderResY;

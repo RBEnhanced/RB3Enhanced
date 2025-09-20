@@ -25,6 +25,7 @@ typedef struct _GlobalSymbols
     Symbol rb3e_get_album;
     Symbol rb3e_get_origin;
     Symbol rb3e_get_genre;
+    Symbol rb3e_delete_songcache;
 
     // modifiers
     Symbol forceHopos;

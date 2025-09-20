@@ -90,6 +90,13 @@ void RB3E_FlushCache(void * address, unsigned int size) {
     ICInvalidateRange((void *)alignedAddress, alignedSize);
 }
 
+int RB3E_DeleteSongCache()
+{
+    // TODO(Emma): delete song cache on Wii
+    RB3E_MSG("Tried to delete song cache on Wii, unsupported.", NULL);
+    return 0;
+}
+
 int RB3E_RelaunchGame()
 {
     /*
