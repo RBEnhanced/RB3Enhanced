@@ -146,7 +146,10 @@
 #define PORT_ADDMULTIGEM 0x827930d8                       // GameGemDB::AddMultiGem
 #define PORT_SONGSORTMGRGETSORT 0x82595ff8                // SongSortMgr::GetSort
 #define PORT_DYNAMICTEX_CT 0x825f2318                     // DynamicTex::__ct
+#define PORT_DYNAMICTEX_DT 0x825f2210                     // DynamicTex::__dt
 #define PORT_RNDMATSETDIFFUSETEX 0x8238b130               // RndMat::SetDiffuseTex
+#define PORT_MUSICLIBRARYONENTER 0x82542238              // MusicLibrary::OnEnter
+#define PORT_MUSICLIBRARYONUNLOAD 0x82540450               // MusicLibrary::OnExit
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x82dfec08 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x82cc8f60  // address of RockCentralGateway
@@ -289,6 +292,9 @@ void DbgPrint(const char *s, ...);
 #define PORT_SONGSORTMGRGETSORT 0x80281b20                // SongSortMgr::GetSort
 #define PORT_RNDMATSETDIFFUSETEX 0x8025ab90               // RndMat::SetDiffuseTex
 #define PORT_DYNAMICTEX_CT 0x80292a70                     // DynamicTex::__ct
+#define PORT_DYNAMICTEX_DT 0x80292bcc                     // DynamicTex::__dt
+#define PORT_MUSICLIBRARYONENTER 0x8022dd24              // MusicLibrary::OnEnter
+#define PORT_MUSICLIBRARYONUNLOAD 0x8022e87c               // MusicLibrary::OnExit
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway

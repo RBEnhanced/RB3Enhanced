@@ -14,7 +14,8 @@ typedef struct _DynamicTex
     char unk; // 0x1C
 } DynamicTex;
 
-void DynamicTexConstructor(void* thisDynamicTex, const char * path, const char* matName, char createNewMat, char enableZBuffer);
+void DynamicTexConstructor(DynamicTex* thisDynamicTex, const char * path, const char* matName, char createNewMat, char enableZBuffer);
+void DynamicTexDestructor(DynamicTex* thisDynamicTex, int unk);
 
 
 

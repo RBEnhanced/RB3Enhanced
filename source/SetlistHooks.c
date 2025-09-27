@@ -34,6 +34,10 @@ void CreateMaterial(GameOriginInfo *info)
     // it will free the dynamic tex itself, the material it created, and the texture too, so it nicely wraps it all up for you
     // this way there is not a chunk of memory permanently dedicated to game origin icons (even if it is not a large amount)
     tex = MemAlloc(0x20, 0);
+    if (tex == NULL) {
+        RB3E_DEBUG("MemAlloc failed for dynamic tex '%s'", info->gameOrigin);
+        return;
+    }
 
     // build the ark path (so dont include /gen/ or the _platform extension etc.)
     RB3E_DEBUG("Creating dynamic tex for game origin '%s'", info->gameOrigin);
@@ -43,6 +47,13 @@ void CreateMaterial(GameOriginInfo *info)
 
     // create and pray
     DynamicTexConstructor(tex, path, info->gameOrigin, 1, 0);
+    if (tex->mMat == NULL || tex->mTex == NULL) {
+        RB3E_DEBUG("DynamicTex::__ct failed for dynamic tex '%s'", path);
+
+        // we should prob do cleanup here but that is a
+        // TODO
+        return;
+    }
 
     textures[info->num] = tex;
 
@@ -59,6 +70,8 @@ void CreateMaterial(GameOriginInfo *info)
 
     // print the material name
     RB3E_DEBUG("Dynamic tex created at %p with material '%s'", textures[info->num], textures[info->num]->mMatName.buf);
+
+    RB3E_DEBUG("Dynamic tex created at %p with mat %p tex %p fileloader %p", tex, tex->mMat, tex->mTex, tex->mFileLoader);
 
     
 }
@@ -123,6 +136,64 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
     return MusicLibraryMat(thisMusicLibrary, data, idx, listSlot);
 }
 
+// called when entering the music library
+// allocate the memory and load the textures here
+void MusicLibraryOnEnterHook(void *thisMusicLibrary)
+{
+    int i;
+
+    // allocate and create the materials for any game origins we found while loading songs
+    for (i = 0; i < numGameOrigins; i++) {
+        int slot = originInfo[i].num;
+        if (slot >= 0 && slot < 100) {
+            if (textures[slot] == NULL) {
+                CreateMaterial(&originInfo[i]);
+            }
+        }
+    }
+
+    // do the original logic
+    MusicLibraryOnEnter(thisMusicLibrary);
+}
+
+// called when the music library panel is unloaded
+void MusicLibraryOnUnloadHook(void *thisMusicLibrary)
+{
+    int i;
+
+    MusicLibraryOnUnload(thisMusicLibrary);
+
+    // call the dynamictex destructor for any textures we created
+    // lets just sweep all 100 to be safe
+    for (i = 0; i < 100; i++) {
+        if (textures[i] != NULL) {
+            // we can't call the DynamicTexDestructor because the FileLoader it used has already been freed by this point, so we must destruct everything but the FileLoader
+            // extremely nasty but it seems to work
+            if(textures[i]->mMat != NULL) {
+                ((Object *)textures[i]->mMat)->table->destructor((Object *)textures[i]->mMat);
+                textures[i]->mMat = NULL;
+            }
+            if(textures[i]->mTex != NULL) {
+                ((Object *)textures[i]->mTex)->table->destructor((Object *)textures[i]->mTex);
+                textures[i]->mTex = NULL;
+            }
+            // TODO: set up a proper vtable for String instead of doign this shit
+            if(textures[i]->mMatName.length != 0) {
+                if(textures[i]->mMatName.vtable != NULL) {
+                    #ifdef RB3E_WII
+                    ((void (*)(String *))textures[i]->mMatName.vtable[2])(&textures[i]->mMatName);
+                    #else
+                    ((void (*)(String *))textures[i]->mMatName.vtable[0])(&textures[i]->mMatName);
+                    #endif
+                }
+            }
+            textures[i] = NULL;
+        }
+    }
+
+    RB3E_DEBUG("Freed game origin icon textures", NULL);
+}
+
 int numGameOrigins;
 GameOriginInfo originInfo[100] = {0};
 
@@ -150,7 +221,6 @@ void AddGameOriginToIconList(char *gameOrigin)
 
     originInfo[numGameOrigins].gameOrigin = gameOrigin;
     originInfo[numGameOrigins].num = numGameOrigins;
-    CreateMaterial(&originInfo[numGameOrigins]);
     numGameOrigins++;
     RB3E_DEBUG("Adding game origin '%s' to icon list, total is now %i", gameOrigin, numGameOrigins);
     } 

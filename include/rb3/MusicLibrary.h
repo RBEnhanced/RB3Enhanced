@@ -17,5 +17,9 @@ typedef struct _MusicLibrary
 void MusicLibrarySelect(int theMusicLibrary, Symbol entryName, int sortType, int unk_r6);
 int *MusicLibraryConstructor(int *thisMusicLibrary, int *songPreview);
 int *MusicLibraryConstructorHook(MusicLibrary *thisMusicLibrary, int *songPreview);
+void MusicLibraryOnEnter(void* thisMusicLibrary);
+void MusicLibraryOnUnload(void* thisMusicLibrary);
+void MusicLibraryOnEnterHook(void* thisMusicLibrary);
+void MusicLibraryOnUnloadHook(void* thisMusicLibrary);
 
 #endif // _MUSICLIBRARY_H_
