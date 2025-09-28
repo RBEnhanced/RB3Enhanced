@@ -116,6 +116,9 @@
 #define PORT_SONGSORTMGRGETSORT 0x80281b20                // SongSortMgr::GetSort
 #define PORT_RNDMATSETDIFFUSETEX 0x8025ab90               // RndMat::SetDiffuseTex
 #define PORT_DYNAMICTEX_CT 0x80292a70                     // DynamicTex::__ct
+#define PORT_DYNAMICTEX_DT 0x80292bcc                     // DynamicTex::__dt
+#define PORT_MUSICLIBRARYONENTER 0x8022dd24              // MusicLibrary::OnEnter
+#define PORT_MUSICLIBRARYONUNLOAD 0x8022e87c               // MusicLibrary::OnExit
 #define PORT_BINSTREAMWRITE 0x80342f48           // BinStream::Write
 #define PORT_BINSTREAMREAD 0x80342e7c            // BinStream::Read
 #define PORT_BINSTREAMREADENDIAN 0x803430bc      // BinStream::ReadEndian
