@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>RB3Enhanced</title>
+    <title>RB3 Search</title>
+    <link rel="icon" type="image/png" href="https://github.com/hmxmilohax/GH2DX-Site/blob/main/docs/favicon.ico?raw=true">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://github.com/hmxmilohax/GH2DX-Site/blob/main/docs/favicon-32x32.png?raw=true">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://github.com/hmxmilohax/GH2DX-Site/blob/main/docs/favicon-16x16.png?raw=true">
+    <link rel="apple-touch-icon" sizes="256x256" href="https://github.com/hmxmilohax/rock-band-3-deluxe/blob/develop/_ark/dx/custom_textures/_additional_textures/blank_album_art_keep.png?raw=true">
     <style>
         /* font choice */
         * {
@@ -296,11 +300,16 @@
         }
     </style>
     <script>
+    	// Uncomment to hardcode API key, replace the placeholder with your API key
+        //let lastfmApiKey="HARDCODEDAPIKEYPLACEHOLDER";window.addEventListener("DOMContentLoaded",()=>document.querySelector(".reset-api-button")?.remove());
+
+    	// Comment to disable hardcoded API key
         let lastfmApiKey = localStorage.getItem('lastfmApiKey') || '';
+
         let searchTimeout = null;
         let currentFetchController = null;
         const apiCallDelay = 300;
-        const placeholderArtUrl = 'https://github.com/hmxmilohax/rock-band-3-deluxe/blob/main/_ark/dx/custom_textures/_additional_textures/blank_album_art_keep.png?raw=true';
+        const placeholderArtUrl = 'https://github.com/hmxmilohax/rock-band-3-deluxe/blob/develop/_ark/dx/custom_textures/_additional_textures/blank_album_art_keep.png?raw=true';
         let albumArtQueue = [];
         let albumArtFetchInProgress = false;
         let albumArtCache = {};
