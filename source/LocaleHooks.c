@@ -73,9 +73,12 @@ char *LocalizeHook(int thisLocale, Symbol sym, int fail)
     char newLocaleName[0x50];
     Symbol newLocale;
     char *original;
+    
+    // No longer needed with origin rewrite
     // game origin icons relies on using different formatting for the song/artist name
-    if (config.GameOriginIcons == 1 && sym.sym != NULL && strcmp(sym.sym, "song_artist_fmt") == 0)
-        return "%s <it>%s</it>";
+    // if (config.GameOriginIcons == 1 && sym.sym != NULL && strcmp(sym.sym, "song_artist_fmt") == 0)
+    //    return "%s <it>%s</it>";
+
     // if the string starts with message_motd_ (but isn't message_motd), it's our motd
     if (memcmp(sym.sym, "message_motd_", 13) == 0)
     {
