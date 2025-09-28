@@ -394,6 +394,7 @@ void InitialiseFunctions()
     POKE_B(&GameGemDBConstructor, PORT_GAMEGEMDB_CT);
     POKE_B(&SongSortMgrGetSort, PORT_SONGSORTMGRGETSORT);
     POKE_B(&DynamicTexConstructor, PORT_DYNAMICTEX_CT);
+    POKE_B(&DynamicTexDestructor, PORT_DYNAMICTEX_DT);
     POKE_B(&RndMatSetDiffuseTex, PORT_RNDMATSETDIFFUSETEX);
     POKE_B(&RndTexSetBitmap3, PORT_RNDTEXSETBITMAP3);
     POKE_B(&BinstreamWrite, PORT_BINSTREAMWRITE);
@@ -452,7 +453,8 @@ void ApplyHooks()
     HookFunction(PORT_DATASET, &DataSet, &DataSetHook);
     HookFunction(PORT_DATASETELEM, &DataSetElem, &DataSetElemHook);
     HookFunction(PORT_DATAONELEM, &DataOnElem, &DataOnElemHook);
-
+    HookFunction(PORT_MUSICLIBRARYONENTER, &MusicLibraryOnEnter, &MusicLibraryOnEnterHook);
+    HookFunction(PORT_MUSICLIBRARYONUNLOAD, &MusicLibraryOnUnload, &MusicLibraryOnUnloadHook);
 #ifdef RB3E_WII // wii exclusive hooks
     // HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);

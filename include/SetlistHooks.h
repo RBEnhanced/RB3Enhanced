@@ -7,6 +7,7 @@
 #include "rb3/BandLabel.h"
 #include "rb3/SortNode.h"
 #include "rb3/Rnd/RndMat.h"
+#include "rb3/Mem.h"
 
 void SetSongAndArtistNameHook(BandLabel *label, SortNode *sortNode);
 void SetSongNameFromNodeHook(BandLabel *label, SortNode *sortNode);
