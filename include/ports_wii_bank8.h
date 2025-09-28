@@ -117,6 +117,9 @@
 #define PORT_ADDMULTIGEM 0x806284e0                       // GameGemDB::AddMultiGem
 #define PORT_SONGSORTMGRGETSORT 0x8037a510                // SongSortMgr::GetSort
 #define PORT_DYNAMICTEX_CT 0x80393bd0                     // DynamicTex::__ct
+#define PORT_DYNAMICTEX_DT 0x80393ef0                     // DynamicTex::__dt
+#define PORT_MUSICLIBRARYONENTER 0x802fa750              // MusicLibrary::OnEnter
+#define PORT_MUSICLIBRARYONUNLOAD 0x802fb2a0               // MusicLibrary::OnExit
 #define PORT_RNDMATSETDIFFUSETEX 0x808d36b0               // RndMat::SetDiffuseTex
 #define PORT_BINSTREAMWRITE 0x804892b0         // BinStream::Write
 #define PORT_BINSTREAMREAD 0x80489140          // BinStream::Read
