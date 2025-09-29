@@ -18,7 +18,7 @@ void DisplayMessage(char *message)
     messageNode.type = SYMBOL;
     messageNode.value.string = message;
     messageArray.mNodeCount = 1;
-    messageArray.mNodes = &messageNode; // set this right for what it actually is
+    messageArray.mNodes = (DataNodes *)&messageNode; // set this right for what it actually is
     messageArray.mRefCount = 1;
     messageArray.mFile = *(Symbol *)PORT_NULLSYMBOL;
     QueueMessage((*(BandUI *)PORT_THEBANDUI).passiveMessagesPanel, &messageArray, 0, (*(Symbol *)PORT_NULLSYMBOL).sym, 0xFFFFFFFF);

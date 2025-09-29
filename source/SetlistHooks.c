@@ -5,6 +5,7 @@
 
 #include <stddef.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include "config.h"
 #include "ports.h"
@@ -12,6 +13,7 @@
 #include "rb3/BandLabel.h"
 #include "rb3/File.h"
 #include "rb3/FilePath.h"
+#include "rb3/Mem.h"
 #include "rb3/MusicLibrary.h"
 #include "rb3/NodeSort.h"
 #include "rb3/UI/UIListSlot.h"
@@ -76,7 +78,7 @@ void CreateMaterial(GameOriginInfo *info)
     
 }
 
-int *MusicLibraryConstructorHook(MusicLibrary *thisMusicLibrary, int *songPreview)
+int *MusicLibraryConstructorHook(int *thisMusicLibrary, int *songPreview)
 {
     return MusicLibraryConstructor(thisMusicLibrary, songPreview);
 }
@@ -87,7 +89,7 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
     {
         if (strcmp(listSlot->mMatchName.buf, "game_origin_icon") == 0)
         {
-            int *ret = 0;
+            NodeSort *ret = 0;
             SortNode *node = 0;
             SongNodeType nodeType = kNodeNone;
             int curInfo = 0;
@@ -106,12 +108,12 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
                         // do a basic null check here, sometimes it can be null
                         if (node != NULL && node->record != NULL &&
                             node->record->metaData != NULL &&
-                            node->record->metaData->mGameOrigin.sym != NULL)
+                            node->record->metaData->gameOrigin.sym != NULL)
                         {
                             // this shit fucking sucks lol
                             for (curInfo = 0; curInfo < numGameOrigins; curInfo++)
                             {
-                                if (strcmp(node->record->metaData->mGameOrigin.sym, originInfo[curInfo].gameOrigin) == 0)
+                                if (strcmp(node->record->metaData->gameOrigin.sym, originInfo[curInfo].gameOrigin) == 0)
                                 {
                                     if (textures[originInfo[curInfo].num] != NULL && textures[originInfo[curInfo].num]->mMat != NULL)
                                     {
@@ -133,7 +135,7 @@ RndMat *MusicLibraryMatHook(MusicLibrary *thisMusicLibrary, int data, int idx, U
         }
     }
 
-    return MusicLibraryMat(thisMusicLibrary, data, idx, listSlot);
+    return (RndMat*)(intptr_t)MusicLibraryMat((void*)thisMusicLibrary, data, idx, (int*)listSlot);
 }
 
 // called when entering the music library
@@ -236,9 +238,9 @@ SongMetadata *SongMetadataConstructorHook(SongMetadata *thisSongMetadata, DataAr
     thisSongMetadata = SongMetadataConstructor(thisSongMetadata, data, backupData, isOnDisc);
 
     // make sure the game origin isn't null
-    if (thisSongMetadata->mGameOrigin.sym != 0)
+    if (thisSongMetadata->gameOrigin.sym != 0)
     {
-        AddGameOriginToIconList(thisSongMetadata->mGameOrigin.sym);
+        AddGameOriginToIconList(thisSongMetadata->gameOrigin.sym);
         return thisSongMetadata;
     }
 
@@ -251,9 +253,9 @@ char SongMetadataLoadHook(SongMetadata *thisSongMetadata, BinStream *stream)
     char ret = SongMetadataLoad(thisSongMetadata, stream);
 
     // make sure the game origin isn't null
-    if (thisSongMetadata->mGameOrigin.sym != 0)
+    if (thisSongMetadata->gameOrigin.sym != 0)
     {
-        AddGameOriginToIconList(thisSongMetadata->mGameOrigin.sym);
+        AddGameOriginToIconList(thisSongMetadata->gameOrigin.sym);
         return ret;
     }
 

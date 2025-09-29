@@ -39,6 +39,6 @@ struct _FileStream
     char unk[0x256];
 };
 
-FileStream *FileStreamConstructor(FileStream *thisFileStream, char *fileName, FileType fileType, char littleEndian);
+FileStream *FileStreamConstructor(FileStream *thisFileStream, char *fileName, int fileType, char littleEndian);
 
 #endif // _FILESTREAM_H

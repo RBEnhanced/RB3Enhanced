@@ -8,9 +8,11 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 #include "quazal/InetAddress.h"
 #include "rb3/SongMetadata.h"
 #include "rb3/BandSongMgr.h"
+#include "rb3/RockCentralGateway.h"
 #include "rb3enhanced.h"
 #include "version.h"
 #include "ports.h"
@@ -24,6 +26,7 @@
 int RB3E_HTTPSocket = -1;
 static int InitFailed = 0;
 static char *PendingShortname = NULL;
+static char *PendingScript = NULL;
 
 typedef struct _song_list_vector
 {
@@ -59,6 +62,39 @@ typedef enum _HTTP_Request_Status
     HTTP_REQUEST_DONE
 } HTTP_Request_Status;
 
+// function from https://stackoverflow.com/a/14530993
+void urldecode2(char *dst, const char *src)
+{
+    char a, b;
+    while (*src)
+    {
+        if ((*src == '%') &&
+            ((a = src[1]) && (b = src[2])) &&
+            (isxdigit(a) && isxdigit(b)))
+        {
+            if (a >= 'a')
+                a -= 'a' - 'A';
+            if (a >= 'A')
+                a -= ('A' - 10);
+            else
+                a -= '0';
+            if (b >= 'a')
+                b -= 'a' - 'A';
+            if (b >= 'A')
+                b -= ('A' - 10);
+            else
+                b -= '0';
+            *dst++ = 16 * a + b;
+            src += 3;
+        }
+        else
+        {
+            *dst++ = *src++;
+        }
+    }
+    *dst++ = '\0';
+}
+
 void HTTP_Server_Accept(void *connection)
 {
     int s = (int)connection;
@@ -69,6 +105,7 @@ void HTTP_Server_Accept(void *connection)
     int state_read_bytes = 0;
     int read_bytes = 0;
     char request_path[250] = {0};
+    char decoded_path[0x400];
     int request_valid = 0;
     char last_byte = '\0';
     const char ok_response[] = "HTTP/1.1 200 OK\r\nServer: RB3Enhanced " RB3E_BUILDTAG "\r\nContent-Type: text/html\r\nX-Clacks-Overhead: GNU maxton\r\nContent-Length: 2\r\n\r\nOK";
@@ -76,6 +113,7 @@ void HTTP_Server_Accept(void *connection)
     char response_buffer[2000] = {0};
     int song_id = 0;
     char *shortname = NULL;
+    char *script = NULL;
     SongMetadata *song_metadata = NULL;
     int list_count = 0;
     int i = 0;
@@ -159,10 +197,11 @@ void HTTP_Server_Accept(void *connection)
             state_read_bytes = 0;
         }
     }
-    RB3E_DEBUG("Got a request for '%s' over HTTP", request_path);
-    if (strstr(request_path, "/song_") == request_path)
+    urldecode2(decoded_path, request_path);
+    RB3E_DEBUG("Got a request for '%s' over HTTP", decoded_path);
+    if (strstr(decoded_path, "/song_") == decoded_path)
     {
-        if (sscanf(request_path + sizeof("/song"), "%i", &song_id) == 1)
+        if (sscanf(decoded_path + sizeof("/song"), "%i", &song_id) == 1)
         {
             RB3E_DEBUG("Fetching song metadata for %i over HTTP", song_id);
             song_metadata = GetMetadata((BandSongMgr *)PORT_THESONGMGR, song_id);
@@ -179,7 +218,7 @@ void HTTP_Server_Accept(void *connection)
             strcat(response_buffer, "Content-Type: text/plain\r\n");
             strcat(response_buffer, "\r\n");
             strcat(response_buffer, "shortname=");
-            strcat(response_buffer, song_metadata->mShortName.sym);
+            strcat(response_buffer, song_metadata->shortname.sym);
             strcat(response_buffer, "\r\n");
             strcat(response_buffer, "title=");
             strcat(response_buffer, song_metadata->title.buf);
@@ -191,17 +230,17 @@ void HTTP_Server_Accept(void *connection)
             strcat(response_buffer, song_metadata->album.buf);
             strcat(response_buffer, "\r\n");
             strcat(response_buffer, "origin=");
-            strcat(response_buffer, song_metadata->mGameOrigin.sym);
+            strcat(response_buffer, song_metadata->gameOrigin.sym);
             strcat(response_buffer, "\r\n");
             strcat(response_buffer, "\r\n");
             RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
             goto close_connection;
         }
     }
-    else if (strstr(request_path, "/jump?shortname=") == request_path)
+    else if (strstr(decoded_path, "/jump?shortname=") == decoded_path)
     {
         // TODO(Emma): This will crash if you're not in the music library. Figure out if we can detect what screen we're on
-        shortname = request_path + 16;
+        shortname = decoded_path + 16;
         RB3E_DEBUG("Jumping to song %s in Music Library", shortname);
         // hacky solution to send the shortname to the main thread
         PendingShortname = shortname;
@@ -210,7 +249,16 @@ void HTTP_Server_Accept(void *connection)
         RB3E_TCP_Send(s, (void *)ok_response, strlen(ok_response));
         goto close_connection;
     }
-    else if (strcmp(request_path, "/list_songs") == 0)
+    else if (strstr(decoded_path, "/execute?script=") == decoded_path && config.AllowScripts)
+    {
+        script = decoded_path + 16;
+        PendingScript = script;
+        while (PendingScript != NULL)
+            RB3E_Sleep(1);
+        RB3E_TCP_Send(s, (void *)ok_response, strlen(ok_response));
+        goto close_connection;
+    }
+    else if (strcmp(decoded_path, "/list_songs") == 0)
     {
         if (song_list.start == NULL)
             SongMgrGetRankedSongs((BandSongMgr *)PORT_THESONGMGR, &song_list, 0, 0);
@@ -232,10 +280,10 @@ void HTTP_Server_Accept(void *connection)
             if (song_metadata != NULL)
             {
                 strcat(response_buffer, "[");
-                strcat(response_buffer, song_metadata->mShortName.sym);
+                strcat(response_buffer, song_metadata->shortname.sym);
                 strcat(response_buffer, "]\r\n");
                 strcat(response_buffer, "shortname=");
-                strcat(response_buffer, song_metadata->mShortName.sym);
+                strcat(response_buffer, song_metadata->shortname.sym);
                 strcat(response_buffer, "\r\n");
                 strcat(response_buffer, "title=");
                 strcat(response_buffer, song_metadata->title.buf);
@@ -247,7 +295,7 @@ void HTTP_Server_Accept(void *connection)
                 strcat(response_buffer, song_metadata->album.buf);
                 strcat(response_buffer, "\r\n");
                 strcat(response_buffer, "origin=");
-                strcat(response_buffer, song_metadata->mGameOrigin.sym);
+                strcat(response_buffer, song_metadata->gameOrigin.sym);
                 strcat(response_buffer, "\r\n");
                 strcat(response_buffer, "\r\n");
                 if (strlen(response_buffer) > 1500)
@@ -265,7 +313,7 @@ void HTTP_Server_Accept(void *connection)
         }
         goto close_connection;
     }
-    else if (strcmp(request_path, "/") == 0)
+    else if (strcmp(decoded_path, "/") == 0)
     {
         file_path = RB3E_GetRawfilePath("rb3e_index.html", 1);
         if (file_path == NULL)
@@ -298,7 +346,7 @@ void HTTP_Server_Accept(void *connection)
         }
         goto close_connection;
     }
-    else if (strcmp(request_path, "/jsonrpc") == 0)
+    else if (strcmp(decoded_path, "/jsonrpc") == 0)
     {
         file_path = RB3E_GetRawfilePath("discordrp.json", 1);
         if (file_path == NULL)
@@ -358,6 +406,11 @@ void HTTP_Server_RunLoop()
     {
         MusicLibrarySelectSong(PendingShortname);
         PendingShortname = NULL;
+    }
+    if (PendingScript != NULL)
+    {
+        ExecuteDTA(PORT_ROCKCENTRALGATEWAY, PendingScript);
+        PendingScript = NULL;
     }
     // accept incoming connections
     // TODO(Emma): add some sort of subnet restriction and ratelimit

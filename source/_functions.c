@@ -15,7 +15,7 @@
 #define RB3E_STUB(x)           \
     __declspec(naked) void x() \
     {                          \
-        __asm { li r3, __LINE__ }     \
+        __asm { li r3, __LINE__ }      \
     }
 #else // other platforms should use GCC notation
 #define RB3E_STUB(x)                   \
@@ -25,13 +25,15 @@
     }
 #endif
 
+RB3E_STUB(RB3EBase); // this will always be the start of .text
+
 // function stub definitions
 #ifndef RB3E_WII
 RB3E_STUB(AppConstructor) // AppConstructor is handled by the BrainSlug engine
 #endif
 RB3E_STUB(ExecuteDTA)
 RB3E_STUB(SymbolConstruct)
-RB3E_STUB(ModifierIsActive)
+RB3E_STUB(ModifierActive)
 RB3E_STUB(HmxFactoryFuncAt)
 RB3E_STUB(BandLabelSetDisplayText)
 RB3E_STUB(RandomInt)
@@ -42,7 +44,7 @@ RB3E_STUB(FileExists)
 RB3E_STUB(QueueMessage)
 RB3E_STUB(GetMetadata)
 RB3E_STUB(GetSongIDFromShortname)
-RB3E_STUB(GetSongSymbol)
+RB3E_STUB(GetSongShortname)
 RB3E_STUB(GetBandUsers)
 RB3E_STUB(GetBandUserFromSlot)
 RB3E_STUB(ChunkStreamConstructor)
@@ -59,6 +61,11 @@ RB3E_STUB(MemPrint)
 RB3E_STUB(MemNumHeaps)
 RB3E_STUB(MemAlloc)
 RB3E_STUB(MemFree)
+RB3E_STUB(FileIsDLC)
+RB3E_STUB(DxRndSuspend)
+#ifndef RB3E_XBOX
+RB3E_STUB(DataRegisterFunc) // DataRegisterFunc is inlined on 360
+#endif
 // hooked function stubs
 RB3E_STUB(Localize)
 RB3E_STUB(SetVenue)
@@ -117,3 +124,34 @@ RB3E_STUB(DynamicTexConstructor)
 RB3E_STUB(DynamicTexDestructor)
 RB3E_STUB(RndMatSetDiffuseTex)
 RB3E_STUB(RndTexSetBitmap3)
+RB3E_STUB(BinstreamWrite)
+RB3E_STUB(BinstreamRead)
+RB3E_STUB(BinstreamReadEndian)
+RB3E_STUB(BinstreamWriteEndian)
+RB3E_STUB(SongParserPitchToSlot)
+RB3E_STUB(DataSet)
+RB3E_STUB(DataSetElem)
+RB3E_STUB(DataOnElem)
+RB3E_STUB(DataNodeGetObj)
+RB3E_STUB(HeapInit)
+RB3E_STUB(ResolvedModuleKeyboard)
+RB3E_STUB(XboxContentConstruct)
+RB3E_STUB(CacheMgrXbox_MountAsync)
+RB3E_STUB(DataArrayExecute)
+
+#ifdef RB3E_WII
+// Wii-specific functions
+// FUTURE(Emma): these really ought to be provided by the BrainSlug loader
+RB3E_STUB(OSFatal)
+RB3E_STUB(OSSetErrorHandler)
+RB3E_STUB(PPCHalt)
+RB3E_STUB(OSReturnToMenu)
+RB3E_STUB(ARCInitHandle)
+RB3E_STUB(contentInitHandleTitleNAND)
+RB3E_STUB(CNTReleaseHandle)
+RB3E_STUB(CNTRead)
+RB3E_STUB(EC_GetContentInfos)
+RB3E_STUB(CNTOpen)
+#endif
+
+RB3E_STUB(RB3EStubEnd);

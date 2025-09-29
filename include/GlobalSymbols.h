@@ -9,8 +9,15 @@ void InitGlobalSymbols();
 
 typedef struct _GlobalSymbols
 {
+    // rb3e version
+    Symbol buildtag;
+    Symbol commit;
+
     // dta functions
     Symbol print_debug;
+    Symbol rb3e_api_version;
+    Symbol rb3e_build_tag;
+    Symbol rb3e_commit;
     Symbol rb3e_change_music_speed;
     Symbol rb3e_change_track_speed;
     Symbol rb3e_get_music_speed;
@@ -20,6 +27,13 @@ typedef struct _GlobalSymbols
     Symbol rb3e_relaunch_game;
     Symbol rb3e_get_song_count;
     Symbol rb3e_send_event_string;
+    Symbol rb3e_get_song_name;
+    Symbol rb3e_get_artist;
+    Symbol rb3e_get_album;
+    Symbol rb3e_get_origin;
+    Symbol rb3e_get_genre;
+    Symbol rb3e_delete_songcache;
+    Symbol rb3e_local_ip;
 
     // modifiers
     Symbol forceHopos;
@@ -27,6 +41,7 @@ typedef struct _GlobalSymbols
     Symbol mirrorMode;
     Symbol blackBackground;
     Symbol gemShuffle;
+    Symbol doubleBass;
 
     // gem widgets
     Symbol greenGem;

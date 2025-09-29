@@ -91,7 +91,7 @@ void PCP_RequestOpenPort(unsigned short port)
     memcpy(req.nonce, mapping_nonce, sizeof(mapping_nonce));
     fill_ipv4_mapped_ipv6(&req.suggested_address, 0);
     // fire it off to the gateway
-    RB3E_UDP_SendTo(natpmp_socket, gateway_ipv4, PCP_COMMAND_PORT, &req, sizeof(NATPMP_MappingRequest));
+    RB3E_UDP_SendTo(natpmp_socket, gateway_ipv4, PCP_COMMAND_PORT, &req, sizeof(PCP_MAPRequest));
     RB3E_DEBUG("Requested port %i from PCP", port);
 }
 

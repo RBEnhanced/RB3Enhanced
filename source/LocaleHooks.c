@@ -39,10 +39,10 @@ static int numOverrideLocales = sizeof(overrideLocales) / sizeof(overrideLocales
 static char *newLocales[][2] = {
     {"mod_black_background", "Black Background"},
     {"mod_force_hopos", "Force HOPOs"},
-    {"mod_mirror_mode", "Mirror Mode (Guitar Only)"},
+    {"mod_mirror_mode", "Mirror Mode"},
     {"mod_color_shuffle", "Gem Color Shuffle"},
-    {"mod_gem_shuffle", "Gem Shuffle"},
-};
+    {"mod_gem_shuffle", "Note Shuffle"},
+    {"mod_double_bass", "Double Bass Pedal"}};
 static int numNewLocales = sizeof(newLocales) / sizeof(newLocales[0]);
 
 char RB3E_ActiveLocale[RB3E_LANG_LEN + 1] = {0};
@@ -67,17 +67,20 @@ int IsSupportedLanguageHook(Symbol lang, int r4)
 
 // this has to be accessible at all times, so can't put it on the stack
 static char mod_locale_string[0x80];
-char *LocalizeHook(int thisLocale, Symbol token, int fail)
+char *LocalizeHook(int thisLocale, Symbol sym, int fail)
 {
     int i = 0;
     char newLocaleName[0x50];
     Symbol newLocale;
     char *original;
+    
+    // No longer needed with origin rewrite
     // game origin icons relies on using different formatting for the song/artist name
-    if (config.GameOriginIcons == 1 && token.sym != NULL && strcmp(token.sym, "song_artist_fmt") == 0)
-        return "%s <it>%s</it>";
+    // if (config.GameOriginIcons == 1 && sym.sym != NULL && strcmp(sym.sym, "song_artist_fmt") == 0)
+    //    return "%s <it>%s</it>";
+
     // if the string starts with message_motd_ (but isn't message_motd), it's our motd
-    if (memcmp(token.sym, "message_motd_", 13) == 0)
+    if (memcmp(sym.sym, "message_motd_", 13) == 0)
     {
         // check for "rb3e_mod_string"
         SymbolConstruct(&newLocale, "rb3e_mod_string");
@@ -92,19 +95,19 @@ char *LocalizeHook(int thisLocale, Symbol token, int fail)
     }
 #ifdef RB3E_XBOX
     // replace the "invite friends" label with "Manage Liveless"
-    if (config.LivelessAddress[0] != 0 && strcmp(token.sym, "overshell_invite") == 0)
+    if (config.LivelessAddress[0] != 0 && strcmp(sym.sym, "overshell_invite") == 0)
         return "Manage Liveless";
 #endif
     // if our string is in the override list, use that string entirely
     for (i = 0; i < numOverrideLocales; i++)
     {
-        if (strcmp(token.sym, overrideLocales[i][0]) == 0)
+        if (strcmp(sym.sym, overrideLocales[i][0]) == 0)
         {
             // length sanity check before sprintf
-            if (strlen(token.sym) > 0x40)
-                return Localize(thisLocale, token, fail);
+            if (strlen(sym.sym) > 0x40)
+                return Localize(thisLocale, sym, fail);
             // check if rb3e_localename exists
-            sprintf(newLocaleName, "rb3e_%s", token.sym);
+            sprintf(newLocaleName, "rb3e_%s", sym.sym);
             SymbolConstruct(&newLocale, newLocaleName);
             original = Localize(thisLocale, newLocale, fail);
             if (original == NULL)
@@ -113,12 +116,12 @@ char *LocalizeHook(int thisLocale, Symbol token, int fail)
         }
     }
     // try to localize through to the original string
-    original = Localize(thisLocale, token, fail);
+    original = Localize(thisLocale, sym, fail);
     if (original == NULL)
     {
         // check to see if it's one of our new localisations
         for (i = 0; i < numNewLocales; i++)
-            if (strcmp(token.sym, newLocales[i][0]) == 0)
+            if (strcmp(sym.sym, newLocales[i][0]) == 0)
                 return newLocales[i][1];
     }
     return original;

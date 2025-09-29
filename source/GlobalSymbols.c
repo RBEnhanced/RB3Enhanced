@@ -9,6 +9,7 @@
 #include "rb3/Symbol.h"
 #include "ports.h"
 #include "GlobalSymbols.h"
+#include "version.h"
 
 GlobalSymbols globalSymbols;
 static char globalSymbolsInitialised = 0;
@@ -26,7 +27,13 @@ void InitGlobalSymbols()
 
     memset(&globalSymbols, 0, sizeof(globalSymbols));
 
+    SymbolConstruct(&globalSymbols.buildtag, RB3E_BUILDTAG);
+    SymbolConstruct(&globalSymbols.commit, RB3E_BUILDCOMMIT);
+
     SymbolConstruct(&globalSymbols.print_debug, "print_debug");
+    SymbolConstruct(&globalSymbols.rb3e_api_version, "rb3e_api_version");
+    SymbolConstruct(&globalSymbols.rb3e_build_tag, "rb3e_build_tag");
+    SymbolConstruct(&globalSymbols.rb3e_commit, "rb3e_commit");
     SymbolConstruct(&globalSymbols.rb3e_change_music_speed, "rb3e_change_music_speed");
     SymbolConstruct(&globalSymbols.rb3e_change_track_speed, "rb3e_change_track_speed");
     SymbolConstruct(&globalSymbols.rb3e_get_music_speed, "rb3e_get_music_speed");
@@ -36,12 +43,20 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.rb3e_relaunch_game, "rb3e_relaunch_game");
     SymbolConstruct(&globalSymbols.rb3e_get_song_count, "rb3e_get_song_count");
     SymbolConstruct(&globalSymbols.rb3e_send_event_string, "rb3e_send_event_string");
+    SymbolConstruct(&globalSymbols.rb3e_get_song_name, "rb3e_get_song_name");
+    SymbolConstruct(&globalSymbols.rb3e_get_artist, "rb3e_get_artist");
+    SymbolConstruct(&globalSymbols.rb3e_get_album, "rb3e_get_album");
+    SymbolConstruct(&globalSymbols.rb3e_get_origin, "rb3e_get_origin");
+    SymbolConstruct(&globalSymbols.rb3e_get_genre, "rb3e_get_genre");
+    SymbolConstruct(&globalSymbols.rb3e_delete_songcache, "rb3e_delete_songcache");
+    SymbolConstruct(&globalSymbols.rb3e_local_ip, "rb3e_local_ip");
 
     SymbolConstruct(&globalSymbols.blackBackground, "mod_black_background");
     SymbolConstruct(&globalSymbols.colorShuffle, "mod_color_shuffle");
     SymbolConstruct(&globalSymbols.forceHopos, "mod_force_hopos");
     SymbolConstruct(&globalSymbols.mirrorMode, "mod_mirror_mode");
     SymbolConstruct(&globalSymbols.gemShuffle, "mod_gem_shuffle");
+    SymbolConstruct(&globalSymbols.doubleBass, "mod_double_bass");
 
     SymbolConstruct(&globalSymbols.greenGem, "gem_green.wid");
     SymbolConstruct(&globalSymbols.redGem, "gem_red.wid");

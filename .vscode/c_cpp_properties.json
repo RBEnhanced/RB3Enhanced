@@ -9,6 +9,7 @@
             "defines": [
                 "_DEBUG",
                 "_XBOX",
+                "_PPC_",
                 "RB3E",
                 "RB3E_XBOX",
                 "RB3EDEBUG"
@@ -30,6 +31,26 @@
                 "__wii__",
                 "RB3E",
                 "RB3E_WII",
+                "RB3EDEBUG"
+            ],
+            "compilerPath": "C:/devkitPro/devkitPPC/bin/powerpc-eabi-gcc.exe",
+            "cStandard": "c89",
+            "intelliSenseMode": "gcc-x86"
+        },
+        {
+            "name": "Wii (Bank 8)",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "C:/devkitPro/bslug/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "GEKKO",
+                "HW_RVL",
+                "__wii__",
+                "RB3E",
+                "RB3E_WII",
+                "RB3E_WII_BANK8",
                 "RB3EDEBUG"
             ],
             "compilerPath": "C:/devkitPro/devkitPPC/bin/powerpc-eabi-gcc.exe",

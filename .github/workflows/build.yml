@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   Wii:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
 
     container:
@@ -19,7 +19,7 @@ jobs:
 
       - name: Install BrainSlug
         run: | 
-          git clone https://github.com/Chadderz121/brainslug-wii
+          git clone -b atof https://github.com/InvoxiPlayGames/brainslug-wii.git
           cd brainslug-wii
           make install
           cd ..
@@ -30,7 +30,7 @@ jobs:
           make wii -j2 DEBUG=1
 
       - name: Upload binaries (debug)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with: 
           name: RB3Enhanced-Wii-Debug
           path: out/RB3Enhanced.mod
@@ -41,14 +41,25 @@ jobs:
           make wii -j2
 
       - name: Upload binaries (no-debug)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with: 
           name: RB3Enhanced-Wii-NoDebug
           path: out/RB3Enhanced.mod
 
+      - name: Compile (bank8-debug)
+        run: |
+          make clean
+          make wii -j2 DEBUG=1 BANK8=1
+
+      - name: Upload binaries (bank8-debug)
+        uses: actions/upload-artifact@v4
+        with: 
+          name: RB3Enhanced-Wii-Bank8-Debug
+          path: out/RB3Enhanced.mod
+
   Xbox:
     if: github.repository == 'RBEnhanced/RB3Enhanced'
-    runs-on: windows-2019
+    runs-on: windows-2022
     timeout-minutes: 10
 
     steps:
@@ -72,7 +83,7 @@ jobs:
           make xbox -j2 DEBUG=1
 
       - name: Upload binaries (debug)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with: 
           name: RB3Enhanced-Xbox-Debug
           path: out/RB3Enhanced.dll
@@ -85,7 +96,7 @@ jobs:
           make xbox -j2
 
       - name: Upload binaries (no-debug)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with: 
           name: RB3Enhanced-Xbox-NoDebug
           path: out/RB3Enhanced.dll

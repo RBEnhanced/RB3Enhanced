@@ -27,8 +27,8 @@ void InitDefaultConfig()
     memset(&config, 0, sizeof(config));
     strcpy(config.RawfilesDir, "rb3");
 #ifdef RB3E_WII
-    // uncomment when GoCentral has a default instance that uses naswii auth
-    // strcpy(config.NASServer, "naswii.rbenhanced.rocks");
+    strcpy(config.NASServer, "naswii.rbenhanced.rocks");
+    config.ModernSDMode = 1;
 #endif
     config.SongSpeedMultiplier = 1.0;
     config.TrackSpeedMultiplier = 1.0;
@@ -59,6 +59,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.LogFileAccess = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "UnlockClothing") == 0)
             config.UnlockClothing = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "DisableMenuMusic") == 0)
+            config.DisableMenuMusic = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "LanguageOverride") == 0 && strlen(value) == RB3E_LANG_LEN)
             strncpy(config.LanguageOverride, value, RB3E_LANG_LEN);
         if (strcmp(name, "RawfilesDir") == 0 && !RB3E_CONFIG_FALSE(value))
@@ -67,6 +69,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.DisableRawfiles = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "QuazalLogging") == 0)
             config.QuazalLogging = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "ContentLogging") == 0)
+            config.ContentLogging = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "Events") == 0)
     {
@@ -80,7 +84,7 @@ static int INIHandler(void *user, const char *section, const char *name, const c
         if (strcmp(name, "EnableGoCentral") == 0)
             config.EnableGoCentral = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "GoCentralAddress") == 0)
-            strncpy(config.GoCentralAddress, value, RB3E_MAX_CONFIG_LEN);
+            strncpy(config.GoCentralAddress, value, RB3E_MAX_DOMAIN);
     }
     if (strcmp(section, "HTTP") == 0)
     {
@@ -88,6 +92,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.EnableHTTPServer = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "AllowCORS") == 0)
             config.AllowCORS = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "AllowScripts") == 0)
+            config.AllowScripts = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "Network") == 0)
     {
@@ -103,6 +109,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.NASServer, value, RB3E_MAX_DOMAIN);
         if (strcmp(name, "LegacySDMode") == 0)
             config.LegacySDMode = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "ModernSDMode") == 0)
+            config.ModernSDMode = RB3E_CONFIG_BOOL(value);
     }
 #elif RB3E_XBOX
     if (strcmp(section, "Xbox360") == 0)

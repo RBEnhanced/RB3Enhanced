@@ -26,9 +26,9 @@ void *GameConstructHook(void *theGame) // You just lost
     RB3E_EventBandInfo bandevent = {0};
 #ifdef RB3E_XBOX
     Symbol song;
-    GetSongSymbol(&song, *(int *)PORT_THEMETAPERFORMER);
+    GetSongShortname(&song, *(int *)PORT_THEMETAPERFORMER);
 #else
-    Symbol song = GetSongSymbol(*(int *)PORT_THEMETAPERFORMER);
+    Symbol song = GetSongShortname(*(int *)PORT_THEMETAPERFORMER);
 #endif
     if (song.sym != NULL)
     {
@@ -39,7 +39,7 @@ void *GameConstructHook(void *theGame) // You just lost
         if (metadata != NULL)
         {
             RB3E_DEBUG("Metadata: %p", metadata);
-            RB3E_DEBUG("Started song: '%s' - %s (ID: %i, %s)", metadata->title.buf, metadata->artist.buf, metadata->mSongID, metadata->mShortName);
+            RB3E_DEBUG("Started song: '%s' - %s (ID: %i, %s)", metadata->title.buf, metadata->artist.buf, metadata->song_id, metadata->shortname);
             RB3E_SendEvent(RB3E_EVENT_SONG_NAME, metadata->title.buf, metadata->title.length);
             RB3E_SendEvent(RB3E_EVENT_SONG_ARTIST, metadata->artist.buf, metadata->artist.length);
         }
@@ -49,10 +49,10 @@ void *GameConstructHook(void *theGame) // You just lost
         bandUser = GetBandUserFromSlot(*(int *)PORT_THEBANDUSERMGR, i);
         if (bandUser != NULL)
         {
-            RB3E_DEBUG("BandUser %i: %p - Track: %i, Controller: %i, Difficulty: %i", i, bandUser, bandUser->mTrackType, bandUser->mControllerType, bandUser->mDifficulty);
+            RB3E_DEBUG("BandUser %i: %p - Track: %i, Controller: %i, Difficulty: %i", i, bandUser, bandUser->trackType, bandUser->controllerType, bandUser->difficulty);
             bandevent.MemberExists[i] = 1;
-            bandevent.Difficulty[i] = bandUser->mDifficulty;
-            bandevent.TrackType[i] = bandUser->mTrackType;
+            bandevent.Difficulty[i] = bandUser->difficulty;
+            bandevent.TrackType[i] = bandUser->trackType;
         }
         else
         {
@@ -68,5 +68,12 @@ void *GameDestructHook(void *theGame, int r4)
 {
     char in_game = 0x00;
     RB3E_SendEvent(RB3E_EVENT_STATE, &in_game, sizeof(in_game));
+    
+#ifdef RB3E_XBOX
+    // When not in-game, turn off the stage-kit lights.
+    // Fixes the RB3 bug(?) that leaves 2 red leds on when exiting the score view screen.
+    StagekitSetStateHook(0x00, 0xFF);    
+#endif
+
     return GameDestruct(theGame, r4);
 }
