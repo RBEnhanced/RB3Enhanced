@@ -343,7 +343,7 @@ DataNode *DTALocalIP(DataNode *node, DataArray *args)
     else
     {
         char ipBuffer[24];
-        unsigned char *ipParts = &localIP;
+        unsigned char *ipParts = (unsigned char *)&localIP;
         sprintf(ipBuffer, "%i.%i.%i.%i", ipParts[0], ipParts[1], ipParts[2], ipParts[3]);
         SymbolConstruct(&ipSym, ipBuffer);
         node->type = SYMBOL;
