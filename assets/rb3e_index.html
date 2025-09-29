@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>RB3Enhanced</title>
+    <title>RB3 Search</title>
+    <link rel="icon" type="image/png" href="https://github.com/hmxmilohax/GH2DX-Site/blob/main/docs/favicon.ico?raw=true">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://github.com/hmxmilohax/GH2DX-Site/blob/main/docs/favicon-32x32.png?raw=true">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://github.com/hmxmilohax/GH2DX-Site/blob/main/docs/favicon-16x16.png?raw=true">
+    <link rel="apple-touch-icon" sizes="256x256" href="https://github.com/hmxmilohax/rock-band-3-deluxe/blob/develop/_ark/dx/custom_textures/_additional_textures/blank_album_art_keep.png?raw=true">
     <style>
         /* font choice */
         * {
@@ -295,12 +299,19 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
     <script>
+    	// Uncomment to hardcode API key, replace the placeholder with your API key
+        //let lastfmApiKey="YOURAPIKEYGOESHEREREPLACEMEPLSSS";window.addEventListener("DOMContentLoaded",()=>document.querySelector(".reset-api-button")?.remove());
+
+    	// Comment to disable hardcoded API key
         let lastfmApiKey = localStorage.getItem('lastfmApiKey') || '';
+
+        let activeSearchId = 0;
         let searchTimeout = null;
         let currentFetchController = null;
-        const apiCallDelay = 300;
-        const placeholderArtUrl = 'https://github.com/hmxmilohax/rock-band-3-deluxe/blob/main/_ark/dx/custom_textures/_additional_textures/blank_album_art_keep.png?raw=true';
+        const apiCallDelay = 200;
+        const placeholderArtUrl = 'https://github.com/hmxmilohax/rock-band-3-deluxe/blob/develop/_ark/dx/custom_textures/_additional_textures/blank_album_art_keep.png?raw=true';
         let albumArtQueue = [];
         let albumArtFetchInProgress = false;
         let albumArtCache = {};
@@ -409,12 +420,32 @@
             }
         }
 
+        function ShowCenteredMessage(message) {
+            ClearList();
+            const row = document.createElement('tr');
+            const td = document.createElement('td');
+            td.className = 'sinfo';
+            td.innerHTML = `<span class="centered-message">${message}</span>`;
+            row.appendChild(td);
+            document.getElementById('songlisttable').appendChild(row);
+        }
 
         function ParseSongList(listini) {
             song_list = ParseListINI(listini);
-            ClearList();
-            song_list.forEach((song, index) => AddSongToList(song, index));
-            AddSongCountToList(song_list.length);
+
+            // Setup Fuse.js with weighted keys
+            fuse = new Fuse(song_list, {
+                keys: [
+                    { name: "title", weight: 0.5 },   // prioritize title matches
+                    { name: "artist", weight: 0.3 },
+                    { name: "album", weight: 0.2 }
+                ],
+                threshold: 0.25,   // fuzzy matching threshold
+                ignoreLocation: true,
+                includeScore: true,  // include score for secondary sorting
+            });
+
+            ShowCenteredMessage('Song list loaded! Start typing to search');
         }
 
         function FetchSongList() {
@@ -425,6 +456,10 @@
                 .then(data => {
                     originalSongListINI = data;
                     ParseSongList(data);
+
+                    // Show the search box now
+                    const searchBox = document.getElementById('searchbox');
+                    searchBox.style.display = 'block';
                 });
         }
 
@@ -435,21 +470,17 @@
         function DoSearch() {
             const search_term = document.getElementById('searchbox').value.toLowerCase();
 
-            // Check if the search term is empty
-            if (search_term === '') {
-                // If the search term is empty, display the unfiltered list
-                unfilteredQueuePaused = false;
-                albumArtQueue = [...unfilteredAlbumArtQueue];
-                unfilteredAlbumArtQueue = [];
+            // If less than 3 characters, reset to "start typing" message
+            if (search_term.length < 3) {
                 ClearList();
-                ParseSongList(originalSongListINI);
-                if (albumArtQueue.length === 0) {
-                    albumArtFetchInProgress = false;
-                    return;
-                }
-                if (!albumArtFetchInProgress) {
-                    processAlbumArtQueue();
-                }
+                ShowCenteredMessage('Song list loaded! Start typing to search');
+                albumArtQueue = [];
+                unfilteredQueuePaused = false;
+
+                // Invalidate any ongoing search
+                if (searchTimeout) clearTimeout(searchTimeout);
+                if (currentFetchController) currentFetchController.abort();
+                activeSearchId++; // makes any in-progress search stop
                 return;
             }
 
@@ -457,31 +488,44 @@
             unfilteredQueuePaused = true;
             albumArtQueue = []; // Clear the current queue since we are performing a search
 
-            if (searchTimeout) {
-                clearTimeout(searchTimeout);
-            }
+            if (searchTimeout) clearTimeout(searchTimeout);
+            if (currentFetchController) currentFetchController.abort();
+            currentFetchController = new AbortController();
+            const { signal } = currentFetchController;
+
+            const thisSearchId = ++activeSearchId;
 
             searchTimeout = setTimeout(async () => {
-                if (currentFetchController) {
-                    currentFetchController.abort();
-                }
-                currentFetchController = new AbortController();
-                const { signal } = currentFetchController;
+                ClearList();
 
-                ClearList(); // Clear the list before displaying the filtered results
                 let loaded_songs = 0;
                 const batchSize = 5;
-                const delay = 300;
+                const delay = 250;
 
-                // Filter the song list based on the search term
-                const searchResults = song_list.filter(song => 
-                    song.title.toLowerCase().includes(search_term) ||
-                    song.artist.toLowerCase().includes(search_term) ||
-                    (song.album && song.album.toLowerCase().includes(search_term))
-                );
+                let searchResults = fuse.search(search_term);
+
+                // Sort by score first, then by title alphabetically
+                searchResults.sort((a, b) => {
+                    if (a.score !== b.score) return a.score - b.score; // lower score = better match
+                    return a.item.title.localeCompare(b.item.title);   // secondary sort by title A-Z
+                });
+
+                // Limit results to 150
+                searchResults = searchResults.slice(0, 150);
+
+                // Map to only the song items
+                searchResults = searchResults.map(result => result.item);
+
+                // If no results, show message and return
+                if (searchResults.length === 0) {
+                    ShowCenteredMessage('No results!');
+                    return;
+                }
 
                 // Display the filtered list
                 for (let i = 0; i < searchResults.length; i++) {
+                    if (thisSearchId !== activeSearchId) return; // canceled
+
                     const song = searchResults[i];
                     AddSongToList(song, loaded_songs);
 
@@ -507,8 +551,10 @@
                     }
                 }
 
-                AddSongCountToList(loaded_songs);
-            }, 300);
+                if (thisSearchId === activeSearchId) {
+                    AddSongCountToList(loaded_songs);
+                }
+            }, 500);
         }
 
         function resetApiKey() {
@@ -625,7 +671,7 @@
         <button class="reset-api-button button balt" onclick="resetApiKey()">Reset API Key</button>
         <img src="https://github.com/hmxmilohax/rock-band-3-deluxe/blob/develop/_ark/dx/custom_textures/_additional_textures/rb3enhanced_logo.png?raw=true" alt="RB3Enhanced Logo" class="logo" />
         <div class="input-container">
-            <input id="searchbox" type="text" placeholder="Search songs, artists, albums..." />
+            <input id="searchbox" type="text" placeholder="Search songs, artists, albums..." style="display:none;" />
         </div>
     </div>
     <table id="songlisttable" class="songlist" cellspacing="0">
