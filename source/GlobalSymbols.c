@@ -9,6 +9,7 @@
 #include "rb3/Symbol.h"
 #include "ports.h"
 #include "GlobalSymbols.h"
+#include "version.h"
 
 GlobalSymbols globalSymbols;
 static char globalSymbolsInitialised = 0;
@@ -26,7 +27,13 @@ void InitGlobalSymbols()
 
     memset(&globalSymbols, 0, sizeof(globalSymbols));
 
+    SymbolConstruct(&globalSymbols.buildtag, RB3E_BUILDTAG);
+    SymbolConstruct(&globalSymbols.commit, RB3E_BUILDCOMMIT);
+
     SymbolConstruct(&globalSymbols.print_debug, "print_debug");
+    SymbolConstruct(&globalSymbols.rb3e_api_version, "rb3e_api_version");
+    SymbolConstruct(&globalSymbols.rb3e_build_tag, "rb3e_build_tag");
+    SymbolConstruct(&globalSymbols.rb3e_commit, "rb3e_commit");
     SymbolConstruct(&globalSymbols.rb3e_change_music_speed, "rb3e_change_music_speed");
     SymbolConstruct(&globalSymbols.rb3e_change_track_speed, "rb3e_change_track_speed");
     SymbolConstruct(&globalSymbols.rb3e_get_music_speed, "rb3e_get_music_speed");
@@ -42,6 +49,7 @@ void InitGlobalSymbols()
     SymbolConstruct(&globalSymbols.rb3e_get_origin, "rb3e_get_origin");
     SymbolConstruct(&globalSymbols.rb3e_get_genre, "rb3e_get_genre");
     SymbolConstruct(&globalSymbols.rb3e_delete_songcache, "rb3e_delete_songcache");
+    SymbolConstruct(&globalSymbols.rb3e_local_ip, "rb3e_local_ip");
 
     SymbolConstruct(&globalSymbols.blackBackground, "mod_black_background");
     SymbolConstruct(&globalSymbols.colorShuffle, "mod_color_shuffle");

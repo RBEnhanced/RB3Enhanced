@@ -26,7 +26,7 @@ typedef struct _SongMetadata
 #ifdef RB3E_WII
     char unknown6[0x10];
 #else
-    char unknown6[0x14];
+    char unknown6[0x10]; // hotfixed from 0x18, then 0x14? what is happening
 #endif
     Symbol genre;
     int animTempo;
