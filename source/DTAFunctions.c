@@ -14,8 +14,40 @@
 #include "rb3/SongMetadata.h"
 #include "rb3/BandSongMgr.h"
 #include "rb3enhanced.h"
+#include "net.h"
+#include "version.h"
 
-DataNode *PrintToDebugger(DataNode *node, DataArray *args)
+DataNode *DTAGetRB3EBuildTag(DataNode *node, DataArray *args)
+{
+    node->type = SYMBOL;
+    node->value.string = globalSymbols.buildtag.sym;
+    return node;
+}
+
+DataNode *DTAGetRB3ECommit(DataNode *node, DataArray *args)
+{
+    node->type = SYMBOL;
+    node->value.string = globalSymbols.commit.sym;
+    return node;
+}
+
+DataNode *DTAGetAPIVersion(DataNode *node, DataArray *args)
+{
+    /* 
+        This API version should be incremented every time a DTA function gets
+        added, has functionality modified, or removed, as well as every time a
+        major feature is added/removed from RB3E or a new major version is
+        released.
+
+        API version history:
+            0 - 29/09/2025 - Initial API version.
+    */
+    node->type = INT_VALUE;
+    node->value.intVal = 0;
+    return node;
+}
+
+DataNode *DTAPrintToDebugger(DataNode *node, DataArray *args)
 {
     DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
     switch (firstArg->type)
@@ -38,21 +70,21 @@ DataNode *PrintToDebugger(DataNode *node, DataArray *args)
     return node;
 }
 
-// Get configuration values
-DataNode *GetMusicSpeed(DataNode *node, DataArray *args)
+DataNode *DTAGetMusicSpeed(DataNode *node, DataArray *args)
 {
     node->type = FLOAT_VALUE;
     node->value.floatVal = config.SongSpeedMultiplier;
     return node;
 }
-DataNode *GetTrackSpeed(DataNode *node, DataArray *args)
+
+DataNode *DTAGetTrackSpeed(DataNode *node, DataArray *args)
 {
     node->type = FLOAT_VALUE;
     node->value.floatVal = config.TrackSpeedMultiplier;
     return node;
 }
-// Set configuration values
-DataNode *ChangeMusicSpeed(DataNode *node, DataArray *args)
+
+DataNode *DTAChangeMusicSpeed(DataNode *node, DataArray *args)
 {
     DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
     switch (firstArg->type)
@@ -73,7 +105,8 @@ DataNode *ChangeMusicSpeed(DataNode *node, DataArray *args)
     node->value.intVal = 1;
     return node;
 }
-DataNode *ChangeTrackSpeed(DataNode *node, DataArray *args)
+
+DataNode *DTAChangeTrackSpeed(DataNode *node, DataArray *args)
 {
     DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
     switch (firstArg->type)
@@ -94,6 +127,7 @@ DataNode *ChangeTrackSpeed(DataNode *node, DataArray *args)
     node->value.intVal = 1;
     return node;
 }
+
 DataNode *DTASetVenue(DataNode *node, DataArray *args)
 {
     DataNode *firstArg = DataNodeEvaluate(&args->mNodes->n[1]);
@@ -294,6 +328,30 @@ DataNode *DTADeleteSongCache(DataNode *node, DataArray *args)
     return node;
 }
 
+DataNode *DTALocalIP(DataNode *node, DataArray *args)
+{
+    Symbol noIpSym;
+    Symbol ipSym;
+    unsigned int localIP = RB3E_GetInternalIP();
+    if (localIP == 0)
+    {
+        SymbolConstruct(&noIpSym, "(not connected)");
+        node->type = SYMBOL;
+        node->value.string = noIpSym.sym;
+        return node;
+    }
+    else
+    {
+        char ipBuffer[24];
+        unsigned char *ipParts = &localIP;
+        sprintf(ipBuffer, "%i.%i.%i.%i", ipParts[0], ipParts[1], ipParts[2], ipParts[3]);
+        SymbolConstruct(&ipSym, ipBuffer);
+        node->type = SYMBOL;
+        node->value.string = ipSym.sym;
+        return node;
+    }
+}
+
 #ifdef RB3E_XBOX
 // this function is inlined on the Xbox version, so we re-create it
 void DataRegisterFunc(Symbol name, DTAFunction_t func)
@@ -304,11 +362,14 @@ void DataRegisterFunc(Symbol name, DTAFunction_t func)
 
 void AddDTAFunctions()
 {
-    DataRegisterFunc(globalSymbols.print_debug, PrintToDebugger);
-    DataRegisterFunc(globalSymbols.rb3e_change_music_speed, ChangeMusicSpeed);
-    DataRegisterFunc(globalSymbols.rb3e_change_track_speed, ChangeTrackSpeed);
-    DataRegisterFunc(globalSymbols.rb3e_get_music_speed, GetMusicSpeed);
-    DataRegisterFunc(globalSymbols.rb3e_get_track_speed, GetTrackSpeed);
+    DataRegisterFunc(globalSymbols.print_debug, DTAPrintToDebugger);
+    DataRegisterFunc(globalSymbols.rb3e_api_version, DTAGetAPIVersion);
+    DataRegisterFunc(globalSymbols.rb3e_build_tag, DTAGetRB3EBuildTag);
+    DataRegisterFunc(globalSymbols.rb3e_commit, DTAGetRB3ECommit);
+    DataRegisterFunc(globalSymbols.rb3e_change_music_speed, DTAChangeMusicSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_change_track_speed, DTAChangeTrackSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_get_music_speed, DTAGetMusicSpeed);
+    DataRegisterFunc(globalSymbols.rb3e_get_track_speed, DTAGetTrackSpeed);
     DataRegisterFunc(globalSymbols.rb3e_set_venue, DTASetVenue);
     DataRegisterFunc(globalSymbols.rb3e_is_emulator, DTAIsEmulator);
     DataRegisterFunc(globalSymbols.rb3e_relaunch_game, DTARelaunchGame);
@@ -320,5 +381,6 @@ void AddDTAFunctions()
     DataRegisterFunc(globalSymbols.rb3e_get_origin, DTAGetOrigin);
     DataRegisterFunc(globalSymbols.rb3e_get_genre, DTAGetGenre);
     DataRegisterFunc(globalSymbols.rb3e_delete_songcache, DTADeleteSongCache);
+    DataRegisterFunc(globalSymbols.rb3e_local_ip, DTALocalIP);
     RB3E_MSG("Added DTA functions!", NULL);
 }

@@ -18,7 +18,8 @@ char *DefinesHook(char *string_define, int always_null)
     case 0:
         return "RB3E";
     case 1:
-        // might not be working?
+        return "RB3E_HAS_VERSION";
+    case 2:
         if (RB3E_IsEmulator())
             return "RB3E_EMULATOR";
         return NULL;
