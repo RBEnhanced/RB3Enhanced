@@ -404,7 +404,8 @@ void InitialiseFunctions()
 void ApplyHooks()
 {
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
-    POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
+    // TODO(Emma): fix this buggy set of hooks
+    //POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
 #ifndef RB3E_WII_BANK8
     POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
 #endif

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
@@ -10,6 +11,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             box-sizing: border-box;
         }
+
         /* it's all light mode until we get to the dark theme palette */
         body {
             margin: 0;
@@ -474,7 +476,7 @@
                 const delay = 300;
 
                 // Filter the song list based on the search term
-                const searchResults = song_list.filter(song => 
+                const searchResults = song_list.filter(song =>
                     song.title.toLowerCase().includes(search_term) ||
                     song.artist.toLowerCase().includes(search_term) ||
                     (song.album && song.album.toLowerCase().includes(search_term))
@@ -491,7 +493,7 @@
                         const cacheKey = albumArt.dataset.cacheKey;
                         if (!albumArtCache[cacheKey]) {
                             albumArt.src = placeholderArtUrl // Reset image to placeholder
-                            albumArtQueue.push({ album: song.album, artist: song.artist, imgElement: albumArt, cacheKey, songIndex: loaded_songs});
+                            albumArtQueue.push({ album: song.album, artist: song.artist, imgElement: albumArt, cacheKey, songIndex: loaded_songs });
                         }
                     }
 
@@ -521,7 +523,7 @@
             const apiKeyInput = document.getElementById('apiKeyInput');
             const saveButton = document.querySelector('.input-container button');
             const resetButton = document.querySelector('.reset-api-button');
-            
+
             if (show) {
                 apiKeyInput.style.display = 'block';
                 saveButton.style.display = 'block';
@@ -620,10 +622,11 @@
         });
     </script>
 </head>
+
 <body>
     <div class="header">
         <button class="reset-api-button button balt" onclick="resetApiKey()">Reset API Key</button>
-        <img src="https://github.com/hmxmilohax/rock-band-3-deluxe/blob/develop/_ark/dx/custom_textures/_additional_textures/rb3enhanced_logo.png?raw=true" alt="RB3Enhanced Logo" class="logo" />
+        <img src="https://rbenhanced.rocks/logo.png" alt="RB3Enhanced Logo" class="logo" />
         <div class="input-container">
             <input id="searchbox" type="text" placeholder="Search songs, artists, albums..." />
         </div>
@@ -645,4 +648,5 @@
         </tr>
     </table>
 </body>
+
 </html>
