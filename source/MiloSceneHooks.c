@@ -96,6 +96,8 @@ void VertexReadHook(BinStream *thisBinStream, Vector3 *vec3)
 }
 
 
+#ifdef RB3E_XBOX
+
 // the third arg is not really a String but a FilePath but shhh i wont tell if you dont
 void MakeOutfitPathHook(void *thisBandCharDesc, Symbol part, String *filePath)
 {
@@ -111,39 +113,46 @@ void MakeOutfitPathHook(void *thisBandCharDesc, Symbol part, String *filePath)
         if (strcmp(genderSym->sym, "female") == 0)
         {
             path = "char/main/head/female/head_custom.milo";
-            len = strlen(path);
 
-            RB3E_DEBUG("Head is hidden on female prefab, using custom head milo", 0);
-
-            copy = (char *)malloc(len + 1);
-            if (copy != NULL)
+            // Check if file exists in ARK or raw filesystem
+            if (FileExists((char *)path, 0) || FileExists((char *)path, 0x10002))
             {
-                strcpy(copy, path);
-                filePath->buf = copy;
-                filePath->length = (int)len;
+                len = strlen(path);
+                RB3E_DEBUG("Head is hidden on female prefab, using custom head milo", 0);
+
+                copy = (char *)malloc(len + 1);
+                if (copy != NULL)
+                {
+                    strcpy(copy, path);
+                    filePath->buf = copy;
+                    filePath->length = (int)len;
+                }
+                return;
             }
-            return;
-        } 
+        }
         else if (strcmp(genderSym->sym, "male") == 0)
         {
             path = "char/main/head/male/head_custom.milo";
-            len = strlen(path);
 
-            RB3E_DEBUG("Head is hidden on male prefab, using custom head milo", 0);
-
-            copy = (char *)malloc(len + 1);
-            if (copy != NULL)
+            // Check if file exists in ARK or raw filesystem
+            if (FileExists((char *)path, 0) || FileExists((char *)path, 0x10002))
             {
-                strcpy(copy, path);
-                filePath->buf = copy;
-                filePath->length = (int)len;
+                len = strlen(path);
+                RB3E_DEBUG("Head is hidden on male prefab, using custom head milo", 0);
+
+                copy = (char *)malloc(len + 1);
+                if (copy != NULL)
+                {
+                    strcpy(copy, path);
+                    filePath->buf = copy;
+                    filePath->length = (int)len;
+                }
+                return;
             }
-            return;
-        } else {
-            RB3E_DEBUG("Unknown gender, cannot load custom head milo", 0);
-            return;
         }
     }
 
     MakeOutfitPath(thisBandCharDesc, part, filePath);
 }
+
+#endif
