@@ -50,6 +50,7 @@
 #define PORT_STAGEKIT_EXISTS 0x8228d03c          // StageKit check. nop over to allow for fog command without a physical StageKit connected.
 #define PORT_VERTEX_READ_1 0x82418704            // call to Vector3::operator>> to read vertex position
 #define PORT_VERTEX_READ_2 0x82418748            // call to Vector3::operator>> to read vertex normals
+#define PORT_CHARBANDDESC_MAKEOUTFITPATH 0x82335220 // CharBandDesc::MakeOutfitPath
 #define PORT_MULTIPLAYER_CRASH 0x82ae6880        // branch to a function that can crash in online multiplayer
 #define PORT_MULTIPLAYER_FIX 0x8282b238          // the function that doesn't crash
 #define PORT_QUAZAL_BREAKPOINT 0x828410c0        // address to DbgBreakPoint in Quazal::Platform::Breakpoint

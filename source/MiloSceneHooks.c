@@ -20,6 +20,8 @@ void DirLoaderOpenFileHook(DirLoader *thisDirLoader)
 }
 */
 
+static char headPath[512] = "char/main/head/male/head_custom.milo";
+
 void LoadObj(Object *object, BinStream *stream)
 {
     char newPath[512] = {0};
@@ -91,4 +93,57 @@ void VertexReadHook(BinStream *thisBinStream, Vector3 *vec3)
 
     return;
 #endif
+}
+
+
+// the third arg is not really a String but a FilePath but shhh i wont tell if you dont
+void MakeOutfitPathHook(void *thisBandCharDesc, Symbol part, String *filePath)
+{
+    const char *path;
+    char *copy;
+    size_t len;
+
+    // check if the head is hidden on the prefab and we are trying to load the head part
+    if (*(char *)((char *)thisBandCharDesc + 0x20) == 1 && strcmp(part.sym, "head") == 0)
+    {
+        // determine gender, gender is a Symbol at 0x10
+        Symbol *genderSym = (Symbol *)((char *)thisBandCharDesc + 0x10);
+        if (strcmp(genderSym->sym, "female") == 0)
+        {
+            path = "char/main/head/female/head_custom.milo";
+            len = strlen(path);
+
+            RB3E_DEBUG("Head is hidden on female prefab, using custom head milo", 0);
+
+            copy = (char *)malloc(len + 1);
+            if (copy != NULL)
+            {
+                strcpy(copy, path);
+                filePath->buf = copy;
+                filePath->length = (int)len;
+            }
+            return;
+        } 
+        else if (strcmp(genderSym->sym, "male") == 0)
+        {
+            path = "char/main/head/male/head_custom.milo";
+            len = strlen(path);
+
+            RB3E_DEBUG("Head is hidden on male prefab, using custom head milo", 0);
+
+            copy = (char *)malloc(len + 1);
+            if (copy != NULL)
+            {
+                strcpy(copy, path);
+                filePath->buf = copy;
+                filePath->length = (int)len;
+            }
+            return;
+        } else {
+            RB3E_DEBUG("Unknown gender, cannot load custom head milo", 0);
+            return;
+        }
+    }
+
+    MakeOutfitPath(thisBandCharDesc, part, filePath);
 }

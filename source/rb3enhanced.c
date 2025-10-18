@@ -452,6 +452,9 @@ void ApplyHooks()
     POKE_BL(PORT_LOADOBJS_BCTRL, &LoadObj);
     POKE_BL(PORT_VERTEX_READ_1, &VertexReadHook);
     POKE_BL(PORT_VERTEX_READ_2, &VertexReadHook);
+
+    // outfit path stuff is 360 only for now
+    HookFunction(PORT_CHARBANDDESC_MAKEOUTFITPATH, &MakeOutfitPath, &MakeOutfitPathHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }

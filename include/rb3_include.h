@@ -9,6 +9,7 @@
 #include "rb3/BandUser.h"
 #include "rb3/BandUserMgr.h"
 #include "rb3/BinStream.h"
+#include "rb3/CharBandDesc.h"
 #include "rb3/Casting.h"
 #include "rb3/ChunkStream.h"
 #include "rb3/Data.h"
