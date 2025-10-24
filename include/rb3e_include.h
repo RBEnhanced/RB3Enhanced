@@ -21,6 +21,7 @@
 #include "net_liveless_online.h"
 #include "net.h"
 #include "OvershellHooks.h"
+#include "pointer_map.h"
 #include "ports.h"
 #include "ppcasm.h"
 #include "QuazalHooks.h"
