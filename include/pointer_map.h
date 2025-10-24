@@ -59,6 +59,7 @@ static void ptr_map_insert(PtrMap* map, void* key, void* value)
 }
 
 // lookup a value by key
+// return NULL if not found
 static void* ptr_map_lookup(PtrMap* map, void* key)
 {
     PtrMapEntry *e;

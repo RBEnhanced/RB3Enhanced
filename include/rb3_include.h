@@ -47,5 +47,8 @@
 
 // UI headers
 #include "rb3/UI/UIPanel.h"
+#include "rb3/InstrumentDupingHooks.h"
+#include "rb3/GameGemDB.h"
+#include "rb3/GameGemList.h"
 
 #endif // _RB3INCLUDE_H_

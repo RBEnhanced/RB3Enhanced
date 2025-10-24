@@ -59,6 +59,11 @@
 #define PORT_QUAZAL_BREAKPOINT 0x828410c0        // address to DbgBreakPoint in Quazal::Platform::Breakpoint
 #define PORT_MAINSEH 0x82272e60                  // address to __CxxFrameHandler above the main() function
 // function patch addresses
+#define PORT_GAMEGEMLIST_RESET 0x8278cb80
+#define PORT_GAMEGEMDB_GETDIFFGEMLIST 0x827931c8
+#define PORT_GAMEGEMDB_DUPLICATE 0x827932c8
+#define PORT_GEMPLAYER_POSTLOAD 0x826c39f8
+#define PORT_TRACKWATCHERIMPL_RECALCGEMLIST 0x82794740
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
 #define PORT_APP_RUNNODEBUG 0x82270080               // App::RunWithoutDebugging

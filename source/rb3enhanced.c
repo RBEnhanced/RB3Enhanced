@@ -255,12 +255,14 @@ void ApplyPatches()
 
     // instrument duping patches
     POKE_32(PORT_OVERSHELLSLOT_ISVALIDCONTROLLERTYPE_1, LI(3, 1));
-    POKE_32(PORT_OVERSHELLSLOT_ISVALIDCONTROLLERTYPE_2, NOP);
+    POKE_32(PORT_OVERSHELLSLOT_ISVALIDCONTROLLERTYPE_2, BLR);
 
     POKE_32(PORT_PLAYERTRACKCONFIGLIST_PROCESSCONFIG_CHECK, NOP);
 
+    POKE_32(0x80431884, NOP);
+
     POKE_32(PORT_OVERSHELLPARTSELECTPROVIDER_ISACTIVE_1, LI(3, 1));
-    POKE_32(PORT_OVERSHELLPARTSELECTPROVIDER_ISACTIVE_2, NOP);
+    POKE_32(PORT_OVERSHELLPARTSELECTPROVIDER_ISACTIVE_2, BLR);
 
     POKE_32(PORT_OVERSHELLSLOT_SHOWCHOOSEPARTWAIT_STATE, LI(4, 12));
     RB3E_MSG("Patches applied!", NULL);
@@ -418,6 +420,9 @@ void InitialiseFunctions()
 #endif
     RB3E_FlushCache((void *)RB3EBase, (unsigned int)RB3EStubEnd - (unsigned int)RB3EBase);
     RB3E_MSG("Functions initialized!", NULL);
+    POKE_B(&Duplicate, PORT_GAMEGEMDB_DUPLICATE);
+    POKE_B(&GetDiffGemList, PORT_GAMEGEMDB_GETDIFFGEMLIST);
+    POKE_B(&Reset, PORT_GAMEGEMLIST_RESET);
 }
 
 void ApplyHooks()
@@ -476,6 +481,8 @@ void ApplyHooks()
     HookFunction(PORT_CHARBANDDESC_MAKEOUTFITPATH, &MakeOutfitPath, &MakeOutfitPathHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
+    HookFunction(PORT_GEMPLAYER_POSTLOAD, &PostLoad, &PostLoadHook);
+    HookFunction(PORT_GEMPLAYER_DESTRUCTOR, &GemPlayerDestructor, &GemPlayerDestructorHook);
 }
 
 void InitCNTHooks();

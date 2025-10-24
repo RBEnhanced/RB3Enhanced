@@ -13,6 +13,7 @@
 #include "GlobalSymbols.h"
 #include "gocentral.h"
 #include "inih.h"
+#include "InstrumentDupingHooks.h"
 #include "LocaleHooks.h"
 #include "MiloSceneHooks.h"
 #include "MusicLibrary.h"
@@ -35,5 +36,6 @@
 #include "utilities.h"
 #include "wii_usbhid.h"
 #include "xbox360.h"
+#include "InstrumentDupingHooks.h"
 
 #endif // RB3EINCLUDE_H_

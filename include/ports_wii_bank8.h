@@ -35,6 +35,11 @@
 #define PORT_MULTIPLAYER_FIX 0x80a2f0c4       // the function that doesn't crash
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
+#define PORT_GAMEGEMLIST_RESET 0x8062b290
+#define PORT_GAMEGEMDB_GETDIFFGEMLIST 0x80628780
+#define PORT_GAMEGEMDB_DUPLICATE 0x806288a0
+#define PORT_GEMPLAYER_POSTLOAD 0x801981e0
+#define PORT_TRACKWATCHERIMPL_RECALCGEMLIST 0x806650d0
 #define PORT_SETDISKERROR 0x804400a0            // PlatformMgr::SetDiskError
 #define PORT_NEWFILE 0x804204a0                 // NewFile
 #define PORT_SETTRACKSPEED 0x805f9060           // TrackPanelDirBase::UpdateTrackSpeed

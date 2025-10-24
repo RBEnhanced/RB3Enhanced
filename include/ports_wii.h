@@ -39,6 +39,12 @@
 #define PORT_OVERSHELLPARTSELECTPROVIDER_ISACTIVE_2 0x80247e60   // second instruction in OvershellPartSelectProvider::IsActive
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
+#define PORT_GAMEGEMLIST_RESET 0x80462f70
+#define PORT_GAMEGEMDB_GETDIFFGEMLIST 0x80461334
+#define PORT_GAMEGEMDB_DUPLICATE 0x80461408
+#define PORT_GEMPLAYER_POSTLOAD 0x80123eb4
+#define PORT_GEMPLAYER_DESTRUCTOR 0x8011fa10
+#define PORT_TRACKWATCHERIMPL_RECALCGEMLIST 0x80493d90
 #define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError
 #define PORT_NEWFILE 0x802f9ed0                  // NewFile
 #define PORT_SETTRACKSPEED 0x80441ee0            // TrackPanelDirBase::UpdateTrackSpeed

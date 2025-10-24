@@ -131,3 +131,8 @@ RB3E_STUB(CNTOpen)
 #endif
 
 RB3E_STUB(RB3EStubEnd);
+RB3E_STUB(PostLoad);
+RB3E_STUB(GemPlayerDestructor);
+RB3E_STUB(Duplicate);
+RB3E_STUB(GetDiffGemList);
+RB3E_STUB(Reset);
