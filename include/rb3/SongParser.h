@@ -13,6 +13,9 @@ typedef struct _SongParser
     char pad[0xf8];
 #endif
     TrackType mTrackType;
+    void * mPartInfo;
+    char mTrackAllowsHopos;
+    
 } SongParser;
 
 extern int SongParserPitchToSlot(SongParser *thisSongParser, int pitch, int *difficulty, int tick);

@@ -23,6 +23,9 @@
 #define PORT_FACE_PAINT_CHECK 0x802b58b0         // check to see if face paint is unlocked (key_unlocked_face_paint BandProfile::HasCampaignKey)
 #define PORT_TATTOO_CHECK 0x802b58cc             // check to see if tattoos are unlocked (key_unlocked_tattoos BandProfile::HasCampaignKey)
 #define PORT_VIDEO_VENUE_CHECK 0x802f0ce8        // check to see if video venues are unlocked (key_video_venues BandProfile::HasCampaignKey)
+#define PORT_GOLD_STAR_CHECK1 0x801d4774         // sets the gold threshold to a massive number if not on expert 1
+#define PORT_GOLD_STAR_CHECK2 0x801d4790         // sets the gold threshold to a massive number if not on expert 2
+#define PORT_GOLD_STAR_CHECK3 0x801d54fc         // checks if you are on expert for solo gold stars
 #define PORT_OPTIONSTR_DEFINE 0x8044219c         // bl to OptionStr("define", NULL) in PreInitSystem
 #define PORT_RUNLOOP_SPARE 0x80010788            // branch to a function that only has a "blr" in App::Run(WithoutDebugging) (branch to UIStats::Poll)
 // #define PORT_MICCHECK 0x8024a4e8              // NOT NEEDED? a bne that throws an error on the song select screen if the mic is not connected

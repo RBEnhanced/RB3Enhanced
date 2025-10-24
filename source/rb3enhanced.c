@@ -282,6 +282,14 @@ void ApplyConfigurablePatches()
         POKE_32(PORT_VIDEO_VENUE_CHECK, LI(3, 1));
     }
 
+    if (config.AllowGoldOnAllDifficulties == 1)
+    {
+        // Allows gold stars to be earned on all difficulties
+        POKE_32(PORT_GOLD_STAR_CHECK1, NOP);
+        POKE_32(PORT_GOLD_STAR_CHECK2, NOP);
+        POKE_32(PORT_GOLD_STAR_CHECK3, NOP);
+    }
+
     if (config.DisableMenuMusic == 1)
     {
         // Disables MetaMusic from loading, saves space on the heap

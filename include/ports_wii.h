@@ -21,6 +21,9 @@
 #define PORT_FACE_PAINT_CHECK 0x801fd9a8         // check to see if face paint is unlocked
 #define PORT_TATTOO_CHECK 0x801fd9c4             // check to see if tattoos are unlocked
 #define PORT_VIDEO_VENUE_CHECK 0x80227e34        // check to see if video venues are unlocked
+#define PORT_GOLD_STAR_CHECK1 0x80153978         // sets the gold threshold to a massive number if not on expert 1
+#define PORT_GOLD_STAR_CHECK2 0x8015398c         // sets the gold threshold to a massive number if not on expert 2
+#define PORT_GOLD_STAR_CHECK3 0x80154604         // checks if you are on expert for solo gold stars
 #define PORT_OPTIONSTR_DEFINE 0x8030e418         // bl to OptionStr("define", NULL) in PreInitSystem
 #define PORT_RUNLOOP_SPARE 0x8000f740            // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
 #define PORT_MICCHECK 0x8024a4e8                 // a bne that throws an error on the song select screen if the mic is not connected

@@ -59,6 +59,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.LogFileAccess = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "UnlockClothing") == 0)
             config.UnlockClothing = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "AllowGoldOnAllDifficulties") == 0)
+            config.AllowGoldOnAllDifficulties = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "DisableMenuMusic") == 0)
             config.DisableMenuMusic = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "LanguageOverride") == 0 && strlen(value) == RB3E_LANG_LEN)
