@@ -9,28 +9,34 @@
 #include <string.h>
 
 // instruction patch addresses
-#define PORT_SONGLIMIT 0x801cedac                // call to "max_song_count" DataNode::_value
-#define PORT_SONGBLACKLIST 0x801d2148            // call to BandSongMgr::IsInExclusionList
-#define PORT_DATAINITFUNCS_TAIL 0x80321b7c       // blr of DataInitFuncs
-#define PORT_FASTSTART_CHECK 0x8000e2f0          // beq after OptionBool("fast",0) in App::_ct
-#define PORT_STRAPSCREEN_1 0x8000e40c            // branch to CustomSplash::Show in App::_ct
-#define PORT_STRAPSCREEN_2 0x8000e41c            // branch to CustomSplash::EndShow in App::_ct
-#define PORT_NASWII_HOST 0x807e94a0              // branch to the add header function in the DWCDL login function
-#define PORT_CHARACTER_CLOTHES_CHECK 0x802607bc  // check to see if the goal required to select a piece of clothing has been unlocked
-#define PORT_CHARACTER_CLOTHES_CHECK2 0x802607c0 // check to see if the goal required to select a piece of clothing has been unlocked 2
-#define PORT_FACE_PAINT_CHECK 0x801fd9a8         // check to see if face paint is unlocked
-#define PORT_TATTOO_CHECK 0x801fd9c4             // check to see if tattoos are unlocked
-#define PORT_VIDEO_VENUE_CHECK 0x80227e34        // check to see if video venues are unlocked
-#define PORT_GOLD_STAR_CHECK1 0x80153978         // sets the gold threshold to a massive number if not on expert 1
-#define PORT_GOLD_STAR_CHECK2 0x8015398c         // sets the gold threshold to a massive number if not on expert 2
-#define PORT_GOLD_STAR_CHECK3 0x80154604         // checks if you are on expert for solo gold stars
-#define PORT_OPTIONSTR_DEFINE 0x8030e418         // bl to OptionStr("define", NULL) in PreInitSystem
-#define PORT_RUNLOOP_SPARE 0x8000f740            // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
-#define PORT_MICCHECK 0x8024a4e8                 // a bne that throws an error on the song select screen if the mic is not connected
-#define PORT_BIGSYMBOLFUNC_TAIL 0x8037a3d4       // blr after a function that initialises a bunch of symbols
-#define PORT_UPDATEPRESENCEBLOCK_B 0x80188194    // branch after the failure case in a function that calls UpdatePresence
-#define PORT_MULTIPLAYER_CRASH 0x80018a78        // branch to a function that can crash in online multiplayer
-#define PORT_MULTIPLAYER_FIX 0x806ec0e8          // the function that doesn't crash
+#define PORT_SONGLIMIT 0x801cedac                             // call to "max_song_count" DataNode::_value
+#define PORT_SONGBLACKLIST 0x801d2148                         // call to BandSongMgr::IsInExclusionList
+#define PORT_DATAINITFUNCS_TAIL 0x80321b7c                    // blr of DataInitFuncs
+#define PORT_FASTSTART_CHECK 0x8000e2f0                       // beq after OptionBool("fast",0) in App::_ct
+#define PORT_STRAPSCREEN_1 0x8000e40c                         // branch to CustomSplash::Show in App::_ct
+#define PORT_STRAPSCREEN_2 0x8000e41c                         // branch to CustomSplash::EndShow in App::_ct
+#define PORT_NASWII_HOST 0x807e94a0                           // branch to the add header function in the DWCDL login function
+#define PORT_CHARACTER_CLOTHES_CHECK 0x802607bc               // check to see if the goal required to select a piece of clothing has been unlocked
+#define PORT_CHARACTER_CLOTHES_CHECK2 0x802607c0              // check to see if the goal required to select a piece of clothing has been unlocked 2
+#define PORT_FACE_PAINT_CHECK 0x801fd9a8                      // check to see if face paint is unlocked
+#define PORT_TATTOO_CHECK 0x801fd9c4                          // check to see if tattoos are unlocked
+#define PORT_VIDEO_VENUE_CHECK 0x80227e34                     // check to see if video venues are unlocked
+#define PORT_GOLD_STAR_CHECK1 0x80153978                      // sets the gold threshold to a massive number if not on expert 1
+#define PORT_GOLD_STAR_CHECK2 0x8015398c                      // sets the gold threshold to a massive number if not on expert 2
+#define PORT_GOLD_STAR_CHECK3 0x80154604                      // checks if you are on expert for solo gold stars
+#define PORT_OPTIONSTR_DEFINE 0x8030e418                      // bl to OptionStr("define", NULL) in PreInitSystem
+#define PORT_RUNLOOP_SPARE 0x8000f740                         // branch to a function that only has a "blr" in App::Run(WithoutDebugging)
+#define PORT_MICCHECK 0x8024a4e8                              // a bne that throws an error on the song select screen if the mic is not connected
+#define PORT_BIGSYMBOLFUNC_TAIL 0x8037a3d4                    // blr after a function that initialises a bunch of symbols
+#define PORT_UPDATEPRESENCEBLOCK_B 0x80188194                 // branch after the failure case in a function that calls UpdatePresence
+#define PORT_MULTIPLAYER_CRASH 0x80018a78                     // branch to a function that can crash in online multiplayer
+#define PORT_MULTIPLAYER_FIX 0x806ec0e8                       // the function that doesn't crash
+#define PORT_OVERSHELLSLOT_ISVALIDCONTROLLERTYPE_1 0x802499cc // first instruction in OvershellSlot::IsValidControllerType
+#define PORT_OVERSHELLSLOT_ISVALIDCONTROLLERTYPE_2 0x802499d0 // second instruction in OvershellSlot::IsValidControllerType
+#define PORT_OVERSHELLSLOT_SHOWCHOOSEPARTWAIT_STATE 0x8024a774   // disables the "Waiting" overshell slot state to allow choosing multiple of the same instrument
+#define PORT_PLAYERTRACKCONFIGLIST_PROCESSCONFIG_CHECK 0x804735c4 // check in PlayerTrackConfigList::ProcessConfig that checks if a track is already occupied
+#define PORT_OVERSHELLPARTSELECTPROVIDER_ISACTIVE_1 0x80247e5c   // first instruction in OvershellPartSelectProvider::IsActive
+#define PORT_OVERSHELLPARTSELECTPROVIDER_ISACTIVE_2 0x80247e60   // second instruction in OvershellPartSelectProvider::IsActive
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError
