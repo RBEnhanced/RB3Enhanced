@@ -136,3 +136,7 @@ RB3E_STUB(GemPlayerDestructor);
 RB3E_STUB(Duplicate);
 RB3E_STUB(GetDiffGemList);
 RB3E_STUB(Reset);
+RB3E_STUB(GetPhraseList);
+RB3E_STUB(GetFreeSmasherPlate);
+RB3E_STUB(ReleaseSmasherPlate);
+RB3E_STUB(RndDirNewObject);

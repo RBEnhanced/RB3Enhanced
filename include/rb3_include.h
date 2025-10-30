@@ -29,6 +29,7 @@
 #include "rb3/PresenceMgr.h"
 #include "rb3/Random.h"
 #include "rb3/RockCentralGateway.h"
+#include "rb3/SongData.h"
 #include "rb3/SongMetadata.h"
 #include "rb3/SongParser.h"
 #include "rb3/SongSortByRecentEntry.h"
@@ -50,5 +51,7 @@
 #include "rb3/InstrumentDupingHooks.h"
 #include "rb3/GameGemDB.h"
 #include "rb3/GameGemList.h"
+#include "rb3/SongData.h"
+#include "rb3/RndDir.h"
 
 #endif // _RB3INCLUDE_H_

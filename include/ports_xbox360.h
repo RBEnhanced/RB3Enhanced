@@ -58,7 +58,12 @@
 #define PORT_MULTIPLAYER_FIX 0x8282b238          // the function that doesn't crash
 #define PORT_QUAZAL_BREAKPOINT 0x828410c0        // address to DbgBreakPoint in Quazal::Platform::Breakpoint
 #define PORT_MAINSEH 0x82272e60                  // address to __CxxFrameHandler above the main() function
+#define PORT_GEMTRACKRESOURCEMANAGER_GETFREESMASHERPLATE_BNE 0x823562c8 // bne instruction in GemTrackResourceManager::GetFreeSmasherPlate
 // function patch addresses
+#define PORT_RNDDIR_NEWOBJECT 0x8240f380
+#define PORT_GEMTRACKRESOURCEMANAGER_RELEASESMASHERPLATE 0x82356300
+#define PORT_GEMTRACKRESOURCEMANAGER_GETFREESMASHERPLATE 0x82356290
+#define PORT_SONGDATA_GETPHRASELIST 0x82770f88
 #define PORT_GAMEGEMLIST_RESET 0x8278cb80
 #define PORT_GAMEGEMDB_GETDIFFGEMLIST 0x827931c8
 #define PORT_GAMEGEMDB_DUPLICATE 0x827932c8

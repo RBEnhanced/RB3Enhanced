@@ -8,4 +8,11 @@ typedef struct _SongData
     std_vector gameGemDbs; // 0x84 std::vector<GameGemDB*>
 } SongData;
 
+typedef struct _PhraseList
+{
+    int placeholder;
+} PhraseList;
+
+extern PhraseList *GetPhraseList(int i, int phraseType);
+
 #endif // _SONGDATA_H

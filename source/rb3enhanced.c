@@ -254,17 +254,30 @@ void ApplyPatches()
 #endif
 
     // instrument duping patches
+
+    // allow overshell slots to contain any controller type
     POKE_32(PORT_OVERSHELLSLOT_ISVALIDCONTROLLERTYPE_1, LI(3, 1));
     POKE_32(PORT_OVERSHELLSLOT_ISVALIDCONTROLLERTYPE_2, BLR);
 
+    // disables check for duped track types in player track configs
     POKE_32(PORT_PLAYERTRACKCONFIGLIST_PROCESSCONFIG_CHECK, NOP);
 
-    POKE_32(0x80431884, NOP);
+    // GemTrackResourceManager::GetFreeSmasherPlate patch to just give the same smasher plate every time
+    POKE_32(PORT_GEMTRACKRESOURCEMANAGER_GETFREESMASHERPLATE_BNE, NOP);
 
+    // overshell part select is always active
+    // TODO: figure out a better way to do this, this has side effects
     POKE_32(PORT_OVERSHELLPARTSELECTPROVIDER_ISACTIVE_1, LI(3, 1));
     POKE_32(PORT_OVERSHELLPARTSELECTPROVIDER_ISACTIVE_2, BLR);
 
+    // never enter the "Waiting" overshell slot state and just go straight to select difficulty
+    // allows people to select multiple of the same instrument
     POKE_32(PORT_OVERSHELLSLOT_SHOWCHOOSEPARTWAIT_STATE, LI(4, 12));
+
+    // allow multiple of the smae instrument to hit an OD phrase
+    // TODO: this is buggy so will disable for now
+    //POKE_32(0x8016fca0, B(0x8016fcac, 0x8016fca0));
+
     RB3E_MSG("Patches applied!", NULL);
 }
 
@@ -409,6 +422,10 @@ void InitialiseFunctions()
     POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
     POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
     POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
+    POKE_B(&Duplicate, PORT_GAMEGEMDB_DUPLICATE);
+    POKE_B(&GetDiffGemList, PORT_GAMEGEMDB_GETDIFFGEMLIST);
+    POKE_B(&Reset, PORT_GAMEGEMLIST_RESET);
+    POKE_B(&RndDirNewObject, PORT_RNDDIR_NEWOBJECT);
 #ifdef RB3E_XBOX
     POKE_B(&DataArrayExecute, PORT_DATAARRAYEXECUTE);
 #endif
@@ -420,9 +437,6 @@ void InitialiseFunctions()
 #endif
     RB3E_FlushCache((void *)RB3EBase, (unsigned int)RB3EStubEnd - (unsigned int)RB3EBase);
     RB3E_MSG("Functions initialized!", NULL);
-    POKE_B(&Duplicate, PORT_GAMEGEMDB_DUPLICATE);
-    POKE_B(&GetDiffGemList, PORT_GAMEGEMDB_GETDIFFGEMLIST);
-    POKE_B(&Reset, PORT_GAMEGEMLIST_RESET);
 }
 
 void ApplyHooks()
@@ -462,6 +476,11 @@ void ApplyHooks()
     HookFunction(PORT_DATASETELEM, &DataSetElem, &DataSetElemHook);
     HookFunction(PORT_DATAONELEM, &DataOnElem, &DataOnElemHook);
 
+    HookFunction(PORT_GEMPLAYER_POSTLOAD, &PostLoad, &PostLoadHook);
+    HookFunction(PORT_GEMPLAYER_DESTRUCTOR, &GemPlayerDestructor, &GemPlayerDestructorHook);
+    //HookFunction(PORT_GEMTRACKRESOURCEMANAGER_GETFREESMASHERPLATE, &GetFreeSmasherPlate, &GetFreeSmasherPlateHook);
+    //HookFunction(PORT_GEMTRACKRESOURCEMANAGER_RELEASESMASHERPLATE, &ReleaseSmasherPlate, &ReleaseSmasherPlateHook);
+
 #ifdef RB3E_WII // wii exclusive hooks
     // HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
@@ -481,8 +500,6 @@ void ApplyHooks()
     HookFunction(PORT_CHARBANDDESC_MAKEOUTFITPATH, &MakeOutfitPath, &MakeOutfitPathHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
-    HookFunction(PORT_GEMPLAYER_POSTLOAD, &PostLoad, &PostLoadHook);
-    HookFunction(PORT_GEMPLAYER_DESTRUCTOR, &GemPlayerDestructor, &GemPlayerDestructorHook);
 }
 
 void InitCNTHooks();

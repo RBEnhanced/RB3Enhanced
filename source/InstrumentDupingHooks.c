@@ -11,18 +11,16 @@
 
 static PtrMap* g_DuplicatedGemDBs = NULL;
 static PtrMap* g_DuplicatedPhraseDBs = NULL;
+static Object* plates[8] = { NULL };
+static int numPlates = 0;
 
 void PostLoadHook(GemPlayer* thisGemPlayer, char b) {
     TrackWatcherImpl* watcher;
     GameGemDB* playerGemDB;
     // PhraseDB * phraseDB; TODO: add this
 
-    RB3E_DEBUG("GemPlayer::PostLoadHook called", 0);
-
-    // call the original function first
+    // call the original PostLoad first
     PostLoad(thisGemPlayer, b);
-
-    RB3E_DEBUG("GemPlayer::PostLoadHook original function called", 0);
 
     watcher = thisGemPlayer->mMatcher->mWatcher->mImpl;
 
@@ -31,6 +29,7 @@ void PostLoadHook(GemPlayer* thisGemPlayer, char b) {
     playerGemDB = (GameGemDB*)ptr_map_lookup(g_DuplicatedGemDBs, thisGemPlayer);
 
     RB3E_DEBUG("Looking up duplicated GameGemDB for GemPlayer %p", thisGemPlayer);
+
     if(!playerGemDB)
     {
         GameGemDB* originalGemDB;
@@ -41,6 +40,7 @@ void PostLoadHook(GemPlayer* thisGemPlayer, char b) {
         RB3E_DEBUG("Duplicated GameGemDB for GemPlayer %p at %p", thisGemPlayer, playerGemDB);
     }
 
+    // set the proper gamegemlist for the difficulty they've picked
     watcher->mGameGemList = playerGemDB->mGameGemLists.data[thisGemPlayer->mUser->difficulty];
 
     // make sure all hit states and flags etc. are reset to a fresh state
@@ -51,14 +51,14 @@ void PostLoadHook(GemPlayer* thisGemPlayer, char b) {
 void GemPlayerDestructorHook(GemPlayer* thisGemPlayer, int unknown) {
     GameGemDB* playerGemDB;
 
-    RB3E_DEBUG("GemPlayer::DestructorHook called for GemPlayer %p", thisGemPlayer);
+    RB3E_DEBUG("GemPlayer::Destructor called for GemPlayer %p", thisGemPlayer);
 
     // call the original destructor first
     GemPlayerDestructor(thisGemPlayer);
 
-    RB3E_DEBUG("GemPlayer::DestructorHook original function called for GemPlayer %p", thisGemPlayer);
+    RB3E_DEBUG("GemPlayer::Destructor original function called for GemPlayer %p", thisGemPlayer);
 
-    // look up and free duplicated GameGemDB
+    // look up and free all duplicated GameGemDBs
     playerGemDB = (GameGemDB*)ptr_map_lookup(g_DuplicatedGemDBs, thisGemPlayer);
 
     if(playerGemDB)
@@ -66,4 +66,27 @@ void GemPlayerDestructorHook(GemPlayer* thisGemPlayer, int unknown) {
         RB3E_DEBUG("Freeing duplicated GameGemDB %p for GemPlayer %p", playerGemDB, thisGemPlayer);
         ptr_map_remove(g_DuplicatedGemDBs, thisGemPlayer);
     }
+
+    // TODO: still need to do more cleanup, there is a memory leak as-is
+}
+
+PhraseList *GetPhraseListHook(int i, int phraseType) {
+    RB3E_DEBUG("GetPhraseListHook called with index %d and phraseType %d", i, phraseType);
+    return GetPhraseList(i, phraseType);
+}
+
+Object* GetFreeSmasherPlateHook(void *thisGemTrackResourceManager, int inst) {
+    Object* plate = GetFreeSmasherPlate(thisGemTrackResourceManager, inst);
+    Object* newObject = RndDirNewObject();
+
+    // copy the plate RndDir
+    ((Object*)((char*)plate + 0x18C))->table->copy(newObject, (Object*)((char*)plate + 0x18C), 0);
+    
+    return (Object*)((char*)newObject - 0x18C);
+}
+
+void ReleaseSmasherPlateHook(void *thisGemTrackResourceMananger, Object* plate) {
+
+    RB3E_DEBUG("ReleaseSmasherPlateHook called for plate %p", plate);
+    ReleaseSmasherPlate(thisGemTrackResourceMananger, plate);
 }
