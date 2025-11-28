@@ -21,6 +21,8 @@ void DirLoaderOpenFileHook(DirLoader *thisDirLoader)
 */
 
 static char headPath[512] = "char/main/head/male/head_custom.milo";
+static char customPrefabNames[128][64];
+static int customPrefabCount = 0;
 
 void LoadObj(Object *object, BinStream *stream)
 {
@@ -99,7 +101,7 @@ void VertexReadHook(BinStream *thisBinStream, Vector3 *vec3)
 #ifdef RB3E_XBOX
 
 // the third arg is not really a String but a FilePath but shhh i wont tell if you dont
-void MakeOutfitPathHook(void *thisBandCharDesc, Symbol part, String *filePath)
+void MakeOutfitPathHook(BandCharDesc *thisBandCharDesc, Symbol part, String *filePath)
 {
     const char *path;
     char *copy;
@@ -152,7 +154,219 @@ void MakeOutfitPathHook(void *thisBandCharDesc, Symbol part, String *filePath)
         }
     }
 
+    // check if we are loading eyebrows, if so this is perhaps a custom prefab part
+    if (strcmp(part.sym, "eyebrows") == 0)
+    {
+        // check if the eyebrows path is actually a prefab name
+        if (strstr(thisBandCharDesc->outfit.parts[0].mName.sym, "prefab_") != NULL)
+        {
+            char customPath[512] = {0};
+            sprintf(customPath, "char/main/custom/characters/%s.milo", thisBandCharDesc->outfit.parts[0].mName.sym);
+            len = strlen(customPath);
+            RB3E_DEBUG("Loading custom prefab part from %s", customPath);
+            copy = (char *)malloc(len + 1);
+            if (copy != NULL)
+            {
+                strcpy(copy, customPath);
+                filePath->buf = copy;
+                filePath->length = (int)len;
+            }
+            return;
+        }
+    }
+
     MakeOutfitPath(thisBandCharDesc, part, filePath);
+}
+
+// ads a custom prefab name to the list
+static void RegisterCustomPrefab(const char* name) {
+    if (customPrefabCount >= 128) return;
+    strncpy(customPrefabNames[customPrefabCount], name, 63);
+    customPrefabNames[customPrefabCount][63] = '\0';
+    customPrefabCount++;
+}
+
+// checks if the given string is a custom prefab name and returns its index, or -1 if not found
+static int CustomPrefabIdx(const char* name) {
+    int i;
+    for (i = 0; i < customPrefabCount; i++) {
+        if (strstr(name, customPrefabNames[i]) != NULL)
+            return i;
+    }
+    return -1;
+}
+
+void* DirLoaderLoadObjsHook(String * filePath, int unk, int unk2)
+{
+    // gotta stay compliant with c89 so declare everything first
+    void* prefabDir;
+    int i;
+    int j;
+    char fullPrefabPath[256];
+    int fileCount;
+    char** customMiloFiles;
+    char* fullPath;
+    char* filename;
+    char prefabNameStr[128];
+    char* extensionStart;
+    Symbol prefabNameSym;
+    Object* rawObject;
+    BandCharDesc* newPrefab;
+    
+    // need different sepearators / paths / extensions for 360 and wii
+    #ifdef RB3E_XBOX
+    const char* searchRoots[] = {"Game:", "RB3HDD:", "RB3USB0:", "RB3USB1:", "RB3USB2:"};
+    int numSearchRoots = sizeof(searchRoots) / sizeof(searchRoots[0]);
+    const char* miloExtension = "milo_xbox";
+    const char path_separator = '\\';
+    const char* customPrefabPath = "char\\main\\custom\\characters\\gen";
+    #else
+    const char* miloExtension = "milo_wii";
+    const char path_separator = '/';
+    const char* customPrefabPath = "char/main/custom/characters/gen";
+    #endif
+
+    // check if we are loading the main character prefabs milo
+    if (strcmp(filePath->buf, "char/main/shared/prefabs.milo") == 0)
+    {
+        // load the original prefabs
+        prefabDir = DirLoaderLoadObjs(filePath, unk, unk2);
+        if (!prefabDir) {
+            RB3E_MSG("Failed to load original prefabs.milo, your Rock Band 3 installation may be corrupt", 0);
+            return NULL;
+        }
+    
+
+        #ifdef RB3E_XBOX
+        for (j = 0; j < numSearchRoots; ++j)
+        #else
+        for (j = 0; j < 1; ++j)
+        #endif
+        {
+            #ifdef RB3E_XBOX
+            sprintf(fullPrefabPath, "%s\\%s\\%s", searchRoots[j], config.RawfilesDir, customPrefabPath);
+            #else
+            sprintf(fullPrefabPath, "sd:/%s/%s", config.RawfilesDir, customPrefabPath);
+            #endif
+            
+            fileCount = 0;
+            customMiloFiles = RB3E_ListFiles(fullPrefabPath, miloExtension, &fileCount);
+
+            // check if we found any custom milo files in this location
+            if (customMiloFiles) {
+                RB3E_DEBUG("Found %d custom character prefabs to inject from %s", fileCount, fullPrefabPath);
+
+                for (i = 0; i < fileCount; i++) {
+                    char strippedPath[256];
+                    FileStream fs;
+                    char endianBuf[4];
+                    int endianResult;
+                    char *extPos;
+                    int partIdx;
+                    char relativePath[256];
+
+                    fullPath = customMiloFiles[i];
+                    filename = strrchr(fullPath, path_separator);
+                    
+                    filename = filename ? filename + 1 : fullPath;
+                    
+                    strncpy(prefabNameStr, filename, sizeof(prefabNameStr) - 1);
+                    prefabNameStr[sizeof(prefabNameStr) - 1] = '\0';
+
+                    // cut it at the .milo_ part
+                    extensionStart = strstr(prefabNameStr, ".milo_");
+                    if (extensionStart) {
+                        *extensionStart = '\0';
+                    }
+
+                    RB3E_DEBUG("Processing custom prefab: %s", prefabNameStr);
+
+                    RegisterCustomPrefab(prefabNameStr);
+
+                    SymbolConstruct(&prefabNameSym, prefabNameStr);
+
+                    rawObject = BandCharDescNewObject();
+                    if (!rawObject) {
+                        RB3E_MSG("Failed to create new BandCharDesc object for %s", prefabNameStr);
+                        continue;
+                    }
+
+                    // get the BandCharDesc pointer from the raw Hmx::Object pointer
+                    // horrible hardcoded pointer math incoming
+                    #ifdef RB3E_XBOX
+                    newPrefab = (BandCharDesc*)((char*)rawObject - 0x238);
+                    #else
+                    newPrefab = (BandCharDesc*)((char*)rawObject - 0x21C);
+                    #endif
+
+                    strncpy(strippedPath, fullPath, sizeof(strippedPath) - 1);
+                    strippedPath[sizeof(strippedPath) - 1] = '\0';
+                    extPos = strstr(strippedPath, ".milo_");
+                    if (extPos) {
+                        *extPos = '\0';
+                    }
+
+                    // try to construct the filestream to read the prefab BandCharDesc right from disk
+                    FileStreamConstructor(&fs, strippedPath, 2, 0);
+
+                    if (!fs.vtable->fail(&fs)) {
+                        RB3E_DEBUG("Loading raw BandCharDesc from disk: %s", prefabNameStr);
+                        fs.vtable->readImpl(&fs, endianBuf, 4);
+                        endianResult = (endianBuf[0] << 24) | (endianBuf[1] << 16) | (endianBuf[2] << 8) | endianBuf[3];
+                        fs.littleEndian = (endianResult > 0xFFFF) ? 1 : 0;
+                    
+                        // rewind the filestream to the beginning
+                        fs.vtable->seekImpl(&fs, 0, 0);
+                    
+                        // load the raw object data from the filestream
+                        rawObject->table->load(rawObject, (BinStream*)&fs);
+                    } else {
+
+                        newPrefab->prefab = prefabNameSym;
+                    }
+
+                    // clean it up
+                    fs.vtable->destructor(&fs, 0);
+                
+
+                    // nullify all 12 outfit parts
+                    for (partIdx = 0; partIdx < 12; partIdx++) {
+                        newPrefab->outfit.parts[partIdx].mName = *(Symbol*)PORT_NULLSYMBOL;
+                    }
+
+                    // set the prefab outfit path to the name of the prefab so we can later catch it in make outfit path
+                    // shitty but meh, it works :tm:
+                    SymbolConstruct(&newPrefab->outfit.parts[0].mName, prefabNameStr);
+
+                    // set the name and add to the directory
+                    rawObject->table->setName(rawObject, prefabNameSym, prefabDir);
+                }
+
+                // free the file list since we don't need it anymore
+                RB3E_FreeFileList(customMiloFiles, fileCount);
+            } else {
+                RB3E_DEBUG("No custom prefabs found in %s.", fullPrefabPath);
+            }
+        }
+
+        return prefabDir;
+    }
+
+    // if it's not the prefabs milo, load it normally
+    return DirLoaderLoadObjs(filePath, unk, unk2);
+}
+
+const char* GetPrefabPortraitPathHook(void* thisPrefabChar)
+{
+    const char * ret = GetPrefabPortraitPath(thisPrefabChar);
+    int idx = CustomPrefabIdx(ret);
+    if(idx != -1) {
+        static char customPortraitPath[256];
+        sprintf(customPortraitPath, "char/main/custom/characters/%s.bmp", customPrefabNames[idx]);
+        RB3E_DEBUG("Using custom portrait path for prefab %s: %s", customPrefabNames[idx], customPortraitPath);
+        return customPortraitPath;
+    }
+    return ret;
 }
 
 #endif

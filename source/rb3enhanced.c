@@ -396,6 +396,8 @@ void InitialiseFunctions()
     POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
     POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
     POKE_B(&BinstreamReadEndian, PORT_BINSTREAMREADENDIAN);
+	POKE_B(&BandCharDescNewObject, PORT_BANDCHARDESC_NEWOBJECT);
+    POKE_B(&GetPrefabPortraitPath, PORT_GETPREFABPORTRAITPATH);
 #ifdef RB3E_XBOX
     POKE_B(&DataArrayExecute, PORT_DATAARRAYEXECUTE);
 #endif
@@ -461,8 +463,10 @@ void ApplyHooks()
     POKE_BL(PORT_VERTEX_READ_1, &VertexReadHook);
     POKE_BL(PORT_VERTEX_READ_2, &VertexReadHook);
 
-    // outfit path stuff is 360 only for now
-    HookFunction(PORT_CHARBANDDESC_MAKEOUTFITPATH, &MakeOutfitPath, &MakeOutfitPathHook);
+    // prefab loader stuff only for 360 right now
+    HookFunction(PORT_BANDCHARDESC_MAKEOUTFITPATH, &MakeOutfitPath, &MakeOutfitPathHook);
+    HookFunction(PORT_GETPREFABPORTRAITPATH, &GetPrefabPortraitPath, &GetPrefabPortraitPathHook);
+    HookFunction(PORT_DIRLOADER_LOADOBJS, &DirLoaderLoadObjs, &DirLoaderLoadObjsHook);
 #endif
     RB3E_MSG("Hooks applied!", NULL);
 }

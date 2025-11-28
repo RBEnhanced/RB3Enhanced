@@ -7,6 +7,7 @@
 
 #include <xtl.h>
 #include <stdio.h>
+#include "rb3/Mem.h"
 #include "ports.h"
 #include "config.h"
 #include "xbox360.h"
@@ -136,6 +137,112 @@ int RB3E_WriteFile(int file, int offset, void *buffer, int size)
 void RB3E_CloseFile(int file)
 {
     XCloseHandle((HANDLE)file);
+}
+
+char** RB3E_ListFiles(const char* directoryPath, const char* extension, int* fileCount)
+{
+    // c89 compliance
+    char searchPath[MAX_PATH];
+    WIN32_FIND_DATA findFileData;
+    HANDLE findHandle;
+    int count = 0;
+    int dirPathLength = strlen(directoryPath);
+    int currentIdx = 0;
+    char** fileList = NULL;
+
+    *fileCount = 0;
+
+    if (dirPathLength > 0 && directoryPath[dirPathLength - 1] == '\\') {
+        sprintf(searchPath, "%s*.%s", directoryPath, extension);
+    } else {
+        sprintf(searchPath, "%s\\*.%s", directoryPath, extension);
+    }
+
+    // count the number of files
+    findHandle = FindFirstFile(searchPath, &findFileData);
+    if (findHandle == INVALID_HANDLE_VALUE) {
+        return NULL;
+    }
+
+    do {
+        if (!(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+            count++;
+        }
+    } while (FindNextFile(findHandle, &findFileData) != 0);
+
+    FindClose(findHandle);
+
+    if (count == 0) {
+        return NULL;
+    }
+
+    fileList = (char**)MemAlloc(count * sizeof(char*), 0);
+    if (!fileList) {
+        // the game is probably already cooked if we hit this, but just in case
+        RB3E_MSG("RB3E_ListFiles: Failed to allocate memory for file list", NULL);
+        return NULL;
+    }
+    memset(fileList, 0, count * sizeof(char*));
+
+    // actually buidl the paths
+    findHandle = FindFirstFile(searchPath, &findFileData);
+    if (findHandle == INVALID_HANDLE_VALUE) {
+        MemFree(fileList);
+        return NULL;
+    }
+
+    // i hate win32 apis
+    do {
+        if (!(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+
+            int needsSlash = 0;
+            int fullPathLen;
+            char* fullPath;
+            if (dirPathLength > 0 && directoryPath[dirPathLength - 1] != '\\') {
+                needsSlash = 1;
+            }
+
+            fullPathLen = dirPathLength;
+            if (needsSlash) {
+                fullPathLen += 1;
+            }
+            fullPathLen += strlen(findFileData.cFileName);
+            fullPathLen += 1;
+
+            fullPath = (char*)MemAlloc(fullPathLen, 0);
+            if (!fullPath) {
+                continue;
+            }
+
+            if (needsSlash) {
+                sprintf(fullPath, "%s\\%s", directoryPath, findFileData.cFileName);
+            } else {
+                sprintf(fullPath, "%s%s", directoryPath, findFileData.cFileName);
+            }
+
+            fileList[currentIdx++] = fullPath;
+        }
+
+    } while (FindNextFile(findHandle, &findFileData) != 0 && currentIdx < count);
+
+    FindClose(findHandle);
+
+    *fileCount = currentIdx;
+    return fileList;
+}
+
+// frees the file list using the games MemFree
+void RB3E_FreeFileList(char** fileList, int fileCount)
+{
+    int i;
+    if (!fileList) return;
+    for (i = 0; i < fileCount; i++) {
+        if (fileList[i])
+        {
+            MemFree(fileList[i]);
+        }
+    }
+    MemFree(fileList);
 }
 
 #endif

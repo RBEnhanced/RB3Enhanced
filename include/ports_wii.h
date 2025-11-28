@@ -111,6 +111,10 @@
 #define PORT_FILEISDLC 0x802fb54c                // FileIsDLC
 #define PORT_SDMODECHECK 0x802F5638              // WiiContentMgr::SDModeCheck
 #define PORT_CHARBANDDESC_MAKEOUTFITPATH 0x803dbf70 // CharBandDesc::MakeOutfitPath
+#define PORT_BANDCHARDESC_NEWOBJECT 0x801f6468        // BandCharDesc::NewObject
+#define PORT_BANDCHARDESC_RELOADPREFABS 0x803d9c6c        // BandCharDesc::ReloadPrefabs
+#define PORT_DIRLOADER_LOADOBJS 0x8032ffe0          // DirLoader::LoadObjs
+#define PORT_GETPREFABPORTRAITPATH 0x801f1394        // GetPortraitPath
 // instance addresses
 #define PORT_MODIFIERMGR_POINTER 0x808fda68 // pointer to ModifierManager
 #define PORT_ROCKCENTRALGATEWAY 0x80900870  // address of RockCentralGateway
@@ -126,6 +130,7 @@
 #define PORT_THEBANDUSERMGR 0x808f9350      // pointer to TheBandUserMgr
 #define PORT_THEGAME 0x808f9758             // pointer to TheGame (you lost)
 #define PORT_OBJECTDIRMAINDIR 0x8091b1e8    // ObjectDir::sMainDir
+#define PORT_GPREFABS 0x809862b8            // gPrefabs (directory for prefabs)
 // string pointers
 #define PORT_NASWII_AC_URL 0x808e2310
 #define PORT_NASWII_PR_URL 0x808e2390

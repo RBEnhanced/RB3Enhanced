@@ -30,6 +30,8 @@ void RB3E_Sleep(int ms);
 int RB3E_RelaunchGame();
 void RB3E_FlushCache(void * address, unsigned int size);
 int RB3E_DeleteSongCache();
+char** RB3E_ListFiles(const char* directoryPath, const char* extension, int* fileCount);
+void RB3E_FreeFileList(char** fileList, int fileCount);
 
 // stub function at the start of the .text segment - doubles as the start of _functions.c
 void RB3EBase();

@@ -114,6 +114,10 @@ RB3E_STUB(XboxContentConstruct)
 RB3E_STUB(CacheMgrXbox_MountAsync)
 RB3E_STUB(DataArrayExecute)
 RB3E_STUB(MakeOutfitPath)
+RB3E_STUB(BandCharDescNewObject)
+RB3E_STUB(ReloadPrefabs)
+RB3E_STUB(DirLoaderLoadObjs)
+RB3E_STUB(GetPrefabPortraitPath)
 
 #ifdef RB3E_WII
 // Wii-specific functions
