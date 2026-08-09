@@ -95,7 +95,11 @@ all: xbox wii
 
 .PHONY: scripts
 scripts:
+ifeq ($(strip $(DEBUG)),1)
+	@bash scripts/version.sh DEBUG
+else
 	@bash scripts/version.sh
+endif
 
 .PHONY: clean
 clean:

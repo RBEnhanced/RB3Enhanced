@@ -481,17 +481,6 @@ void TryToLoadPRNGKeyFromFile();
 
 void StartupHook(void *ThisApp, int argc, char **argv)
 {
-#ifdef RB3E_XBOX
-    HANDLE XamHandle;
-    typedef VOID(__cdecl *XNotifyQueueUI_t)(DWORD dwType, DWORD dwUserIndex, DWORD dwPriority, LPCWSTR pwszStringParam, ULONGLONG qwParam);
-    XNotifyQueueUI_t XNotifyQueueUI;
-    #ifdef RB3EDEBUG
-        // Since debug can have adverse affects to performance, don't ever forget when you left it on
-        XexGetModuleHandle("xam.xex", &XamHandle);
-        XexGetProcedureAddress(XamHandle, 0x290, &XNotifyQueueUI);
-        XNotifyQueueUI(13, 0xFF, 2, L"RB3E Debug Loaded\nNot intended for gameplay", NULL);
-    #endif
-#endif
     RB3E_MSG("Loaded! Version " RB3E_BUILDTAG " (" RB3E_BUILDCOMMIT ")", NULL);
     // apply code patches and hooks
     InitialiseFunctions();
