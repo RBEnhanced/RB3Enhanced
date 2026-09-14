@@ -78,7 +78,7 @@ int RB3E_RelaunchGame()
     return 0;
 }
 
-void RB3E_FlushCache(void * address, unsigned int size)
+void RB3E_FlushCache(void *address, unsigned int size)
 {
     // TODO(Emma): clear dcache (and icache if possible) on xbox
 }
@@ -104,9 +104,10 @@ static void EnableSockpatch()
 {
     HANDLE launch_handle = NULL;
     int opt_value = 0;
+    int r = 0;
     // get a handle to launch.xex
-    XexGetModuleHandle("launch.xex", &launch_handle);
-    if (launch_handle == (HANDLE)-1)
+    r = XexGetModuleHandle("launch.xex", &launch_handle);
+    if (r != 0 || launch_handle == (HANDLE)NULL)
     {
         RB3E_DEBUG("Dashlaunch not found, not enabling sockpatch.", NULL);
         return;
