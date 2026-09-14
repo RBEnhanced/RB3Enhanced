@@ -339,7 +339,7 @@ void* DirLoaderLoadObjsHook(String * filePath, int unk, int unk2)
                     SymbolConstruct(&newPrefab->outfit.parts[0].mName, prefabNameStr);
 
                     // set the name and add to the directory
-                    rawObject->table->setName(rawObject, prefabNameSym, prefabDir);
+                    rawObject->table->setName(rawObject, prefabNameSym.sym, prefabDir);
                 }
 
                 // free the file list since we don't need it anymore

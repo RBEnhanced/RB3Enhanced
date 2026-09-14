@@ -6,6 +6,7 @@
 #include "rb3/BinStream.h"
 #include "rb3/DirLoader.h"
 #include "rb3/Object.h"
+#include "rb3/Rnd/Transform.h"
 #include "rb3/Vector.h"
 #include "rb3/String.h"
 

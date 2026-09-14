@@ -16,6 +16,7 @@ typedef struct _BandLabel
 
 extern void SetSongAndArtistName(BandLabel *label, SortNode *unk);
 extern void SetSongNameFromNode(BandLabel *label, SortNode *unk);
-extern void BandLabelSetDisplayText(BandLabel *label, char *text, int unk);
+extern void BandLabelSetDisplayText(BandLabel *label, char *text, char clear_token);
+extern int MusicLibraryMat(void *thisMusicLibrary, int data, int unk2, int *listSlot); // returns the material for UIListMeshes in the music library
 
 #endif // _BANDLABEL_H

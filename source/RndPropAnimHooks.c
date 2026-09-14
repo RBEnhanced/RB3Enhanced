@@ -10,7 +10,7 @@
 // see https://github.com/RBEnhanced/RB3Enhanced/issues/2
 void PropAnimSetFrameHook(RndPropAnim *rndPropAnim, float frame, float time)
 {
-    if (strcmp(rndPropAnim->object.name, "slot_positions.anim") == 0)
+    if (strcmp(rndPropAnim->mObject.name, "slot_positions.anim") == 0)
     {
         // check that it is not setting the frame to 0 (which is the default slot positions for overshell)
         if (frame != 0.0f)

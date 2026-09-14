@@ -377,6 +377,7 @@ void InitialiseFunctions()
     POKE_B(&HmxFactoryFuncAt, PORT_HMXFACTORYFUNCAT);
     // TODO(Emma): port to bank8
     POKE_B(&ObjectFindUIPanel, PORT_OBJECTFINDUIPANEL);
+    POKE_B(&vector_push_back, PORT_VECTORPUSHBACK); // otherwise unused it seems?
 #endif
     POKE_B(&RandomInt, PORT_RANDOMINT);
     POKE_B(&DataNodeEvaluate, PORT_DATANODEEVALUATE);
@@ -388,6 +389,7 @@ void InitialiseFunctions()
     POKE_B(&GetMetadata, PORT_GETMETADATA);
     POKE_B(&GetSongIDFromShortname, PORT_GETSONGIDFROMSHORTNAME);
     POKE_B(&GetBandUsers, PORT_GETBANDUSERS);
+    POKE_B(&GetBandUserFromSlot, PORT_GETBANDUSERFROMSLOT);
     POKE_B(&FileStreamConstructor, PORT_FILESTREAM_CT);
     POKE_B(&ChunkStreamConstructor, PORT_CHUNKSTREAM_CT);
     POKE_B(&Dynamic_Cast, PORT_DYNAMICCAST);
@@ -395,6 +397,18 @@ void InitialiseFunctions()
     POKE_B(&JoypadGetPadData, PORT_JOYPADGETPADDATA);
     POKE_B(&MemAlloc, PORT_MEMALLOC);
     POKE_B(&MemFree, PORT_MEMFREE);
+    POKE_B(&RndTexNewObject, PORT_RNDTEXNEWOBJECT);
+    POKE_B(&RndMatNewObject, PORT_RNDMATNEWOBJECT);
+    POKE_B(&RndTexSetBitmap, PORT_RNDTEXSETBITMAP);
+    POKE_B(&RndTexSetBitmap2, PORT_RNDTEXSETBITMAP2);
+    POKE_B(&FilePathConstructor, PORT_FILEPATHCONSTRUCTOR);
+    POKE_B(&NodeSortGetNode, PORT_NODESORTGETNODE);
+    POKE_B(&GameGemDBConstructor, PORT_GAMEGEMDB_CT);
+    POKE_B(&SongSortMgrGetSort, PORT_SONGSORTMGRGETSORT);
+    POKE_B(&DynamicTexConstructor, PORT_DYNAMICTEX_CT);
+    POKE_B(&DynamicTexDestructor, PORT_DYNAMICTEX_DT);
+    POKE_B(&RndMatSetDiffuseTex, PORT_RNDMATSETDIFFUSETEX);
+    POKE_B(&RndTexSetBitmap3, PORT_RNDTEXSETBITMAP3);
     POKE_B(&BinstreamWrite, PORT_BINSTREAMWRITE);
     POKE_B(&BinstreamRead, PORT_BINSTREAMREAD);
     POKE_B(&BinstreamWriteEndian, PORT_BINSTREAMWRITEENDIAN);
@@ -419,17 +433,18 @@ void InitialiseFunctions()
 void ApplyHooks()
 {
     POKE_B(PORT_DATAINITFUNCS_TAIL, &AddDTAFunctions);
+    POKE_B(PORT_OVERSHELLPARTSELECTPROVIDERRELOAD, &OvershellPartSelectProviderReload);
+    //#ifndef RB3E_WII_BANK8
+    //    POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
+    //#endif
     // TODO(Emma): fix this buggy set of hooks
     //POKE_B(PORT_ISSUPPORTEDLANGUAGE, &IsSupportedLanguageHook);
-#ifndef RB3E_WII_BANK8
-    POKE_B(PORT_BUILDINSTRUMENTSELECTION, &BuildInstrumentSelectionList);
-#endif
     POKE_BL(PORT_OPTIONSTR_DEFINE, &DefinesHook);
     POKE_BL(PORT_RUNLOOP_SPARE, &RB3E_RunLoop);
     HookFunction(PORT_LOCALIZE, &Localize, &LocalizeHook);
     HookFunction(PORT_WILLBENOSTRUM, &WillBeNoStrum, &WillBeNoStrumHook);
     HookFunction(PORT_ADDGAMEGEM, &AddGameGem, &AddGameGemHook);
-    HookFunction(PORT_SETSONGANDARTISTNAME, &SetSongAndArtistName, SetSongAndArtistNameHook);
+    //HookFunction(PORT_SETSONGANDARTISTNAME, &SetSongAndArtistName, SetSongAndArtistNameHook);
     HookFunction(PORT_SETVENUE, &SetVenue, &SetVenueHook);
     HookFunction(PORT_MODIFIERMGR_CT, &ModifierManagerConstructor, &ModifierManagerConstructorHook);
     HookFunction(PORT_NEWFILE, &NewFile, &NewFileHook);
@@ -447,19 +462,24 @@ void ApplyHooks()
     HookFunction(PORT_RNDPROPANIMSETFRAME, &PropAnimSetFrame, &PropAnimSetFrameHook);
     HookFunction(PORT_SYMBOLPREINIT, &SymbolPreInit, &SymbolPreInitHook);
     HookFunction(PORT_INITSONGMETADATA, &InitSongMetadata, &InitSongMetadataHook);
+    HookFunction(PORT_SONGMETADATACONSTRUCTOR, &SongMetadataConstructor, &SongMetadataConstructorHook);
+    HookFunction(PORT_SONGMETADATALOAD, &SongMetadataLoad, &SongMetadataLoadHook);
     HookFunction(PORT_UPDATEPRESENCE, &UpdatePresence, &UpdatePresenceHook);
+    HookFunction(PORT_MUSICLIBRARY_CT, &MusicLibraryConstructor, &MusicLibraryConstructorHook);
+    HookFunction(PORT_MUSICLIBRARYMAT, &MusicLibraryMat, &MusicLibraryMatHook);
     HookFunction(PORT_SONGPARSERPITCHTOSLOT, &SongParserPitchToSlot, &SongParserPitchToSlotHook);
     HookFunction(PORT_DATASET, &DataSet, &DataSetHook);
     HookFunction(PORT_DATASETELEM, &DataSetElem, &DataSetElemHook);
     HookFunction(PORT_DATAONELEM, &DataOnElem, &DataOnElemHook);
-
+    HookFunction(PORT_MUSICLIBRARYONENTER, &MusicLibraryOnEnter, &MusicLibraryOnEnterHook);
+    HookFunction(PORT_MUSICLIBRARYONUNLOAD, &MusicLibraryOnUnload, &MusicLibraryOnUnloadHook);
 #ifdef RB3E_WII // wii exclusive hooks
     // HookFunction(PORT_USBWIIGETTYPE, &UsbWiiGetType, &UsbWiiGetTypeHook);
     HookFunction(PORT_WIINETINIT_DNSLOOKUP, &StartDNSLookup, &StartDNSLookupHook);
     POKE_B(PORT_FILEISLOCAL, &FileIsLocalHook);
 #elif RB3E_XBOX // 360 exclusive hooks
     HookFunction(PORT_STAGEKIT_SET_STATE, &StagekitSetState, &StagekitSetStateHook);
-    HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
+    //HookFunction(PORT_SETSONGNAMEFROMNODE, &SetSongNameFromNode, &SetSongNameFromNodeHook);
     // TODO: port these to Wii
     HookFunction(PORT_DATANODEGETOBJ, &DataNodeGetObj, &DataNodeGetObjHook);
     POKE_B(PORT_GETSONGID, &GetSongIDHook);
