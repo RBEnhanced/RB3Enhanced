@@ -102,7 +102,7 @@ int RB3E_FileExists(char *filename)
 {
     DWORD attr = GetFileAttributesA(filename);
     DWORD lastError = GetLastError();
-    return !(attr == -1 && (lastError == 2 || lastError == 3 || lastError == 1617));
+    return !(attr == -1 && (lastError == 2 || lastError == 3 || lastError == 1005 || lastError == 1617));
 }
 int RB3E_OpenFile(char *filename, char readWrite)
 {
