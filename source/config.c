@@ -73,6 +73,8 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             config.QuazalLogging = RB3E_CONFIG_BOOL(value);
         if (strcmp(name, "ContentLogging") == 0)
             config.ContentLogging = RB3E_CONFIG_BOOL(value);
+        if (strcmp(name, "RestartOnCrash") == 0)
+            config.RestartOnCrash = RB3E_CONFIG_BOOL(value);
     }
     if (strcmp(section, "Events") == 0)
     {
@@ -129,8 +131,6 @@ static int INIHandler(void *user, const char *section, const char *name, const c
             strncpy(config.STUNServer, value, RB3E_MAX_DOMAIN);
         if (strcmp(name, "STUNServerPort") == 0)
             config.STUNServerPort = atoi(value);
-        if (strcmp(name, "RestartOnExcept") == 0)
-            config.RestartOnExcept = RB3E_CONFIG_BOOL(value);
     }
 #endif
     if (strcmp(section, "Graphics") == 0)

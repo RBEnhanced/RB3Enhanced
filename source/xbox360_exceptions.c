@@ -42,11 +42,7 @@ void DxRndSuspend(void *theDxRnd);
 
 static void GraphicalExceptionDisplay()
 {
-    HANDLE XamHandle;
-    typedef VOID(__cdecl *XNotifyQueueUI_t)(DWORD dwType, DWORD dwUserIndex, DWORD dwPriority, LPCWSTR pwszStringParam, ULONGLONG qwParam);
-    XNotifyQueueUI_t XNotifyQueueUI;
-    wchar_t notifyText[128];
-
+    char *exceptionOutputFilenameCut = exceptionOutputFilename;
     wchar_t exceptionText[1024] = {0};
     wchar_t exceptionFmtBuffer[128];
     wcscat(exceptionText, L"Rock Band 3 has crashed. If this happens again, report this to the RB3Enhanced developers!\n\n");
@@ -95,7 +91,6 @@ static void GraphicalExceptionDisplay()
 
     if (didSuccessfullyWriteFile)
     {
-        char *exceptionOutputFilenameCut = exceptionOutputFilename;
         if (exceptionOutputFilenameCut[0] == 'R') // starts with RB3 so skip it
             exceptionOutputFilenameCut += 3;
         fmtExc(L"\nCrash dump saved to\n%S", exceptionOutputFilenameCut);
@@ -105,16 +100,30 @@ static void GraphicalExceptionDisplay()
         fmtExc(L"\nFailed to save crash dump.");
     }
 #undef fmtExc
-    if (config.RestartOnExcept == 1)
+    if (config.RestartOnCrash == 1)
     {
-        // suspend TheDxRnd so XAM can render our error message
-        DxRndSuspend((void *)PORT_DXRND);
+        // this is a bit ugly but get the XAM functions to pop a notification
+        HANDLE XamHandle;
+        void(*XNotifyQueueUI)(uint32_t type, uint32_t userIndex, uint64_t areas, const wchar_t *displayText, void *pContextData) = NULL;
+        wchar_t notifyText[128];
         XexGetModuleHandle("xam.xex", &XamHandle);
-        XexGetProcedureAddress(XamHandle, 0x290, &XNotifyQueueUI);
-        wsprintfW(notifyText, L"Rock Band 3 has crashed and will now restart.\nException address: 0x%08X", exceptionRecord.ExceptionAddress);
-        XNotifyQueueUI(15, 0xFF, 2, notifyText, 0);
-        // we should probably get the current exec name from the kernel
-        XLaunchNewImage("default.xex", 0);
+        XexGetProcedureAddress(XamHandle, 656, &XNotifyQueueUI);
+        if (XNotifyQueueUI != NULL)
+        {
+            if (didSuccessfullyWriteFile)
+            {
+                // (technically the backslash in the file path is treated specially by XAM, but we can ignore this)
+                wsprintfW(notifyText, L"Rock Band 3 has crashed and will now restart.\nCrash dump saved to %S", exceptionOutputFilenameCut);
+            }
+            else
+            {
+                // show the bare minimum amount of information to know why the crash happened
+                wsprintfW(notifyText, L"Rock Band 3 has crashed and will now restart.\nException: 0x%08x @ 0x%08X", exceptionRecord.ExceptionCode, exceptionRecord.ExceptionAddress);
+            }
+            XNotifyQueueUI(15, 0xFF, 2, notifyText, NULL);
+        }
+        // restart the game
+        RB3E_RelaunchGame();
     }
     else
     {
