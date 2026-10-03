@@ -7,6 +7,7 @@
 #include <xtl.h>
 #include <stdio.h>
 #include <string.h>
+#include "config.h"
 #include "exceptions.h"
 #include "ppcasm.h"
 #include "ports.h"
@@ -41,6 +42,11 @@ void DxRndSuspend(void *theDxRnd);
 
 static void GraphicalExceptionDisplay()
 {
+    HANDLE XamHandle;
+    typedef VOID(__cdecl *XNotifyQueueUI_t)(DWORD dwType, DWORD dwUserIndex, DWORD dwPriority, LPCWSTR pwszStringParam, ULONGLONG qwParam);
+    XNotifyQueueUI_t XNotifyQueueUI;
+    wchar_t notifyText[128];
+
     wchar_t exceptionText[1024] = {0};
     wchar_t exceptionFmtBuffer[128];
     wcscat(exceptionText, L"Rock Band 3 has crashed. If this happens again, report this to the RB3Enhanced developers!\n\n");
@@ -99,9 +105,23 @@ static void GraphicalExceptionDisplay()
         fmtExc(L"\nFailed to save crash dump.");
     }
 #undef fmtExc
-    // suspend TheDxRnd so XAM can render our error message
-    DxRndSuspend((void *)PORT_DXRND);
-    MessageBoxAndWait(exceptionText);
+    if (config.RestartOnExcept == 1)
+    {
+        // suspend TheDxRnd so XAM can render our error message
+        DxRndSuspend((void *)PORT_DXRND);
+        XexGetModuleHandle("xam.xex", &XamHandle);
+        XexGetProcedureAddress(XamHandle, 0x290, &XNotifyQueueUI);
+        wsprintfW(notifyText, L"Rock Band 3 has crashed and will now restart.\nException address: 0x%08X", exceptionRecord.ExceptionAddress);
+        XNotifyQueueUI(15, 0xFF, 2, notifyText, 0);
+        // we should probably get the current exec name from the kernel
+        XLaunchNewImage("default.xex", 0);
+    }
+    else
+    {
+        // suspend TheDxRnd so XAM can render our error message
+        DxRndSuspend((void *)PORT_DXRND);
+        MessageBoxAndWait(exceptionText);
+    }
 }
 
 static int openExceptionFile = -1;
