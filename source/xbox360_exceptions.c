@@ -21,16 +21,17 @@ static EXCEPTION_RECORD exceptionRecord;
 static CONTEXT exceptionContext;
 static BYTE exceptionHandlerStack[0x2000];
 
-static LPWSTR buttons[1] = {L"Return to Dashboard"};
+static LPWSTR buttons[2] = {L"Return to Dashboard", L"Restart Game"};
 static MESSAGEBOX_RESULT result;
 static XOVERLAPPED overlapped;
-static void MessageBoxAndWait(wchar_t *text)
+static int MessageBoxAndWait(wchar_t *text)
 {
-    if (XShowMessageBoxUI(XUSER_INDEX_ANY, L"RB3Enhanced Exception", text, 1, buttons, 0, XMB_ERRORICON, &result, &overlapped) == ERROR_IO_PENDING)
+    if (XShowMessageBoxUI(XUSER_INDEX_ANY, L"RB3Enhanced Exception", text, 2, buttons, 1, XMB_ERRORICON, &result, &overlapped) == ERROR_IO_PENDING)
     {
         while (!XHasOverlappedIoCompleted(&overlapped))
             Sleep(50);
     }
+    return result.dwButtonPressed;
 }
 
 static int didSuccessfullyWriteFile = 0;
@@ -129,7 +130,8 @@ static void GraphicalExceptionDisplay()
     {
         // suspend TheDxRnd so XAM can render our error message
         DxRndSuspend((void *)PORT_DXRND);
-        MessageBoxAndWait(exceptionText);
+        if (MessageBoxAndWait(exceptionText) == 1)
+            RB3E_RelaunchGame();
     }
 }
 
