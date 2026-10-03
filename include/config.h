@@ -30,6 +30,7 @@ typedef struct _RB3E_Config
     char DisableRawfiles;
     char QuazalLogging;
     char ContentLogging;
+    char RestartOnCrash;
     // [Graphics]
     int RenderResX;
     int RenderResY;
