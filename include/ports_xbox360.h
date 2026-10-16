@@ -233,6 +233,7 @@
 #define PORT_XAMUSERCHECKPRIVILEGE 0x82c4bd1c
 #define PORT_XAMSHOWFRIENDSUI 0x8283d710
 #define PORT_XAMLOADERTERMINATETITLE 0x82c4bccc
+#define PORT_XSTRINGVERIFY 0x82A6A8F8
 
 // define logging functions
 void DbgPrint(const char *s, ...);

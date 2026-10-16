@@ -285,6 +285,61 @@ int XInviteGetAcceptedInfoHook(int player_num, XINVITE_INFO *info)
     return XInviteGetAcceptedInfo(player_num, info);
 }
 
+static DWORD VerifyStringsHook(DWORD flags, const CHAR *locale, DWORD count, const STRING_DATA *strings,
+    DWORD resultBytes, STRING_VERIFY_RESPONSE *results, XOVERLAPPED *overlapped)
+{
+    DWORD i;
+    DWORD required;
+    HRESULT *verdicts;
+
+    (void)locale;
+
+    // Check the arguments.
+    if (flags != 0 || count == 0 || count > 0xFFFF || strings == NULL || results == NULL)
+    {
+        return ERROR_INVALID_PARAMETER;
+    }
+
+    if (overlapped != NULL && overlapped->pCompletionRoutine != NULL)
+    {
+        return ERROR_INVALID_PARAMETER;
+    }
+
+    required = sizeof(*results) + count * sizeof(HRESULT);
+
+    if (resultBytes < required)
+        return ERROR_INSUFFICIENT_BUFFER;
+
+    for (i = 0; i < count; ++i)
+    {
+        if (strings[i].pszString == NULL || strings[i].wStringSize == 0)
+        {
+            return ERROR_INVALID_PARAMETER;
+        }
+    }
+
+    // Mark every string as passed.
+    verdicts = (HRESULT *)((unsigned char *)results + sizeof(*results));
+
+    memset(verdicts, 0, count * sizeof(HRESULT));
+
+    results->wNumStrings = (WORD)count;
+    results->pStringResult = verdicts;
+
+    // Mark the operation as complete.
+    if (overlapped != NULL)
+    {
+        overlapped->InternalHigh = 0;
+        overlapped->dwExtendedError = ERROR_SUCCESS;
+        overlapped->InternalLow = ERROR_SUCCESS;
+
+        if (overlapped->hEvent != NULL)
+            SetEvent(overlapped->hEvent);
+    }
+
+    return ERROR_SUCCESS;
+}
+
 // defined in net_stun.c, not worth its own header
 int STUN_GetExternalIP(char *stunServerIP, short stunPort, char *returnedIP, int socket_type);
 
@@ -312,6 +367,8 @@ void InitLivelessHooks()
     POKE_B(PORT_SOCKET_STUB, &socketHook);
     POKE_B(PORT_XAMUSERGETSIGNININFO, &XamUserGetSigninInfoHook);
     POKE_B(PORT_XAMUSERGETSIGNINSTATE, &XamUserGetSigninStateHook);
+    POKE_B(PORT_XSTRINGVERIFY, &VerifyStringsHook); // Remove profanity filter checks
+
     RB3E_MSG("Applied socket patches!", NULL);
     if (config.EnableLiveless)
     {
