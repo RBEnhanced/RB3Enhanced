@@ -34,6 +34,7 @@
 #define PORT_RND_ENDWORLD_CALL 0x8063b7a8        // call to Rnd::EndWorld in Rnd::EndDrawing
 #define PORT_RND_UPDATEHEAP_CALL 0x8063b86c      // call to Rnd::UpdateHeap in Rnd::UpdateOverlay
 #define PORT_ADDTRACKVECTOR_BL 0x80480a88       // bl to vector_push_back inside of SongData::AddTrack
+#define PORT_SONGMGR_SYNCSONGS 0x801cf730       // call to TheRockCentral.SyncAvailableSongs in BandSongMgr::ContentDone
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x8030ce7c             // PlatformMgr::SetDiskError

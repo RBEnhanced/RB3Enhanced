@@ -35,6 +35,7 @@
 #define PORT_GETGAMELIST 0x801dbfa0             // SongData::GetGameList // actually SongDB::GetGems
 #define PORT_MULTIPLAYER_CRASH 0x80023fec     // branch to a function that can crash in online multiplayer
 #define PORT_MULTIPLAYER_FIX 0x80a2f0c4       // the function that doesn't crash
+#define PORT_SONGMGR_SYNCSONGS 0x802708c4       // call to TheRockCentral.SyncAvailableSongs in BandSongMgr::ContentDone
 // #define PORT_LOADOBJS_BCTRL 0x827562e4
 // function patch addresses
 #define PORT_SETDISKERROR 0x804400a0            // PlatformMgr::SetDiskError
