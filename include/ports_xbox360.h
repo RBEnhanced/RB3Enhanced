@@ -61,6 +61,7 @@
 #define PORT_QUAZAL_BREAKPOINT 0x828410c0        // address to DbgBreakPoint in Quazal::Platform::Breakpoint
 #define PORT_MAINSEH 0x82272e60                  // address to __CxxFrameHandler above the main() function
 #define PORT_RND_ENDWORLD_CALL 0x8240f04c         // call to Rnd::EndWorld in Rnd::EndDrawing
+#define PORT_SONGMGR_SYNCSONGS 0x8257a370            // call to TheRockCentral.SyncAvailableSongs in BandSongMgr::ContentDone
 // function patch addresses
 #define PORT_SETDISKERROR 0x82516320                 // PlatformMgr::SetDiskError
 #define PORT_APP_RUN 0x82272e90                      // App::Run
