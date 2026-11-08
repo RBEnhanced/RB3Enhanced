@@ -16,6 +16,13 @@ typedef struct _DateTime
     unsigned char year; // years since 1900
 } DateTime;
 
+// technically DataArraySongInfo (a SongInfoCopy), only the fields we need
+typedef struct _SongInfo
+{
+    char unknown[0x20]; // vtable, name, base file name, package name
+    int numVocalParts;
+} SongInfo;
+
 // node of the STLport hashtable behind the Xbox build's ranks map (a singly linked list)
 typedef struct _SongRankHashNode
 {
@@ -49,7 +56,10 @@ typedef struct _SongMetadata
     int song_id;
     char unknown2[0x4];
     Symbol gameOrigin;
-    char unknown3[0x10];
+    float previewStartTime;
+    float previewEndTime;
+    SongInfo *songInfo;
+    int age;
     String title;
     String artist;
     String album;

@@ -257,6 +257,8 @@ void HTTP_Server_Accept(void *connection)
             strcat(response_buffer, "\r\n");
             sprintf(response_buffer + strlen(response_buffer), "year=%d\r\n", song_metadata->dateReleased.year + 1900);
             sprintf(response_buffer + strlen(response_buffer), "length=%d\r\n", song_metadata->lengthMs);
+            if (song_metadata->songInfo != NULL)
+                sprintf(response_buffer + strlen(response_buffer), "vocal_parts=%d\r\n", song_metadata->songInfo->numVocalParts);
             AppendSongRanks(response_buffer, song_metadata);
             strcat(response_buffer, "\r\n");
             RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
@@ -328,6 +330,8 @@ void HTTP_Server_Accept(void *connection)
                 strcat(response_buffer, "\r\n");
                 sprintf(response_buffer + strlen(response_buffer), "year=%d\r\n", song_metadata->dateReleased.year + 1900);
                 sprintf(response_buffer + strlen(response_buffer), "length=%d\r\n", song_metadata->lengthMs);
+                if (song_metadata->songInfo != NULL)
+                    sprintf(response_buffer + strlen(response_buffer), "vocal_parts=%d\r\n", song_metadata->songInfo->numVocalParts);
                 AppendSongRanks(response_buffer, song_metadata);
                 strcat(response_buffer, "\r\n");
                 // leave enough of the buffer free to fit the next song's entry
