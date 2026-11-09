@@ -455,7 +455,7 @@ void HTTP_Server_RunLoop()
     if (r != -1)
     {
         RB3E_MSG("New HTTP connection from %08X:%i", connected_ip, connected_port);
-        RB3E_CreateThread(HTTP_Server_Accept, (void *)r, 0x4000);
+        RB3E_CreateThread(HTTP_Server_Accept, (void *)r, 0x1000);
     }
 }
 
