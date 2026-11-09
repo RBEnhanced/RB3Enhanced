@@ -36,6 +36,26 @@ typedef struct _song_list_vector
 } song_list_vector;
 static song_list_vector song_list = {0};
 
+#define MAX_SONG_RANKS 9
+
+// appends a "rank_<part>=<rank>" line for each part in the song's rank map
+static void AppendSongRanks(char *buffer, SongMetadata *metadata)
+{
+    // ranks are stored in an STLport hash map, so walk its element list
+    SongRankHashNode *node = metadata->ranks.first;
+    unsigned int i = 0;
+
+    if (metadata->ranks.count == 0 || metadata->ranks.count > MAX_SONG_RANKS)
+        return;
+
+    for (i = 0; i < metadata->ranks.count && node != NULL; i++)
+    {
+        if (node->part.sym != NULL)
+            sprintf(buffer + strlen(buffer), "rank_%s=%d\r\n", node->part.sym, (int)node->rank);
+        node = node->next;
+    }
+}
+
 void HTTP_Server_Init()
 {
     RB3E_HTTPSocket = RB3E_CreateSocket(RB3E_TYPE_TCP);
@@ -232,6 +252,14 @@ void HTTP_Server_Accept(void *connection)
             strcat(response_buffer, "origin=");
             strcat(response_buffer, song_metadata->gameOrigin.sym);
             strcat(response_buffer, "\r\n");
+            strcat(response_buffer, "genre=");
+            strcat(response_buffer, song_metadata->genre.sym);
+            strcat(response_buffer, "\r\n");
+            sprintf(response_buffer + strlen(response_buffer), "year=%d\r\n", song_metadata->dateReleased.year + 1900);
+            sprintf(response_buffer + strlen(response_buffer), "length=%d\r\n", song_metadata->lengthMs);
+            if (song_metadata->songInfo != NULL)
+                sprintf(response_buffer + strlen(response_buffer), "vocal_parts=%d\r\n", song_metadata->songInfo->numVocalParts);
+            AppendSongRanks(response_buffer, song_metadata);
             strcat(response_buffer, "\r\n");
             RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
             goto close_connection;
@@ -297,8 +325,17 @@ void HTTP_Server_Accept(void *connection)
                 strcat(response_buffer, "origin=");
                 strcat(response_buffer, song_metadata->gameOrigin.sym);
                 strcat(response_buffer, "\r\n");
+                strcat(response_buffer, "genre=");
+                strcat(response_buffer, song_metadata->genre.sym);
                 strcat(response_buffer, "\r\n");
-                if (strlen(response_buffer) > 1500)
+                sprintf(response_buffer + strlen(response_buffer), "year=%d\r\n", song_metadata->dateReleased.year + 1900);
+                sprintf(response_buffer + strlen(response_buffer), "length=%d\r\n", song_metadata->lengthMs);
+                if (song_metadata->songInfo != NULL)
+                    sprintf(response_buffer + strlen(response_buffer), "vocal_parts=%d\r\n", song_metadata->songInfo->numVocalParts);
+                AppendSongRanks(response_buffer, song_metadata);
+                strcat(response_buffer, "\r\n");
+                // leave enough of the buffer free to fit the next song's entry
+                if (strlen(response_buffer) > 1000)
                 {
                     RB3E_TCP_Send(s, (void *)response_buffer, strlen(response_buffer));
                     memset(response_buffer, 0, sizeof(response_buffer));

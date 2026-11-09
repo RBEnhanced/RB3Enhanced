@@ -3,8 +3,36 @@
 
 #include "rb3/BinStream.h"
 #include "rb3/Data.h"
+#include "rb3/DateTime.h"
 #include "String.h"
 #include "Symbol.h"
+
+// technically DataArraySongInfo (a SongInfoCopy), only the fields we need
+typedef struct _SongInfo
+{
+    char unknown[0x20]; // vtable, name, base file name, package name
+    int numVocalParts;
+} SongInfo;
+
+// node of the STLport hashtable behind the Xbox build's ranks map (a singly linked list)
+typedef struct _SongRankHashNode
+{
+    struct _SongRankHashNode *next;
+    Symbol part;
+    float rank;
+} SongRankHashNode;
+
+// STLport hash map<Symbol, float>, used for ranks on Xbox
+typedef struct _SongRankHashMap
+{
+    int hashEquals;          // empty hash/equals functors + padding
+    SongRankHashNode *first; // head of the element list, NULL-terminated
+    void **bucketsBegin;
+    void **bucketsEnd;
+    void **bucketsCapacity;
+    unsigned int count;
+    float maxLoadFactor;
+} SongRankHashMap;
 
 // technically BandSongMetadata?
 typedef struct _SongMetadata
@@ -19,19 +47,26 @@ typedef struct _SongMetadata
     int song_id;
     char unknown2[0x4];
     Symbol gameOrigin;
-    char unknown3[0x10];
+    float previewStartTime;
+    float previewEndTime;
+    SongInfo *songInfo;
+    int age;
     String title;
     String artist;
     String album;
-#ifdef RB3E_WII
-    char unknown6[0x10];
-#else
-    char unknown6[0x10]; // hotfixed from 0x18, then 0x14? what is happening
-#endif
+    short albumTrackNum;
+    DateTime dateRecorded;
+    DateTime dateReleased;
+    short unknown6;
     Symbol genre;
     int animTempo;
     Symbol vocalGender;
     int lengthMs;
+    int basePoints;
+#ifdef RB3E_XBOX
+    int unknown7[2]; // unknown, only on Xbox
+    SongRankHashMap ranks;
+#endif
 } SongMetadata;
 
 extern SongMetadata *InitSongMetadata(SongMetadata *data);
