@@ -48,7 +48,7 @@ static void AppendSongRanks(char *buffer, SongMetadata *metadata)
     if (metadata->ranks.count == 0 || metadata->ranks.count > MAX_SONG_RANKS)
         return;
 
-    for (i = 0; i < metadata->ranks.count && node != NULL && ((unsigned int)node & 3) == 0; i++)
+    for (i = 0; i < metadata->ranks.count && node != NULL; i++)
     {
         if (node->part.sym != NULL)
             sprintf(buffer + strlen(buffer), "rank_%s=%d\r\n", node->part.sym, (int)node->rank);

@@ -3,18 +3,9 @@
 
 #include "rb3/BinStream.h"
 #include "rb3/Data.h"
+#include "rb3/DateTime.h"
 #include "String.h"
 #include "Symbol.h"
-
-typedef struct _DateTime
-{
-    unsigned char sec;
-    unsigned char min;
-    unsigned char hour;
-    unsigned char day;
-    unsigned char month;
-    unsigned char year; // years since 1900
-} DateTime;
 
 // technically DataArraySongInfo (a SongInfoCopy), only the fields we need
 typedef struct _SongInfo
